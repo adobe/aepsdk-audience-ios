@@ -11,6 +11,6 @@
  */
 
 /// Audience extension for the Adobe Experience Platform SDK
- @objc(AEPAudience) public final class Audience: NSObject {
+@objc(AEPAudience) public final class Audience: NSObject {
 
- }
+}

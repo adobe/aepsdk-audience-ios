@@ -12,6 +12,8 @@
 		2EBEE7A22526763200880E72 /* AEPAudience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7A12526763200880E72 /* AEPAudience.swift */; };
 		805CE096CD9B90E8EC24A4B0 /* Pods_AEPAudience_AEPAudienceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DC4CD3B863FEC88AB6F8414 /* Pods_AEPAudience_AEPAudienceTests.framework */; };
 		D1871705C85CB2C9DA24EA3C /* Pods_AEPAudience.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 151F1B53F2ABF76C27A79BFA /* Pods_AEPAudience.framework */; };
+		D6733D502527EB5700AE65A9 /* AudienceState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733D4F2527EB5700AE65A9 /* AudienceState.swift */; };
+		D6733D542527F42300AE65A9 /* AudienceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733D532527F42300AE65A9 /* AudienceConstants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +41,8 @@
 		9CD92F41BC0E3F813FEB1F7F /* Pods-AEPAudience-AEPAudienceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience-AEPAudienceTests.release.xcconfig"; path = "Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests.release.xcconfig"; sourceTree = "<group>"; };
 		ADEE37F541BDAB909167BAD2 /* Pods-AEPAudience.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience.release.xcconfig"; path = "Target Support Files/Pods-AEPAudience/Pods-AEPAudience.release.xcconfig"; sourceTree = "<group>"; };
 		CF4CF2C266D19BACED3D6321 /* Pods-AEPAudience-AEPAudienceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience-AEPAudienceTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests.debug.xcconfig"; sourceTree = "<group>"; };
+		D6733D4F2527EB5700AE65A9 /* AudienceState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceState.swift; sourceTree = "<group>"; };
+		D6733D532527F42300AE65A9 /* AudienceConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceConstants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +110,8 @@
 				2EBEE7922525A47800880E72 /* AEPAudience.h */,
 				2EBEE7932525A47800880E72 /* Info.plist */,
 				2EBEE7A12526763200880E72 /* AEPAudience.swift */,
+				D6733D4F2527EB5700AE65A9 /* AudienceState.swift */,
+				D6733D532527F42300AE65A9 /* AudienceConstants.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -314,6 +320,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2EBEE7A22526763200880E72 /* AEPAudience.swift in Sources */,
+				D6733D502527EB5700AE65A9 /* AudienceState.swift in Sources */,
+				D6733D542527F42300AE65A9 /* AudienceConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
