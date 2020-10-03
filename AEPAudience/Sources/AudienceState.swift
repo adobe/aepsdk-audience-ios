@@ -48,18 +48,18 @@ public final class AudienceState {
     
     func setUuid(uuid:String) {
         if(uuid.isEmpty){
-            dataStore.remove(key: AudienceConstants.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY)
+            dataStore.remove(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY)
         }else if(privacy_status != PrivacyStatus.optedOut){
-            dataStore.set(key: AudienceConstants.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY, value: uuid)
+            dataStore.set(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY, value: uuid)
             self.uuid = uuid;
         }
     }
     
     func setVisitorProfile(visitorProfile:[String: String]) {
         if(visitorProfile.isEmpty){
-            dataStore.remove(key: AudienceConstants.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY)
+            dataStore.remove(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY)
         }else if(privacy_status != PrivacyStatus.optedOut){
-            dataStore.set(key: AudienceConstants.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY, value: visitorProfile)
+            dataStore.set(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY, value: visitorProfile)
             self.visitor_profile = visitorProfile
         }
     }
