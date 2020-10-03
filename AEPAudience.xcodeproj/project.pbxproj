@@ -9,7 +9,9 @@
 /* Begin PBXBuildFile section */
 		2EBEE77A2525A35400880E72 /* AEPAudience.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EBEE7702525A35400880E72 /* AEPAudience.framework */; };
 		2EBEE7962525A47800880E72 /* AEPAudience.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EBEE7922525A47800880E72 /* AEPAudience.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2EBEE7A22526763200880E72 /* AEPAudience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7A12526763200880E72 /* AEPAudience.swift */; };
+		2EBEE7A22526763200880E72 /* Audience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7A12526763200880E72 /* Audience.swift */; };
+		2EBEE7BB2527C89E00880E72 /* AudienceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7BA2527C89E00880E72 /* AudienceConstants.swift */; };
+		2EBEE7BF252806B700880E72 /* Audience+PublicAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7BE252806B700880E72 /* Audience+PublicAPI.swift */; };
 		805CE096CD9B90E8EC24A4B0 /* Pods_AEPAudience_AEPAudienceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DC4CD3B863FEC88AB6F8414 /* Pods_AEPAudience_AEPAudienceTests.framework */; };
 		D1871705C85CB2C9DA24EA3C /* Pods_AEPAudience.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 151F1B53F2ABF76C27A79BFA /* Pods_AEPAudience.framework */; };
 /* End PBXBuildFile section */
@@ -34,7 +36,9 @@
 		2EBEE7922525A47800880E72 /* AEPAudience.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AEPAudience.h; sourceTree = "<group>"; };
 		2EBEE7932525A47800880E72 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2EBEE79D2526761700880E72 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2EBEE7A12526763200880E72 /* AEPAudience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AEPAudience.swift; sourceTree = "<group>"; };
+		2EBEE7A12526763200880E72 /* Audience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Audience.swift; sourceTree = "<group>"; };
+		2EBEE7BA2527C89E00880E72 /* AudienceConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceConstants.swift; sourceTree = "<group>"; };
+		2EBEE7BE252806B700880E72 /* Audience+PublicAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Audience+PublicAPI.swift"; sourceTree = "<group>"; };
 		8A0C78D9D55A442A45667964 /* Pods-AEPAudience.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience.debug.xcconfig"; path = "Target Support Files/Pods-AEPAudience/Pods-AEPAudience.debug.xcconfig"; sourceTree = "<group>"; };
 		9CD92F41BC0E3F813FEB1F7F /* Pods-AEPAudience-AEPAudienceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience-AEPAudienceTests.release.xcconfig"; path = "Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests.release.xcconfig"; sourceTree = "<group>"; };
 		ADEE37F541BDAB909167BAD2 /* Pods-AEPAudience.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience.release.xcconfig"; path = "Target Support Files/Pods-AEPAudience/Pods-AEPAudience.release.xcconfig"; sourceTree = "<group>"; };
@@ -105,7 +109,9 @@
 			children = (
 				2EBEE7922525A47800880E72 /* AEPAudience.h */,
 				2EBEE7932525A47800880E72 /* Info.plist */,
-				2EBEE7A12526763200880E72 /* AEPAudience.swift */,
+				2EBEE7A12526763200880E72 /* Audience.swift */,
+				2EBEE7BA2527C89E00880E72 /* AudienceConstants.swift */,
+				2EBEE7BE252806B700880E72 /* Audience+PublicAPI.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -313,7 +319,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EBEE7A22526763200880E72 /* AEPAudience.swift in Sources */,
+				2EBEE7A22526763200880E72 /* Audience.swift in Sources */,
+				2EBEE7BF252806B700880E72 /* Audience+PublicAPI.swift in Sources */,
+				2EBEE7BB2527C89E00880E72 /* AudienceConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
