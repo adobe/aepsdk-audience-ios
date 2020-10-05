@@ -10,7 +10,25 @@
  governing permissions and limitations under the License.
  */
 
-/// Audience extension for the Adobe Experience Platform SDK
- @objc(AEPAudience) public final class Audience: NSObject {
+import XCTest
+@testable import AEPAudience
+@testable import AEPCore
+@testable import AEPServices
 
- }
+class AudienceTests: XCTestCase {
+    var audience: Audience!
+    var mockRuntime: TestableExtensionRuntime!
+    
+    override func setUp() {
+        MobileCore.setLogLevel(level: .error) // reset log level to error before each test
+        mockRuntime = TestableExtensionRuntime()
+        audience = Audience(runtime: mockRuntime)
+        audience.onRegistered()
+    }
+
+    /// Tests that when audience receives a audience reset event
+    func testAudienceHappy() {
+        
+    }
+
+}
