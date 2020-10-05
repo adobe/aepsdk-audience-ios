@@ -24,7 +24,7 @@ pod-update: pod-repo-update
 open:
 	open $(PROJECT_NAME).xcworkspace
 
-test:
+unit-test:
 	@echo "######################################################################"
 	@echo "### Unit Testing iOS"
 	@echo "######################################################################"
