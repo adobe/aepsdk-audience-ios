@@ -23,13 +23,13 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   AEPCore:
-    :commit: 9a847aff7753ec1a0da8b158d42f4e8242304c37
+    :commit: 3e3a8ed7e5209966d4c31c120a86d06594d332c8
     :git: https://github.com/adobe/aepsdk-core-ios.git
   AEPRulesEngine:
     :commit: b7e2b7d778b07be8fccd6641e8119767bfc26b1f
     :git: https://github.com/adobe/aepsdk-rulesengine-ios.git
   AEPServices:
-    :commit: 9a847aff7753ec1a0da8b158d42f4e8242304c37
+    :commit: 3e3a8ed7e5209966d4c31c120a86d06594d332c8
     :git: https://github.com/adobe/aepsdk-core-ios.git
 
 SPEC CHECKSUMS:
@@ -39,4 +39,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 3a5ee7ccdb6d461c3fc0755a061b95a914582c28
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.0.rc.1
