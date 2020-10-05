@@ -16,6 +16,7 @@
 		2EBEE7C825282EC000880E72 /* TestableExtensionRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7C725282EC000880E72 /* TestableExtensionRuntime.swift */; };
 		805CE096CD9B90E8EC24A4B0 /* Pods_AEPAudience_AEPAudienceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DC4CD3B863FEC88AB6F8414 /* Pods_AEPAudience_AEPAudienceTests.framework */; };
 		D1871705C85CB2C9DA24EA3C /* Pods_AEPAudience.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 151F1B53F2ABF76C27A79BFA /* Pods_AEPAudience.framework */; };
+		D6733D80252B9B8500AE65A9 /* AudienceState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733D7F252B9B8500AE65A9 /* AudienceState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,7 @@
 		9CD92F41BC0E3F813FEB1F7F /* Pods-AEPAudience-AEPAudienceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience-AEPAudienceTests.release.xcconfig"; path = "Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests.release.xcconfig"; sourceTree = "<group>"; };
 		ADEE37F541BDAB909167BAD2 /* Pods-AEPAudience.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience.release.xcconfig"; path = "Target Support Files/Pods-AEPAudience/Pods-AEPAudience.release.xcconfig"; sourceTree = "<group>"; };
 		CF4CF2C266D19BACED3D6321 /* Pods-AEPAudience-AEPAudienceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience-AEPAudienceTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests.debug.xcconfig"; sourceTree = "<group>"; };
+		D6733D7F252B9B8500AE65A9 /* AudienceState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 				2EBEE7A12526763200880E72 /* Audience.swift */,
 				2EBEE7BA2527C89E00880E72 /* AudienceConstants.swift */,
 				2EBEE7BE252806B700880E72 /* Audience+PublicAPI.swift */,
+				D6733D7F252B9B8500AE65A9 /* AudienceState.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -333,6 +336,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2EBEE7A22526763200880E72 /* Audience.swift in Sources */,
+				D6733D80252B9B8500AE65A9 /* AudienceState.swift in Sources */,
 				2EBEE7BF252806B700880E72 /* Audience+PublicAPI.swift in Sources */,
 				2EBEE7BB2527C89E00880E72 /* AudienceConstants.swift in Sources */,
 			);
