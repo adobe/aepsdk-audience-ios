@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08471CD66E5BE2F2D1D45FBA /* Pods_AEPAudience_AEPAudienceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07971550F3CE45AD9083EBF0 /* Pods_AEPAudience_AEPAudienceTests.framework */; };
+		09A9A15E4DD2DCBC526BF654 /* Pods_AEPAudience.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 018D1BBB433F6FE295DCFC0B /* Pods_AEPAudience.framework */; };
 		2EBEE77A2525A35400880E72 /* AEPAudience.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EBEE7702525A35400880E72 /* AEPAudience.framework */; };
 		2EBEE7962525A47800880E72 /* AEPAudience.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EBEE7922525A47800880E72 /* AEPAudience.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EBEE7A22526763200880E72 /* Audience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7A12526763200880E72 /* Audience.swift */; };
@@ -14,8 +16,6 @@
 		2EBEE7BF252806B700880E72 /* Audience+PublicAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7BE252806B700880E72 /* Audience+PublicAPI.swift */; };
 		2EBEE7C325282CD300880E72 /* AudienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7C225282CD300880E72 /* AudienceTests.swift */; };
 		2EBEE7C825282EC000880E72 /* TestableExtensionRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7C725282EC000880E72 /* TestableExtensionRuntime.swift */; };
-		805CE096CD9B90E8EC24A4B0 /* Pods_AEPAudience_AEPAudienceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DC4CD3B863FEC88AB6F8414 /* Pods_AEPAudience_AEPAudienceTests.framework */; };
-		D1871705C85CB2C9DA24EA3C /* Pods_AEPAudience.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 151F1B53F2ABF76C27A79BFA /* Pods_AEPAudience.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,8 +29,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		151F1B53F2ABF76C27A79BFA /* Pods_AEPAudience.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPAudience.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2DC4CD3B863FEC88AB6F8414 /* Pods_AEPAudience_AEPAudienceTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPAudience_AEPAudienceTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		018D1BBB433F6FE295DCFC0B /* Pods_AEPAudience.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPAudience.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		07971550F3CE45AD9083EBF0 /* Pods_AEPAudience_AEPAudienceTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPAudience_AEPAudienceTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E0B4C04252BA10800ABBE57 /* AEPCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AEPCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EBEE7702525A35400880E72 /* AEPAudience.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AEPAudience.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EBEE7792525A35400880E72 /* AEPAudienceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AEPAudienceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EBEE7902525A47800880E72 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -42,10 +43,10 @@
 		2EBEE7BE252806B700880E72 /* Audience+PublicAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Audience+PublicAPI.swift"; sourceTree = "<group>"; };
 		2EBEE7C225282CD300880E72 /* AudienceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceTests.swift; sourceTree = "<group>"; };
 		2EBEE7C725282EC000880E72 /* TestableExtensionRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableExtensionRuntime.swift; sourceTree = "<group>"; };
-		8A0C78D9D55A442A45667964 /* Pods-AEPAudience.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience.debug.xcconfig"; path = "Target Support Files/Pods-AEPAudience/Pods-AEPAudience.debug.xcconfig"; sourceTree = "<group>"; };
-		9CD92F41BC0E3F813FEB1F7F /* Pods-AEPAudience-AEPAudienceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience-AEPAudienceTests.release.xcconfig"; path = "Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests.release.xcconfig"; sourceTree = "<group>"; };
-		ADEE37F541BDAB909167BAD2 /* Pods-AEPAudience.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience.release.xcconfig"; path = "Target Support Files/Pods-AEPAudience/Pods-AEPAudience.release.xcconfig"; sourceTree = "<group>"; };
-		CF4CF2C266D19BACED3D6321 /* Pods-AEPAudience-AEPAudienceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience-AEPAudienceTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests.debug.xcconfig"; sourceTree = "<group>"; };
+		623C5AF36ADAE01B09AD62CB /* Pods-AEPAudience.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience.release.xcconfig"; path = "Target Support Files/Pods-AEPAudience/Pods-AEPAudience.release.xcconfig"; sourceTree = "<group>"; };
+		A548C95AF75A8BB7D958C643 /* Pods-AEPAudience.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience.debug.xcconfig"; path = "Target Support Files/Pods-AEPAudience/Pods-AEPAudience.debug.xcconfig"; sourceTree = "<group>"; };
+		DFAFE58700B110EBB4D1CD6D /* Pods-AEPAudience-AEPAudienceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience-AEPAudienceTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests.debug.xcconfig"; sourceTree = "<group>"; };
+		EC3736F018AFA996FF5B760E /* Pods-AEPAudience-AEPAudienceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience-AEPAudienceTests.release.xcconfig"; path = "Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,7 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D1871705C85CB2C9DA24EA3C /* Pods_AEPAudience.framework in Frameworks */,
+				09A9A15E4DD2DCBC526BF654 /* Pods_AEPAudience.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,7 +63,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2EBEE77A2525A35400880E72 /* AEPAudience.framework in Frameworks */,
-				805CE096CD9B90E8EC24A4B0 /* Pods_AEPAudience_AEPAudienceTests.framework in Frameworks */,
+				08471CD66E5BE2F2D1D45FBA /* Pods_AEPAudience_AEPAudienceTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,10 +140,10 @@
 		CBC3893DB8AB73D3C12C6603 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				8A0C78D9D55A442A45667964 /* Pods-AEPAudience.debug.xcconfig */,
-				ADEE37F541BDAB909167BAD2 /* Pods-AEPAudience.release.xcconfig */,
-				CF4CF2C266D19BACED3D6321 /* Pods-AEPAudience-AEPAudienceTests.debug.xcconfig */,
-				9CD92F41BC0E3F813FEB1F7F /* Pods-AEPAudience-AEPAudienceTests.release.xcconfig */,
+				A548C95AF75A8BB7D958C643 /* Pods-AEPAudience.debug.xcconfig */,
+				623C5AF36ADAE01B09AD62CB /* Pods-AEPAudience.release.xcconfig */,
+				DFAFE58700B110EBB4D1CD6D /* Pods-AEPAudience-AEPAudienceTests.debug.xcconfig */,
+				EC3736F018AFA996FF5B760E /* Pods-AEPAudience-AEPAudienceTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -150,8 +151,9 @@
 		CEBDCEF550A14091A479F5C5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				151F1B53F2ABF76C27A79BFA /* Pods_AEPAudience.framework */,
-				2DC4CD3B863FEC88AB6F8414 /* Pods_AEPAudience_AEPAudienceTests.framework */,
+				2E0B4C04252BA10800ABBE57 /* AEPCore.framework */,
+				018D1BBB433F6FE295DCFC0B /* Pods_AEPAudience.framework */,
+				07971550F3CE45AD9083EBF0 /* Pods_AEPAudience_AEPAudienceTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -174,7 +176,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2EBEE7842525A35400880E72 /* Build configuration list for PBXNativeTarget "AEPAudience" */;
 			buildPhases = (
-				80CA4EF09B2A21DD0FD474E7 /* [CP] Check Pods Manifest.lock */,
+				B232921D873E552FD78ECD72 /* [CP] Check Pods Manifest.lock */,
 				2EBEE76B2525A35300880E72 /* Headers */,
 				2EBEE76C2525A35300880E72 /* Sources */,
 				2EBEE76D2525A35300880E72 /* Frameworks */,
@@ -193,11 +195,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2EBEE7872525A35400880E72 /* Build configuration list for PBXNativeTarget "AEPAudienceTests" */;
 			buildPhases = (
-				7233C3D23AD9DC46830F5B71 /* [CP] Check Pods Manifest.lock */,
+				281F99B5B741FD361B9469C2 /* [CP] Check Pods Manifest.lock */,
 				2EBEE7752525A35400880E72 /* Sources */,
 				2EBEE7762525A35400880E72 /* Frameworks */,
 				2EBEE7772525A35400880E72 /* Resources */,
-				F97659D4BD4E2CD56664E0B9 /* [CP] Embed Pods Frameworks */,
+				572B34761AC260431AB44D63 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -217,6 +219,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1200;
 				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = Adobe;
 				TargetAttributes = {
 					2EBEE76F2525A35300880E72 = {
 						CreatedOnToolsVersion = 12.0.1;
@@ -264,7 +267,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		7233C3D23AD9DC46830F5B71 /* [CP] Check Pods Manifest.lock */ = {
+		281F99B5B741FD361B9469C2 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -286,7 +289,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		80CA4EF09B2A21DD0FD474E7 /* [CP] Check Pods Manifest.lock */ = {
+		572B34761AC260431AB44D63 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B232921D873E552FD78ECD72 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -306,23 +326,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F97659D4BD4E2CD56664E0B9 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -410,7 +413,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MACH_O_TYPE = mh_dylib;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -468,7 +472,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MACH_O_TYPE = mh_dylib;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -482,8 +487,9 @@
 		};
 		2EBEE7852525A35400880E72 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8A0C78D9D55A442A45667964 /* Pods-AEPAudience.debug.xcconfig */;
+			baseConfigurationReference = A548C95AF75A8BB7D958C643 /* Pods-AEPAudience.debug.xcconfig */;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -491,15 +497,16 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "$(SRCROOT)/AEPAudience/Sources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = Adobe.AEPAudience;
+				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.mobile.AEPAudience;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -507,8 +514,9 @@
 		};
 		2EBEE7862525A35400880E72 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = ADEE37F541BDAB909167BAD2 /* Pods-AEPAudience.release.xcconfig */;
+			baseConfigurationReference = 623C5AF36ADAE01B09AD62CB /* Pods-AEPAudience.release.xcconfig */;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -516,15 +524,16 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "$(SRCROOT)/AEPAudience/Sources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = Adobe.AEPAudience;
+				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.mobile.AEPAudience;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -532,42 +541,50 @@
 		};
 		2EBEE7882525A35400880E72 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CF4CF2C266D19BACED3D6321 /* Pods-AEPAudience-AEPAudienceTests.debug.xcconfig */;
+			baseConfigurationReference = DFAFE58700B110EBB4D1CD6D /* Pods-AEPAudience-AEPAudienceTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FKGEE875K4;
 				INFOPLIST_FILE = AEPAudience/Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACH_O_TYPE = mh_bundle;
 				PRODUCT_BUNDLE_IDENTIFIER = Adobe.AEPAudienceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Debug;
 		};
 		2EBEE7892525A35400880E72 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9CD92F41BC0E3F813FEB1F7F /* Pods-AEPAudience-AEPAudienceTests.release.xcconfig */;
+			baseConfigurationReference = EC3736F018AFA996FF5B760E /* Pods-AEPAudience-AEPAudienceTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FKGEE875K4;
 				INFOPLIST_FILE = AEPAudience/Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACH_O_TYPE = mh_bundle;
 				PRODUCT_BUNDLE_IDENTIFIER = Adobe.AEPAudienceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Release;
 		};

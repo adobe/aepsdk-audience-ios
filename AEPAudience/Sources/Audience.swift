@@ -100,4 +100,4 @@ public class Audience: NSObject, Extension {
     func getLogTagWith(functionName: String) -> String {
         return "\(name):\(functionName)"
     }
- }
+}
