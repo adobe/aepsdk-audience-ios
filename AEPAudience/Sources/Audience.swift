@@ -41,7 +41,6 @@ public class Audience: NSObject, Extension {
     
     /// Invoked when the `EventHub` has successfully registered the Audience extension.
     public func onRegistered() {
-        registerListener(type: EventType.hub, source: EventSource.sharedState, listener: handleSharedStateUpdate(event:))
         registerListener(type: EventType.lifecycle, source: EventSource.responseContent, listener: handleLifecycleResponse(event:))
         registerListener(type: EventType.analytics, source: EventSource.responseContent, listener: handleAnalyticsResponse(event:))
         
@@ -54,7 +53,7 @@ public class Audience: NSObject, Extension {
     public func onUnregistered() {}
 
     public func readyForEvent(_ event: Event) -> Bool {
-        return true
+        return getSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event)?.status == .set
     }
     
     // MARK: Event Listeners
@@ -93,7 +92,7 @@ public class Audience: NSObject, Extension {
     ///   - event: the event to version the shared state at
     ///   - data: data for the shared state
     private func updateSharedState(event: Event, data: [String: Any]) {
-        let sharedStateData = data;
+        let sharedStateData = data
         Log.trace(label: getLogTagWith(functionName: #function), "Updating Audience shared state")
         createSharedState(data: sharedStateData as [String: Any], event: event)
     }

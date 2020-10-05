@@ -25,13 +25,13 @@ enum AudienceConstants {
     }
     
     enum EventDataKeys {
-        static let VISITOR_TRAITS       = "aamtraits"
-        static let VISITOR_PROFILE      = "aamprofile"
+        static let VISITOR_TRAITS       = "aam.traits"
+        static let VISITOR_PROFILE      = "aam.profile"
         static let DPID                 = "dpid"
         static let DPUUID               = "dpuuid"
         static let UUID                 = "uuid"
-        static let AUDIENCE_IDS         = "audienceids"
-        static let OPTED_OUT_HIT_SENT   = "optedouthitsent"
+        static let AUDIENCE_IDS         = "audience.ids"
+        static let OPTED_OUT_HIT_SENT   = "optedout.hit.sent"
     }
 
     enum DataStoreKeys {
