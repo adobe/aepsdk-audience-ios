@@ -49,7 +49,7 @@ class TestableExtensionRuntime: ExtensionRuntime {
             self.createdSharedStates += [data]
         }
     }
-    
+
     func getSharedState(extensionName: String, event: Event?, barrier: Bool) -> SharedStateResult? {
         return otherSharedStates["\(extensionName)-\(String(describing: event?.id))"] ?? nil
     }

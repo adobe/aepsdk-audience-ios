@@ -18,7 +18,7 @@ import XCTest
 class AudienceTests: XCTestCase {
     var audience: Audience!
     var mockRuntime: TestableExtensionRuntime!
-    
+
     override func setUp() {
         MobileCore.setLogLevel(level: .error) // reset log level to error before each test
         mockRuntime = TestableExtensionRuntime()
@@ -27,8 +27,7 @@ class AudienceTests: XCTestCase {
     }
 
     /// Tests that when audience receives a audience reset event
-    func testAudienceHappy() {
-        
+    func testAudienceResetHappy() {
     }
 
 }

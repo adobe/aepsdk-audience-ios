@@ -3,7 +3,7 @@
  This file is licensed to you under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License. You may obtain a copy
  of the License at http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software distributed under
  the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
  OF ANY KIND, either express or implied. See the License for the specific language
@@ -16,7 +16,7 @@ import Foundation
 
 /// Defines the public interface for the Audience extension
 @objc public extension Audience {
-    
+
     /// Returns the visitor profile that was most recently obtained.
     /// - Parameters:
     ///   - completion: closure  invoked with the visitor's profile as a parameter
@@ -34,8 +34,8 @@ import Foundation
             completion(profileData, .none)
         }
     }
-    
-    
+
+
     /// Sends Audience Manager a signal with traits and returns the matching segments for the visitor in a closure.
     /// - Parameters:
     ///   - data: Traits data for the current visitor
@@ -56,7 +56,7 @@ import Foundation
             completion(profileData, .none)
         }
     }
-    
+
     /// Resets the Audience Manager UUID and purges the current visitor profile from NSUserDefaults.
     @objc(reset)
     static func reset() {
