@@ -142,7 +142,7 @@ class AudienceStateTests: XCTestCase {
         dataStore.set(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY, value: AudienceStateTests.persistedVisitorProfile)
         
         // test
-        let returnedValue = audienceState.getVisitorProfile() as? [String:String] ?? AudienceStateTests.emptyProfile
+        let returnedValue = audienceState.getVisitorProfile()
         
         // verify
         XCTAssertFalse(returnedValue.isEmpty)
@@ -156,7 +156,7 @@ class AudienceStateTests: XCTestCase {
         dataStore.set(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY, value: AudienceStateTests.emptyProfile)
         
         // test
-        let returnedValue = audienceState.getVisitorProfile() as? [String:String] ?? AudienceStateTests.emptyProfile
+        let returnedValue = audienceState.getVisitorProfile()
         
         // verify
         XCTAssertFalse(returnedValue.isEmpty)
@@ -170,7 +170,7 @@ class AudienceStateTests: XCTestCase {
         dataStore.set(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY, value: AudienceStateTests.persistedVisitorProfile)
         
         // test
-        let returnedValue = audienceState.getVisitorProfile() as? [String:String] ?? AudienceStateTests.emptyProfile
+        let returnedValue = audienceState.getVisitorProfile()
         
         // verify
         XCTAssertFalse(returnedValue.isEmpty)
@@ -334,7 +334,7 @@ class AudienceStateTests: XCTestCase {
         audienceState.setVisitorProfile(visitorProfile: AudienceStateTests.inMemoryVisitorProfile)
         
         // verify
-        XCTAssertEqual(AudienceStateTests.inMemoryVisitorProfile, audienceState.getVisitorProfile() as? [String:String] ?? AudienceStateTests.emptyProfile)
+        XCTAssertEqual(AudienceStateTests.inMemoryVisitorProfile, audienceState.getVisitorProfile())
         XCTAssertEqual(AudienceStateTests.inMemoryVisitorProfile, (dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY) as? [String : String] ?? AudienceStateTests.emptyProfile))
     }
     
@@ -358,7 +358,7 @@ class AudienceStateTests: XCTestCase {
         audienceState.setVisitorProfile(visitorProfile: AudienceStateTests.inMemoryVisitorProfile)
         
         // verify
-        XCTAssertEqual(AudienceStateTests.inMemoryVisitorProfile, audienceState.getVisitorProfile() as? [String:String] ?? AudienceStateTests.emptyProfile)
+        XCTAssertEqual(AudienceStateTests.inMemoryVisitorProfile, audienceState.getVisitorProfile())
         XCTAssertEqual(AudienceStateTests.inMemoryVisitorProfile, (dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY) as? [String : String] ?? AudienceStateTests.emptyProfile))
     }
     

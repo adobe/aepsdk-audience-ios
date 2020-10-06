@@ -24,7 +24,7 @@ public final class AudienceState {
     private var dpid = String()
     private var dpuuid = String()
     private var uuid = String()
-    private var visitorProfile = [AnyHashable:Any]()
+    private var visitorProfile = [String:String]()
     private var privacyStatus = PrivacyStatus.unknown
     
     /// Creates a new `AudienceState`
@@ -136,10 +136,10 @@ public final class AudienceState {
     /// Returns the `visitorProfile` from the AudienceState instance.
     /// If there is no `visitorProfile` value in memory, this method attempts to find one from the DataStore.
     /// - Returns: A dictionary containing the `visitorProfile`
-    func getVisitorProfile() -> [AnyHashable:Any] {
+    func getVisitorProfile() -> [String:String] {
         if(self.visitorProfile.isEmpty){
             // check data store to see if we can return a visitor profile from persistence
-            self.visitorProfile = (dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY) ?? [AnyHashable:Any]())
+            self.visitorProfile = (dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY)) as? [String:String] ?? [String:String]()
         }
         return self.visitorProfile
     }
