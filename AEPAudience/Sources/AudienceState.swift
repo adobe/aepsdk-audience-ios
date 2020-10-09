@@ -45,7 +45,7 @@ public final class AudienceState {
     func setDpid(dpid:String) {
         // allow setting if not opt-out or if clearing data
         if(dpid.isEmpty || privacyStatus != PrivacyStatus.optedOut){
-            self.dpid = dpid;
+            self.dpid = dpid
         }
     }
     
@@ -56,7 +56,7 @@ public final class AudienceState {
     func setDpuuid(dpuuid:String) {
         // allow setting if not opt-out or if clearing data
         if(dpuuid.isEmpty || privacyStatus != PrivacyStatus.optedOut){
-            self.dpuuid = dpuuid;
+            self.dpuuid = dpuuid
         }
     }
     
@@ -73,7 +73,7 @@ public final class AudienceState {
         }
         
         if(uuid.isEmpty || privacyStatus != PrivacyStatus.optedOut){
-            self.uuid = uuid;
+            self.uuid = uuid
         }
     }
     
@@ -91,7 +91,7 @@ public final class AudienceState {
         }
         
         if(visitorProfile.isEmpty || privacyStatus != PrivacyStatus.optedOut){
-            self.visitorProfile = visitorProfile;
+            self.visitorProfile = visitorProfile
         }
     }
     
