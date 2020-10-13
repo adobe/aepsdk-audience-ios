@@ -16,7 +16,7 @@ import XCTest
 @testable import AEPServices
 
 class AudienceStateTests: XCTestCase {
-    let dataStore = NamedCollectionDataStore(name: "AudienceStateTests")
+    let dataStore = NamedCollectionDataStore(name: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_DATA_STORE)
     var audienceState: AudienceState!
     // test strings
     static let emptyString = ""
@@ -33,7 +33,7 @@ class AudienceStateTests: XCTestCase {
         for key in UserDefaults.standard.dictionaryRepresentation().keys {
             UserDefaults.standard.removeObject(forKey: key)
         }
-        audienceState = AudienceState(dataStore: dataStore)
+        audienceState = AudienceState()
     }
 
     func testGetDpid_WhenDpidEmptyInMemory() {
