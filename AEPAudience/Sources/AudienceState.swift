@@ -20,18 +20,17 @@ import Foundation
 /// 3. Provides public getters and setters for all maintained variables.
 public final class AudienceState {
     private static let LOG_TAG = "AudienceState"
-    let dataStore: NamedCollectionDataStore
+    private var dataStore: NamedCollectionDataStore
     private var dpid = String()
     private var dpuuid = String()
     private var uuid = String()
     private var visitorProfile = [String:String]()
-    private var privacyStatus = PrivacyStatus.unknown
+    private var privacyStatus: PrivacyStatus
     
     /// Creates a new `AudienceState`
-    /// - Parameter:
-    ///   - dataStore: The Audience Extension's datastore
-    init(dataStore: NamedCollectionDataStore) {
-        self.dataStore = dataStore
+    init() {
+        dataStore = NamedCollectionDataStore(name: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_DATA_STORE)
+        privacyStatus = PrivacyStatus.unknown
     }
     
     //==================================================================
@@ -185,6 +184,6 @@ public final class AudienceState {
         setUuid(uuid: "")
         setDpuuid(dpuuid: "")
         setDpid(dpid: "")
-        setVisitorProfile(visitorProfile: [String: String]());
+        setVisitorProfile(visitorProfile: [String: String]())
     }
 }
