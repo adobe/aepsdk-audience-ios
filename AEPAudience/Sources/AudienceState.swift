@@ -48,10 +48,11 @@ public class AudienceState {
     /// - Parameter:
     ///   - dpid: The value for the new dpid
     func setDpid(dpid:String) {
-        // allow setting if not opt-out or if clearing data
-        if(dpid.isEmpty || privacyStatus != .optedOut){
-            self.dpid = dpid
+        // allow setting if not opt-out
+        if(privacyStatus == .optedOut){
+            return
         }
+        self.dpid = dpid
     }
     
     /// Sets the value of the dpuuid property in the AudienceState instance.
@@ -59,10 +60,11 @@ public class AudienceState {
     /// - Parameter:
     ///   - dpuuid: The value for the new dpuuid
     func setDpuuid(dpuuid:String) {
-        // allow setting if not opt-out or if clearing data
-        if(dpuuid.isEmpty || privacyStatus != .optedOut){
-            self.dpuuid = dpuuid
+        // allow setting if not opt-out
+        if(privacyStatus == .optedOut){
+            return
         }
+        self.dpuuid = dpuuid
     }
     
     /// Sets the value of the uuid property in the AudienceState instance.
@@ -158,7 +160,7 @@ public class AudienceState {
         return self.privacyStatus
     }
     
-    /// Get the data for this AudienceState instance to share with other modules.
+    /// Get the data for this AudienceState instance to share with other extensions.
     /// The state data is only populated if the set privacy status is not `PrivacyStatus.optedOut`.
     /// - Returns: A dictionary containing the event data stored in the AudienceState
     func getStateData() -> [String:Any] {
