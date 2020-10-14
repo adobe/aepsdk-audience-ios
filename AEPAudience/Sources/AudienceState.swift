@@ -18,7 +18,7 @@ import Foundation
 /// 1. Responsible for keeping the current state of all Audience-related variables.
 /// 2. Persists variables via the LocalStorageServiceInterface.
 /// 3. Provides public getters and setters for all maintained variables.
-public final class AudienceState {
+public class AudienceState {
     private static let LOG_TAG = "AudienceState"
     /// The Audience Manager extension datastore.
     private var dataStore: NamedCollectionDataStore
@@ -36,7 +36,7 @@ public final class AudienceState {
     /// Creates a new `AudienceState`
     init() {
         dataStore = NamedCollectionDataStore(name: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_DATA_STORE)
-        privacyStatus = PrivacyStatus.unknown
+        privacyStatus = .unknown
     }
     
     //==================================================================
@@ -49,7 +49,7 @@ public final class AudienceState {
     ///   - dpid: The value for the new dpid
     func setDpid(dpid:String) {
         // allow setting if not opt-out or if clearing data
-        if(dpid.isEmpty || privacyStatus != PrivacyStatus.optedOut){
+        if(dpid.isEmpty || privacyStatus != .optedOut){
             self.dpid = dpid
         }
     }
@@ -60,7 +60,7 @@ public final class AudienceState {
     ///   - dpuuid: The value for the new dpuuid
     func setDpuuid(dpuuid:String) {
         // allow setting if not opt-out or if clearing data
-        if(dpuuid.isEmpty || privacyStatus != PrivacyStatus.optedOut){
+        if(dpuuid.isEmpty || privacyStatus != .optedOut){
             self.dpuuid = dpuuid
         }
     }
@@ -71,15 +71,17 @@ public final class AudienceState {
     /// - Parameter:
     ///   - uuid: The value for the new uuid
     func setUuid(uuid:String) {
-        if(uuid.isEmpty){
+        if(privacyStatus == .optedOut && !uuid.isEmpty) {
+            return
+        }
+        else if(uuid.isEmpty){
             dataStore.remove(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY)
-        }else if(privacyStatus != PrivacyStatus.optedOut){
+        }
+        else {
             dataStore.set(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY, value: uuid)
         }
-        
-        if(uuid.isEmpty || privacyStatus != PrivacyStatus.optedOut){
-            self.uuid = uuid
-        }
+
+        self.uuid = uuid
     }
     
     /// Sets the value of the visitor profile property in the AudienceState instance.
@@ -88,16 +90,17 @@ public final class AudienceState {
     /// - Parameter:
     ///   - visitorProfile: The value for the new visitorProfile
     func setVisitorProfile(visitorProfile:[String: String]) {
-        if(visitorProfile.isEmpty){
+        if(privacyStatus == .optedOut && !visitorProfile.isEmpty) {
+            return
+        }
+        else if(visitorProfile.isEmpty){
             dataStore.remove(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY)
-        }else if(privacyStatus != PrivacyStatus.optedOut){
+        }
+        else {
             dataStore.set(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY, value: visitorProfile)
-            self.visitorProfile = visitorProfile
         }
-        
-        if(visitorProfile.isEmpty || privacyStatus != PrivacyStatus.optedOut){
-            self.visitorProfile = visitorProfile
-        }
+
+        self.visitorProfile = visitorProfile
     }
     
     /// Sets the `PrivacyStatus` in the AudienceState instance.
@@ -106,7 +109,7 @@ public final class AudienceState {
     ///   - privacyStatus: The value for the new privacyStatus
     func setMobilePrivacyStatus(privacyStatus: PrivacyStatus) {
         self.privacyStatus = privacyStatus
-        if(privacyStatus == PrivacyStatus.optedOut){
+        if(privacyStatus == .optedOut){
             clearIdentifiers()
         }
     }
@@ -160,7 +163,7 @@ public final class AudienceState {
     /// - Returns: A dictionary containing the event data stored in the AudienceState
     func getStateData() -> [String:Any] {
         var data = [String:Any]()
-        if(privacyStatus != PrivacyStatus.optedOut){
+        if(privacyStatus != .optedOut){
             let dpid = getDpid()
             if(!dpid.isEmpty){
                 data[AudienceConstants.EventDataKeys.DPID] = dpid
