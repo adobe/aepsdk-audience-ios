@@ -20,11 +20,17 @@ import Foundation
 /// 3. Provides public getters and setters for all maintained variables.
 public final class AudienceState {
     private static let LOG_TAG = "AudienceState"
+    /// The Audience Manager extension datastore.
     private var dataStore: NamedCollectionDataStore
+    /// The Audience Manager Data Source ID.
     private var dpid = String()
+    /// The Audience Manager Data Provider Unique User ID.
     private var dpuuid = String()
+    /// The Audience Manager Unique User ID
     private var uuid = String()
+    /// The Audience Manager Visitor Profile
     private var visitorProfile = [String:String]()
+    /// The current privacy status provided by the Configuration extension, defaults to `unknown`
     private var privacyStatus: PrivacyStatus
     
     /// Creates a new `AudienceState`
