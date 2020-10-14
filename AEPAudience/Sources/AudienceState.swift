@@ -71,7 +71,7 @@ public class AudienceState {
     /// - Parameter:
     ///   - uuid: The value for the new uuid
     func setUuid(uuid:String) {
-        if(privacyStatus == .optedOut && !uuid.isEmpty) {
+        if(privacyStatus == .optedOut) {
             return
         }
         else if(uuid.isEmpty){
@@ -90,7 +90,7 @@ public class AudienceState {
     /// - Parameter:
     ///   - visitorProfile: The value for the new visitorProfile
     func setVisitorProfile(visitorProfile:[String: String]) {
-        if(privacyStatus == .optedOut && !visitorProfile.isEmpty) {
+        if(privacyStatus == .optedOut) {
             return
         }
         else if(visitorProfile.isEmpty){
@@ -190,9 +190,13 @@ public class AudienceState {
     /// Clear the identifiers for this AudienceState.
     /// The cleared identifiers are: `uuid`, `dpid`, `dpuuid`, and `visitorProfile`
     func clearIdentifiers() {
-        setUuid(uuid: "")
-        setDpuuid(dpuuid: "")
-        setDpid(dpid: "")
-        setVisitorProfile(visitorProfile: [String: String]())
+        // clear the persisted data
+        dataStore.remove(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY)
+        dataStore.remove(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY)
+        // reset the in-memory variables
+        self.uuid = ""
+        self.dpuuid = ""
+        self.dpid = ""
+        self.visitorProfile = [String:String]()
     }
 }
