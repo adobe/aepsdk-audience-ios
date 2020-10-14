@@ -16,7 +16,7 @@ import Foundation
 
 /// @class AudienceState
 /// 1. Responsible for keeping the current state of all Audience-related variables.
-/// 2. Persists variables via the LocalStorageServiceInterface.
+/// 2. Persists variables via the NamedCollectionDataStore.
 /// 3. Provides public getters and setters for all maintained variables.
 public class AudienceState {
     private static let LOG_TAG = "AudienceState"
