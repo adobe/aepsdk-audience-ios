@@ -15,7 +15,7 @@ import AEPServices
 import Foundation
 
 /// Audience extension for the Adobe Experience Platform SDK
-@objc(AEPAudience)
+@objc(AEPMobileAudience)
 public class Audience: NSObject, Extension {
     public let runtime: ExtensionRuntime
 
