@@ -23,11 +23,7 @@ public class Audience: NSObject, Extension {
     public let friendlyName = AudienceConstants.FRIENDLY_NAME
     public static let extensionVersion = AudienceConstants.EXTENSION_VERSION
     public let metadata: [String: String]? = nil
-    #if DEBUG
-        var state: AudienceState
-    #else
-        private(set) var state: AudienceState // for AudienceState testing
-    #endif
+    private(set) var state: AudienceState
     
     // MARK: Extension
 
@@ -83,17 +79,16 @@ public class Audience: NSObject, Extension {
     /// - Parameter:
     ///   - event: The configuration response event
     private func handleConfigurationResponse(event: Event) {
-        if let privacyStatusStr = event.data?[AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY] as? String {
-            let privacyStatus = PrivacyStatus(rawValue: privacyStatusStr) ?? PrivacyStatus.unknown
-            if privacyStatus == .optedOut {
-                // send opt-out hit
-                handleOptOut(event: event)
-                createSharedState(data: state.getStateData(), event: event)
-            }
-            // if privacy status is opted out, audience manager data in the AudienceState will be cleared.
-            state.setMobilePrivacyStatus(privacyStatus: privacyStatus)
-            // todo: update privacy status in hit processor
+        guard let privacyStatusStr = event.data?[AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY] as? String else { return }
+        let privacyStatus = PrivacyStatus(rawValue: privacyStatusStr) ?? PrivacyStatus.unknown
+        if privacyStatus == .optedOut {
+            // send opt-out hit
+            handleOptOut(event: event)
+            createSharedState(data: state.getStateData(), event: event)
         }
+        // if privacy status is opted out, audience manager data in the AudienceState will be cleared.
+        state.setMobilePrivacyStatus(privacyStatus: privacyStatus)
+        // todo: update privacy status in hit processor
     }
     
     private func handleAudienceIdentityRequest(event: Event) {
@@ -123,17 +118,12 @@ public class Audience: NSObject, Extension {
     /// - Parameter event: the event responsible for sending this opt-out hit
     private func handleOptOut(event: Event) {
         guard let configSharedState = getSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event)?.value else { return }
-        let privacyStatusStr = configSharedState[AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY] as? String ?? ""
-        let privacyStatus = PrivacyStatus(rawValue: privacyStatusStr) ?? PrivacyStatus.unknown
-
-        if privacyStatus == .optedOut {
-            guard let aamServer = configSharedState[AudienceConstants.Configuration.AAM_SERVER] as? String else { return }
-            let uuid = state.getUuid()
+        guard let aamServer = configSharedState[AudienceConstants.Configuration.AAM_SERVER] as? String else { return }
+        let uuid = state.getUuid()
             
-            // only send the opt-out hit if the audience manager server and uuid are not empty
-            if !uuid.isEmpty && !aamServer.isEmpty {
-                ServiceProvider.shared.networkService.sendOptOutRequest(aamServer: aamServer, uuid: uuid)
-            }
+        // only send the opt-out hit if the audience manager server and uuid are not empty
+        if !uuid.isEmpty && !aamServer.isEmpty {
+            ServiceProvider.shared.networkService.sendOptOutRequest(aamServer: aamServer, uuid: uuid)
         }
     }
 }
