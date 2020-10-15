@@ -57,8 +57,8 @@ enum AudienceConstants {
         static let AUDIENCE_MANAGER_CUSTOMER_DATA_PREFIX = "c_"
         static let AUDIENCE_MANAGER_URL_SUFFIX = "&d_dst=1&d_rtbd=json"
         static let AUDIENCE_MANAGER_URL_PLATFORM_KEY = "&d_ptfm="
-        static let AUDIENCE_MANAGER_OPT_OUT_URL_BASE = "https://%s/demoptout.jpg?"
-        static let AUDIENCE_MANAGER_OPT_OUT_URL_AAM = "d_uuid=%s"
+        static let AUDIENCE_MANAGER_OPT_OUT_URL_PATH = "/demoptout.jpg"
+        static let AUDIENCE_MANAGER_OPT_OUT_URL_AAM_UUID = "d_uuid"
     }
 
     enum Default {
