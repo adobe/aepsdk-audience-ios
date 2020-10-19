@@ -35,16 +35,15 @@ enum AudienceConstants {
     }
 
     enum DataStoreKeys {
-        static let AUDIENCE_MANAGER_SHARED_PREFS_DATA_STORE = "AAMDataStore"
-        static let AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY = "AAMUserProfile"
-        static let AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY = "AAMUserId"
+        static let PROFILE_KEY = "AAMUserProfile"
+        static let USER_ID_KEY = "AAMUserId"
 
     }
 
     enum DestinationKeys {
-        static let AUDIENCE_MANAGER_DATA_PROVIDER_ID_KEY          = "d_dpid"
-        static let AUDIENCE_MANAGER_DATA_PROVIDER_USER_ID_KEY     = "d_dpuuid"
-        static let AUDIENCE_MANAGER_USER_ID_KEY                   = "d_uuid"
+        static let DATA_PROVIDER_ID_KEY          = "d_dpid"
+        static let DATA_PROVIDER_USER_ID_KEY     = "d_dpuuid"
+        static let USER_ID_KEY                   = "d_uuid"
         static let MARKETING_CLOUD_ORG_ID                         = "d_orgid"
         static let VISITOR_ID_MID_KEY                             = "d_mid"
         static let VISITOR_ID_BLOB_KEY                            = "d_blob"
@@ -54,11 +53,11 @@ enum AudienceConstants {
     }
 
     enum URLKeys {
-        static let AUDIENCE_MANAGER_CUSTOMER_DATA_PREFIX = "c_"
-        static let AUDIENCE_MANAGER_URL_SUFFIX = "&d_dst=1&d_rtbd=json"
-        static let AUDIENCE_MANAGER_URL_PLATFORM_KEY = "&d_ptfm="
-        static let AUDIENCE_MANAGER_OPT_OUT_URL_PATH = "/demoptout.jpg"
-        static let AUDIENCE_MANAGER_OPT_OUT_URL_AAM_UUID = "d_uuid"
+        static let CUSTOMER_DATA_PREFIX = "c_"
+        static let URL_SUFFIX = "&d_dst=1&d_rtbd=json"
+        static let URL_PLATFORM_KEY = "&d_ptfm="
+        static let OPT_OUT_URL_BASE = "https://%s/demoptout.jpg?"
+        static let OPT_OUT_URL_AAM = "d_uuid=%s"
     }
 
     enum Default {
@@ -66,12 +65,12 @@ enum AudienceConstants {
     }
 
     enum ResponseKeys {
-        static let AUDIENCE_MANAGER_JSON_DESTS_KEY                = "dests"
-        static let AUDIENCE_MANAGER_JSON_URL_KEY                  = "c"
-        static let AUDIENCE_MANAGER_JSON_STUFF_KEY                = "stuff"
-        static let AUDIENCE_MANAGER_JSON_USER_ID_KEY              = "uuid"
-        static let AUDIENCE_MANAGER_JSON_COOKIE_NAME_KEY          = "cn"
-        static let AUDIENCE_MANAGER_JSON_COOKIE_VALUE_KEY         = "cv"
+        static let JSON_DESTS_KEY                = "dests"
+        static let JSON_URL_KEY                  = "c"
+        static let JSON_STUFF_KEY                = "stuff"
+        static let JSON_USER_ID_KEY              = "uuid"
+        static let JSON_COOKIE_NAME_KEY          = "cn"
+        static let JSON_COOKIE_VALUE_KEY         = "cv"
     }
 
     enum ContextDataKeys {
