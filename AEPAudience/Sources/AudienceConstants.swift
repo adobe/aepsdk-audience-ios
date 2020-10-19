@@ -3,7 +3,7 @@
  This file is licensed to you under the Apache License, Version 2.0 (the "License")
  you may not use this file except in compliance with the License. You may obtain a copy
  of the License at http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software distributed under
  the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
  OF ANY KIND, either express or implied. See the License for the specific language
@@ -23,7 +23,7 @@ enum AudienceConstants {
         static let IDENTITY = "com.adobe.module.identity"
         static let LIFECYCLE = "com.adobe.module.lifecycle"
     }
-    
+
     enum EventDataKeys {
         static let VISITOR_TRAITS       = "aam.traits"
         static let VISITOR_PROFILE      = "aam.profile"
@@ -38,9 +38,9 @@ enum AudienceConstants {
         static let AUDIENCE_MANAGER_SHARED_PREFS_DATA_STORE = "AAMDataStore"
         static let AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY = "AAMUserProfile"
         static let AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY = "AAMUserId"
-        
+
     }
-    
+
     enum DestinationKeys {
         static let AUDIENCE_MANAGER_DATA_PROVIDER_ID_KEY          = "d_dpid"
         static let AUDIENCE_MANAGER_DATA_PROVIDER_USER_ID_KEY     = "d_dpuuid"
@@ -62,9 +62,9 @@ enum AudienceConstants {
     }
 
     enum Default {
-        static let DEFAULT_AAM_TIMEOUT = TimeInterval(2000)
+        static let TIMEOUT = TimeInterval(2000)
     }
-    
+
     enum ResponseKeys {
         static let AUDIENCE_MANAGER_JSON_DESTS_KEY                = "dests"
         static let AUDIENCE_MANAGER_JSON_URL_KEY                  = "c"
@@ -73,7 +73,7 @@ enum AudienceConstants {
         static let AUDIENCE_MANAGER_JSON_COOKIE_NAME_KEY          = "cn"
         static let AUDIENCE_MANAGER_JSON_COOKIE_VALUE_KEY         = "cv"
     }
-    
+
     enum ContextDataKeys {
         static let ADVERTISING_IDENTIFIER    = "a.adid"
         static let APPLICATION_IDENTIFIER    = "a.AppID"
@@ -109,11 +109,11 @@ enum AudienceConstants {
         static let AAM_TIMEOUT = "audience.timeout"
         static let ANALYTICS_AAM_FORWARDING = "analytics.aamForwardingEnabled"
     }
-    
+
     enum Analytics {
         static let SERVER_RESPONSE = "analyticsserverresponse"
     }
-    
+
     enum Identity {
         static let ADVERTISING_IDENTIFIER = "advertisingidentifier"
         static let VISITOR_ID_MID = "mid"
@@ -121,7 +121,7 @@ enum AudienceConstants {
         static let VISITOR_ID_LOCATION_HINT = "locationhint"
         static let VISITOR_IDS_LIST = "visitoridslist"
     }
-    
+
     enum Lifecycle {
         static let ADDITIONAL_CONTEXT_DATA = "additionalcontextdata"
         static let APP_ID                  = "appid"
@@ -156,35 +156,35 @@ enum AudienceConstants {
         static let SESSION_START_TIMESTAMP = "starttimestampseconds"
         static let UPGRADE_EVENT           = "upgradeevent"
     }
-    
+
     enum RulesEnging {
         static let RULES_REQUEST_CONTENT_AUDIENCE_MANAGER_DATA = "audiencemanagerdata"
     }
-    
+
     static let MapToContextDataKeys = [
-        Identity.ADVERTISING_IDENTIFIER : ContextDataKeys.ADVERTISING_IDENTIFIER,
-        Lifecycle.APP_ID                  : ContextDataKeys.APPLICATION_IDENTIFIER,
-        Lifecycle.CARRIER_NAME            : ContextDataKeys.CARRIER_NAME,
-        Lifecycle.CRASH_EVENT             : ContextDataKeys.CRASH_EVENT_KEY,
-        Lifecycle.DAILY_ENGAGED_EVENT     : ContextDataKeys.DAILY_ENGAGED_EVENT_KEY,
-        Lifecycle.DAY_OF_WEEK             : ContextDataKeys.DAY_OF_WEEK,
-        Lifecycle.DAYS_SINCE_FIRST_LAUNCH : ContextDataKeys.DAYS_SINCE_LAST_LAUNCH,
-        Lifecycle.DAYS_SINCE_LAST_LAUNCH  : ContextDataKeys.DAYS_SINCE_LAST_LAUNCH,
-        Lifecycle.DAYS_SINCE_LAST_UPGRADE : ContextDataKeys.DAYS_SINCE_LAST_UPGRADE,
-        Lifecycle.DEVICE_NAME             : ContextDataKeys.DEVICE_NAME,
-        Lifecycle.DEVICE_RESOLUTION       : ContextDataKeys.DEVICE_RESOLUTION,
-        Lifecycle.HOUR_OF_DAY             : ContextDataKeys.HOUR_OF_DAY,
-        Lifecycle.IGNORED_SESSION_LENGTH  : ContextDataKeys.IGNORED_SESSION_LENGTH,
-        Lifecycle.INSTALL_DATE            : ContextDataKeys.INSTALL_DATE,
-        Lifecycle.INSTALL_EVENT           : ContextDataKeys.INSTALL_EVENT_KEY,
-        Lifecycle.LAUNCH_EVENT            : ContextDataKeys.LAUNCH_EVENT_KEY,
-        Lifecycle.LAUNCHES                : ContextDataKeys.LAUNCHES,
-        Lifecycle.LAUNCHES_SINCE_UPGRADE  : ContextDataKeys.LAUNCHES_SINCE_UPGRADE,
-        Lifecycle.LOCALE                  : ContextDataKeys.LOCALE,
-        Lifecycle.MONTHLY_ENGAGED_EVENT   : ContextDataKeys.MONTHLY_ENGAGED_EVENT_KEY,
-        Lifecycle.OPERATING_SYSTEM        : ContextDataKeys.OPERATING_SYSTEM,
-        Lifecycle.PREVIOUS_SESSION_LENGTH : ContextDataKeys.PREVIOUS_SESSION_LENGTH,
-        Lifecycle.RUN_MODE                : ContextDataKeys.RUN_MODE,
-        Lifecycle.UPGRADE_EVENT           : ContextDataKeys.UPGRADE_EVENT_KEY
+        Identity.ADVERTISING_IDENTIFIER: ContextDataKeys.ADVERTISING_IDENTIFIER,
+        Lifecycle.APP_ID: ContextDataKeys.APPLICATION_IDENTIFIER,
+        Lifecycle.CARRIER_NAME: ContextDataKeys.CARRIER_NAME,
+        Lifecycle.CRASH_EVENT: ContextDataKeys.CRASH_EVENT_KEY,
+        Lifecycle.DAILY_ENGAGED_EVENT: ContextDataKeys.DAILY_ENGAGED_EVENT_KEY,
+        Lifecycle.DAY_OF_WEEK: ContextDataKeys.DAY_OF_WEEK,
+        Lifecycle.DAYS_SINCE_FIRST_LAUNCH: ContextDataKeys.DAYS_SINCE_LAST_LAUNCH,
+        Lifecycle.DAYS_SINCE_LAST_LAUNCH: ContextDataKeys.DAYS_SINCE_LAST_LAUNCH,
+        Lifecycle.DAYS_SINCE_LAST_UPGRADE: ContextDataKeys.DAYS_SINCE_LAST_UPGRADE,
+        Lifecycle.DEVICE_NAME: ContextDataKeys.DEVICE_NAME,
+        Lifecycle.DEVICE_RESOLUTION: ContextDataKeys.DEVICE_RESOLUTION,
+        Lifecycle.HOUR_OF_DAY: ContextDataKeys.HOUR_OF_DAY,
+        Lifecycle.IGNORED_SESSION_LENGTH: ContextDataKeys.IGNORED_SESSION_LENGTH,
+        Lifecycle.INSTALL_DATE: ContextDataKeys.INSTALL_DATE,
+        Lifecycle.INSTALL_EVENT: ContextDataKeys.INSTALL_EVENT_KEY,
+        Lifecycle.LAUNCH_EVENT: ContextDataKeys.LAUNCH_EVENT_KEY,
+        Lifecycle.LAUNCHES: ContextDataKeys.LAUNCHES,
+        Lifecycle.LAUNCHES_SINCE_UPGRADE: ContextDataKeys.LAUNCHES_SINCE_UPGRADE,
+        Lifecycle.LOCALE: ContextDataKeys.LOCALE,
+        Lifecycle.MONTHLY_ENGAGED_EVENT: ContextDataKeys.MONTHLY_ENGAGED_EVENT_KEY,
+        Lifecycle.OPERATING_SYSTEM: ContextDataKeys.OPERATING_SYSTEM,
+        Lifecycle.PREVIOUS_SESSION_LENGTH: ContextDataKeys.PREVIOUS_SESSION_LENGTH,
+        Lifecycle.RUN_MODE: ContextDataKeys.RUN_MODE,
+        Lifecycle.UPGRADE_EVENT: ContextDataKeys.UPGRADE_EVENT_KEY
     ]
 }

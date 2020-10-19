@@ -41,14 +41,14 @@ archive:
 clean:
 	rm -rf ./build
 
-format:
-	swiftformat . --swiftversion 5.2
+lint:
+	swiftlint lint
 
 lint-autocorrect:
 	swiftlint autocorrect
 
-lint:
-	swiftlint lint
-
 checkFormat:
-		swiftformat . --lint --swiftversion 5.2
+	swiftformat . --lint --swiftversion 5.2
+
+format:
+	swiftformat . --swiftversion 5.2

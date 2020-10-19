@@ -39,12 +39,12 @@ public class Audience: NSObject, Extension {
 //
 //        let dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
     }
-    
+
     /// Invoked when the `EventHub` has successfully registered the Audience extension.
     public func onRegistered() {
         registerListener(type: EventType.lifecycle, source: EventSource.responseContent, listener: handleLifecycleResponse(event:))
         registerListener(type: EventType.analytics, source: EventSource.responseContent, listener: handleAnalyticsResponse(event:))
-        
+
         registerListener(type: EventType.audienceManager, source: EventSource.requestContent, listener: handleAudienceRequest(event:))
         registerListener(type: EventType.audienceManager, source: EventSource.requestIdentity, listener: handleAudienceIdentityRequest(event:))
         registerListener(type: EventType.audienceManager, source: EventSource.requestReset, listener: handleAudienceResetRequest(event:))
@@ -56,23 +56,23 @@ public class Audience: NSObject, Extension {
     public func readyForEvent(_ event: Event) -> Bool {
         return getSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event)?.status == .set
     }
-    
+
     // MARK: Event Listeners
 
     private func handleSharedStateUpdate(event: Event) {
-        
+
     }
-    
+
     private func handleLifecycleResponse(event: Event) {
-        
+
     }
-    
+
     private func handleAnalyticsResponse(event: Event) {
-        
+
     }
-    
+
     private func handleAudienceRequest(event: Event) {
-        
+
     }
     
     /// Processes Configuration Response content events to retrieve the configuration data and privacy status settings.
@@ -90,16 +90,15 @@ public class Audience: NSObject, Extension {
         state.setMobilePrivacyStatus(privacyStatus: privacyStatus)
         // todo: update privacy status in hit processor
     }
-    
+
     private func handleAudienceIdentityRequest(event: Event) {
-        
+
     }
-    
+
     private func handleAudienceResetRequest(event: Event) {
-        
+
     }
-    
-    
+
     /// Updates the Audience shared state versioned at `event` with `data`
     /// - Parameters:
     ///   - event: the event to version the shared state at
@@ -109,7 +108,7 @@ public class Audience: NSObject, Extension {
         Log.trace(label: getLogTagWith(functionName: #function), "Updating Audience shared state")
         createSharedState(data: sharedStateData as [String: Any], event: event)
     }
-        
+
     func getLogTagWith(functionName: String) -> String {
         return "\(name):\(functionName)"
     }
