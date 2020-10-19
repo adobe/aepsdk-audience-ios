@@ -23,7 +23,6 @@
 		D6733D80252B9B8500AE65A9 /* AudienceState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733D7F252B9B8500AE65A9 /* AudienceState.swift */; };
 		D6733D87252BCCC500AE65A9 /* AudienceStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733D83252BCCB900AE65A9 /* AudienceStateTests.swift */; };
 		D6733E1F253777EC00AE65A9 /* Networking+Audience.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733E1E253777EC00AE65A9 /* Networking+Audience.swift */; };
-		D6733E4A2537C6FD00AE65A9 /* MockNetworkServiceOverrider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733E402537C4E800AE65A9 /* MockNetworkServiceOverrider.swift */; };
 		D6733E862538AD1000AE65A9 /* URL+Audience.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733E282537843200AE65A9 /* URL+Audience.swift */; };
 /* End PBXBuildFile section */
 
@@ -64,7 +63,6 @@
 		D6733D83252BCCB900AE65A9 /* AudienceStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceStateTests.swift; sourceTree = "<group>"; };
 		D6733E1E253777EC00AE65A9 /* Networking+Audience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Networking+Audience.swift"; sourceTree = "<group>"; };
 		D6733E282537843200AE65A9 /* URL+Audience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Audience.swift"; sourceTree = "<group>"; };
-		D6733E402537C4E800AE65A9 /* MockNetworkServiceOverrider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkServiceOverrider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,7 +155,6 @@
 		2EBEE7C625282EA400880E72 /* TestHelper */ = {
 			isa = PBXGroup;
 			children = (
-				D6733E402537C4E800AE65A9 /* MockNetworkServiceOverrider.swift */,
 				2EBEE7C725282EC000880E72 /* TestableExtensionRuntime.swift */,
 				2E45B6B92537A071003D3534 /* MockNetworking.swift */,
 			);
@@ -377,7 +374,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D6733E4A2537C6FD00AE65A9 /* MockNetworkServiceOverrider.swift in Sources */,
 				2EBEE7C825282EC000880E72 /* TestableExtensionRuntime.swift in Sources */,
 				2E45B6BA2537A071003D3534 /* MockNetworking.swift in Sources */,
 				2E45B6B625379FA7003D3534 /* AudienceHitProcessorTests.swift in Sources */,
