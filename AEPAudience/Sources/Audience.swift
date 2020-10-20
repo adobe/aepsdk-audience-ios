@@ -73,7 +73,7 @@ public class Audience: NSObject, Extension {
             let aamForwardingStatus = getAnalyticsAAMForwardingStatus(configurationSharedState: configSharedState)
             // a signal with data request will be made if aam forwarding is false and if audience manager configuration is ready
             if !aamForwardingStatus && readyForSignalWithData(configurationSharedState: configSharedState) {
-                let eventData: [String:String] = convertLifecycleKeys(event: event)
+                let eventData: [String: Any] = convertLifecycleKeys(event: event)
                 let signalWithDataEvent = Event(name: "Signal Event", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
                 signalWithData(event: signalWithDataEvent)
             }
@@ -257,10 +257,10 @@ public class Audience: NSObject, Extension {
     /// Converts Lifecycle event data to Audience Manager context data
     /// - Parameters:
     ///   - event: the `Lifecycle` response content event
-    private func convertLifecycleKeys(event: Event) -> [String: String] {
-        var convertedKeys = [String: String]()
-        guard let lifecycleEventData:[String: String] = event.data?[AudienceConstants.Lifecycle.LIFECYCLE_CONTEXT_DATA] as? [String:String] else {
-            return [String:String]()
+    private func convertLifecycleKeys(event: Event) -> [String: Any] {
+        var convertedKeys = [String: Any]()
+        guard let lifecycleEventData:[String: Any] = event.data else {
+            return [String: Any]()
         }
 
         if !lifecycleEventData.isEmpty {
