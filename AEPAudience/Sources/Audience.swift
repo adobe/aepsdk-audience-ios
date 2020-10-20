@@ -24,7 +24,6 @@ public class Audience: NSObject, Extension {
     public static let extensionVersion = AudienceConstants.EXTENSION_VERSION
     public let metadata: [String: String]? = nil
     private(set) var state: AudienceState
-    private(set) var lastValidConfig: [String:Any] = [:]
 
     // MARK: Extension
 
@@ -283,14 +282,12 @@ public class Audience: NSObject, Extension {
     ///   - configurationSharedState: config shared state corresponding to the event to be processed
     func readyForSignalWithData(configurationSharedState: [String: Any]) -> Bool {
         // audience server is a requirement.
-        // use what's in current config shared state. if that's missing, check latest config.
         if let audienceServer = configurationSharedState[AudienceConstants.Configuration.AAM_SERVER] as? String, !audienceServer.isEmpty {
-            lastValidConfig = configurationSharedState
-        } else if lastValidConfig.isEmpty {
+            return true
+        } else {
             // can't process this event, wait for a valid config and retry later
             return false
         }
-        return true
     }
 
     /// Queues a signal with data hit.
@@ -298,12 +295,6 @@ public class Audience: NSObject, Extension {
     /// - Parameters:
     ///   - event: event corresponding to signalWithData.
     private func signalWithData(event: Event) {
-        // sanity check, config should never be empty
-        if lastValidConfig.isEmpty {
-            Log.debug(label: "\(name):\(#function)", "Ignoring signal with data request as last valid config is empty")
-            return
-        }
-
         // Early exit if privacy is opt-out
         if state.getPrivacyStatus() == .optedOut {
             Log.debug(label: "\(name):\(#function)", "Ignoring signal with data request as privacy is opted-out")
