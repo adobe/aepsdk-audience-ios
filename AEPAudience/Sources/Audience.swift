@@ -291,7 +291,7 @@ public class Audience: NSObject, Extension {
     }
 
     /// Queues a signal with data hit.
-    /// Assumes a valid config is in `lastValidConfig` from calling `readyForSignalWithData`
+    /// Assumes a valid aam server is available from a prior call to `readyForSignalWithData`
     /// - Parameters:
     ///   - event: event corresponding to signalWithData.
     private func signalWithData(event: Event) {
