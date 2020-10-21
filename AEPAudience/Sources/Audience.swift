@@ -56,7 +56,15 @@ public class Audience: NSObject, Extension {
     public func onUnregistered() {}
 
     public func readyForEvent(_ event: Event) -> Bool {
-        return getSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event)?.status == .set
+        let configurationStatus = getSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event)?.status ?? .none
+
+        let identityStatus = getSharedState(extensionName: AudienceConstants.SharedStateKeys.IDENTITY, event: event)?.status ?? .none
+
+        if event.type == EventType.audienceManager, event.source == EventSource.requestContent {
+            return configurationStatus != .pending && identityStatus != .pending
+        }
+
+        return configurationStatus == .set
     }
 
     // MARK: Event Listeners
@@ -113,6 +121,20 @@ public class Audience: NSObject, Extension {
     }
 
     func queueHit(event: Event) {
+        if state?.getPrivacyStatus() == PrivacyStatus.optedOut {
+            Log.debug(label: getLogTagWith(functionName: #function), "Unable to process AAM event as privacy status is OPT_OUT:  \(event.description)")
+            // dispatch with an empty visitior profile in response if privacy is opt-out.
+            dispatchResponse(visitorProfle: ["": ""], event: event)
+            return
+        }
+
+        if state?.getPrivacyStatus() == PrivacyStatus.unknown {
+            Log.debug(label: getLogTagWith(functionName: #function), "Unable to process AAM event as privacy status is Unknown:  \(event.description)")
+            // dispatch with an empty visitior profile in response if privacy is unknown.
+            dispatchResponse(visitorProfle: ["": ""], event: event)
+            return
+        }
+
         let configurationSharedState = getSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event)?.value ?? ["": ""]
         let identitySharedState = getSharedState(extensionName: AudienceConstants.SharedStateKeys.IDENTITY, event: event)?.value ?? ["": ""]
 
@@ -130,6 +152,13 @@ public class Audience: NSObject, Extension {
         }
 
         hitQueue?.queue(entity: DataEntity(uniqueIdentifier: UUID().uuidString, timestamp: Date(), data: hitData))
+    }
+
+    func dispatchResponse(visitorProfle: [String: String], event: Event) {
+        var eventData = [String: Any]()
+        eventData[AudienceConstants.EventDataKeys.VISITOR_PROFILE] = visitorProfle
+        let responseEvent = event.createResponseEvent(name: "Audience Manager Profile", type: EventType.audienceManager, source: EventSource.responseContent, data: eventData)
+        dispatch(event: responseEvent)
     }
 
     /// Updates the Audience shared state versioned at `event` with `data`
@@ -163,6 +192,8 @@ public class Audience: NSObject, Extension {
     ///   - responseData: the network response data if any
     private func handleNetworkResponse(entity: DataEntity, responseData: Data?) {
         //state?.handleHitResponse(hit: entity, response: responseData, eventDispatcher: dispatch(event:), createSharedState: createSharedState(data:event:))
+
+        //TODO dispatchResponse()
     }
 
     // MARK: Helper
