@@ -44,7 +44,7 @@ enum AudienceConstants {
         static let DATA_PROVIDER_ID_KEY          = "d_dpid"
         static let DATA_PROVIDER_USER_ID_KEY     = "d_dpuuid"
         static let USER_ID_KEY                   = "d_uuid"
-        static let MARKETING_CLOUD_ORG_ID                         = "d_orgid"
+        static let EXPERIENCE_CLOUD_ORG_ID                         = "d_orgid"
         static let VISITOR_ID_MID_KEY                             = "d_mid"
         static let VISITOR_ID_BLOB_KEY                            = "d_blob"
         static let VISITOR_ID_LOCATION_HINT_KEY                   = "dcs_region"
@@ -54,10 +54,9 @@ enum AudienceConstants {
 
     enum URLKeys {
         static let CUSTOMER_DATA_PREFIX = "c_"
-        static let URL_SUFFIX = "&d_dst=1&d_rtbd=json"
-        static let URL_PLATFORM_KEY = "&d_ptfm="
-        static let OPT_OUT_URL_BASE = "https://%s/demoptout.jpg?"
-        static let OPT_OUT_URL_AAM = "d_uuid=%s"
+        static let PLATFORM_KEY = "d_ptfm"
+        static let OPT_OUT_URL_PATH = "/demoptout.jpg"
+        static let OPT_OUT_URL_AAM_UUID = "d_uuid"
     }
 
     enum Default {
