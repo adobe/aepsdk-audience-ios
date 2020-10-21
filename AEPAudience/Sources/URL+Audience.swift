@@ -36,7 +36,7 @@ extension URL {
 
         var queryItems: [URLQueryItem] = []
 
-        // Attach the customer data sent by SingalWithData API
+        // Attach the customer data sent by SignalWithData API
         for (key, value) in customerEventData {
             if key.isEmpty || value.isEmpty {
                 continue
@@ -80,7 +80,7 @@ extension URL {
 
         }
 
-        // Attach ecid from configruration shared state
+        // Attach experience cloud org id from configruration shared state
         if let experienceCloudOrgId = configurationSharedState?[AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID] as? String {
             queryItems += [URLQueryItem(name: AudienceConstants.DestinationKeys.EXPERIENCE_CLOUD_ORG_ID, value: experienceCloudOrgId)]
         }
