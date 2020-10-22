@@ -29,7 +29,7 @@ class AudienceStateTests: XCTestCase {
     static let persistedVisitorProfile = ["persistedTrait":"persistedValue"]
     
     override func setUp() {
-        MobileCore.setLogLevel(level: .error) // reset log level to error before each test
+        MobileCore.setLogLevel(.error) // reset log level to error before each test
         for key in UserDefaults.standard.dictionaryRepresentation().keys {
             UserDefaults.standard.removeObject(forKey: key)
         }

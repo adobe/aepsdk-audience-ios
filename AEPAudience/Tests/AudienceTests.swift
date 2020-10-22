@@ -20,11 +20,11 @@ class AudienceTests: XCTestCase {
     var mockRuntime: TestableExtensionRuntime!
     var mockHitQueue: MockHitQueue!
     var responseCallbackArgs = [(DataEntity, Data?)]()
-    let dataStore = NamedCollectionDataStore(name: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_DATA_STORE)
+    let dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
 
     override func setUp() {
         ServiceProvider.shared.networkService = MockNetworking()
-        MobileCore.setLogLevel(level: .error) // reset log level to error before each test
+        MobileCore.setLogLevel(.error) // reset log level to error before each test
         mockRuntime = TestableExtensionRuntime()
         mockHitQueue = MockHitQueue(processor: AudienceHitProcessor(responseHandler: { [weak self] entity, data in
             self?.responseCallbackArgs.append((entity, data))
@@ -39,10 +39,10 @@ class AudienceTests: XCTestCase {
             UserDefaults.standard.removeObject(forKey: key)
         }
     }
-    
-    private func dispatchConfigurationEventForLifecycleTesting(aamServer: String, aamForwardingStatus: Bool, privacyStatus: PrivacyStatus) -> [String:Any]{
+
+    private func dispatchConfigurationEventForTesting(aamServer: String?, aamForwardingStatus: Bool, privacyStatus: PrivacyStatus) -> [String:Any]{
         // setup configuration data
-        let configData = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: privacyStatus.rawValue, AudienceConstants.Configuration.AAM_SERVER: aamServer, AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING: aamForwardingStatus] as [String: Any]
+        let configData = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: privacyStatus.rawValue, AudienceConstants.Configuration.AAM_SERVER: aamServer as Any, AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING: aamForwardingStatus] as [String: Any]
         // create a configuration event with the created event data
         let configEvent = Event(name: "configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: configData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: configEvent, data: (configData, .set))
@@ -234,7 +234,7 @@ class AudienceTests: XCTestCase {
     func testHandleLifecycleResponse_ConfigurationIsValidAndPrivacyOptedIn() {
         // setup
         // dispatch a configuration response event containing privacy status opted in, aam server, and aam forwarding status equal to false
-        let configData = dispatchConfigurationEventForLifecycleTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn)
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn)
         // create lifecycle response content
         let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
         // create the lifecycle event and simulate having the configuration data in shared state
@@ -244,15 +244,15 @@ class AudienceTests: XCTestCase {
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
-        
+
         // verify
         XCTAssertEqual(1, audience.hitQueue?.count())
     }
-    
+
     func testHandleLifecycleResponse_ConfigurationMissingAAMServer() {
         // setup
         // dispatch a configuration response event containing privacy status opted in and aam forwarding status equal to false
-        let configData = dispatchConfigurationEventForLifecycleTesting(aamServer: "", aamForwardingStatus: false, privacyStatus: .optedIn)
+        let configData = dispatchConfigurationEventForTesting(aamServer: nil, aamForwardingStatus: false, privacyStatus: .optedIn)
         // create lifecycle response content
         let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
         // create the lifecycle event and simulate having the configuration data in shared state
@@ -262,15 +262,15 @@ class AudienceTests: XCTestCase {
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
-        
+
         // verify
         XCTAssertEqual(0, audience.hitQueue?.count())
     }
-    
+
     func testHandleLifecycleResponse_ConfigurationHasAAMForwardingTrue() {
         // setup
         // dispatch a configuration response event containing privacy status opted in, aam server, and aam forwarding status equal to true
-        let configData = dispatchConfigurationEventForLifecycleTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn)
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn)
         // create lifecycle response content
         let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
         // create the lifecycle event and simulate having the configuration data in shared state
@@ -280,15 +280,15 @@ class AudienceTests: XCTestCase {
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
-        
+
         // verify
         XCTAssertEqual(0, audience.hitQueue?.count())
     }
-    
+
     func testHandleLifecycleResponse_ConfigurationHasPrivacyStatusOptedOut() {
         // setup
         // dispatch a configuration response event containing privacy status opted out, aam server, and aam forwarding status equal to false
-        let configData = dispatchConfigurationEventForLifecycleTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedOut)
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedOut)
         // create lifecycle response content
         let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
         // create the lifecycle event and simulate having the configuration data in shared state
@@ -298,15 +298,15 @@ class AudienceTests: XCTestCase {
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
-        
+
         // verify
         XCTAssertEqual(0, audience.hitQueue?.count())
     }
-    
+
     func testHandleLifecycleResponse_LifecycleResponseHasEmptyData() {
         // setup
         // dispatch a configuration response event containing privacy status opted in, aam server, and aam forwarding status equal to false
-        let configData = dispatchConfigurationEventForLifecycleTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedOut)
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedOut)
         // create the lifecycle event with empty data and simulate having the configuration data in shared state
         let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
@@ -314,11 +314,11 @@ class AudienceTests: XCTestCase {
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
-        
+
         // verify
         XCTAssertEqual(0, audience.hitQueue?.count())
     }
-    
+
     func testHandleLifecycleResponse_ConfigurationSharedStateIsPending() {
         // setup
         // create lifecycle response content
@@ -330,11 +330,11 @@ class AudienceTests: XCTestCase {
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
-        
+
         // verify
         XCTAssertEqual(0, audience.hitQueue?.count())
     }
-    
+
     // ==========================================================================
     // handleAnalyticsResponse
     // ==========================================================================
@@ -342,7 +342,7 @@ class AudienceTests: XCTestCase {
         // setup
         let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
         // dispatch a configuration response event containing privacy status opted in, aam server, and aam forwarding status equal to false
-        let configData = dispatchConfigurationEventForLifecycleTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn)
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn)
         // create analytics response content
         let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[\"http://www.adobe.com\",\"http://www.testsite.com\"]}"]
         // create the analytics event
@@ -352,7 +352,7 @@ class AudienceTests: XCTestCase {
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
-        
+
         // verify
         let visitorProfile = audience?.state?.getVisitorProfile()
         XCTAssertEqual("segments=1606170,2461982", visitorProfile?["testCookieName"])
