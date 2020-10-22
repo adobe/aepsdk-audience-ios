@@ -268,11 +268,11 @@ public class Audience: NSObject, Extension {
     ///   - timeout: the Audience Manager network request timeout
     private func processDestsArray(response: AudienceHitResponse, timeout: TimeInterval) {
         // check "dests" for urls to forward
-        let destinations = (response.dests ?? [AudienceDestObject]()) as [AudienceDestObject]
+        let destinations = (response.dests ?? [[String:String]]()) as [[String:String]]
         if !destinations.isEmpty {
             for destination in destinations {
-                guard let url = URL(string: destination.url ?? "") else {
-                    Log.error(label: "\(name):\(#function)", "Building destination URL failed, skipping forwarding for: \(String(describing: destination.url)).")
+                guard let url = URL(string: destination[AudienceConstants.ResponseKeys.JSON_URL_KEY] ?? "") else {
+                    Log.error(label: "\(name):\(#function)", "Building destination URL failed, skipping forwarding for: \(String(describing: destination[AudienceConstants.ResponseKeys.JSON_DESTS_KEY])).")
                     continue
                 }
                 Log.debug(label: "\(name):\(#function)", "Forwarding to url: \(url).")

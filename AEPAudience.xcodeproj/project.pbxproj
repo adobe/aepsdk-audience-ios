@@ -27,7 +27,6 @@
 		D6733E99253A1C8200AE65A9 /* AudienceHitResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733E98253A1C8200AE65A9 /* AudienceHitResponse.swift */; };
 		D6733ECC253E3A2700AE65A9 /* AudienceStuffObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733ECB253E3A2600AE65A9 /* AudienceStuffObject.swift */; };
 		D6733ED0253F3C8700AE65A9 /* MockHitQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733ECF253F3C8600AE65A9 /* MockHitQueue.swift */; };
-		D68384DD254159B500933D17 /* AudienceDestObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D68384DC254159B400933D17 /* AudienceDestObject.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,7 +69,6 @@
 		D6733E98253A1C8200AE65A9 /* AudienceHitResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceHitResponse.swift; sourceTree = "<group>"; };
 		D6733ECB253E3A2600AE65A9 /* AudienceStuffObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceStuffObject.swift; sourceTree = "<group>"; };
 		D6733ECF253F3C8600AE65A9 /* MockHitQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHitQueue.swift; sourceTree = "<group>"; };
-		D68384DC254159B400933D17 /* AudienceDestObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceDestObject.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,7 +148,6 @@
 				D6733E282537843200AE65A9 /* URL+Audience.swift */,
 				D6733E98253A1C8200AE65A9 /* AudienceHitResponse.swift */,
 				D6733ECB253E3A2600AE65A9 /* AudienceStuffObject.swift */,
-				D68384DC254159B400933D17 /* AudienceDestObject.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -375,7 +372,6 @@
 				2EBEE7A22526763200880E72 /* Audience.swift in Sources */,
 				D6733E862538AD1000AE65A9 /* URL+Audience.swift in Sources */,
 				D6733D80252B9B8500AE65A9 /* AudienceState.swift in Sources */,
-				D68384DD254159B500933D17 /* AudienceDestObject.swift in Sources */,
 				2EBEE7BF252806B700880E72 /* Audience+PublicAPI.swift in Sources */,
 				2E45B6B225350D9E003D3534 /* AudienceHitProcessor.swift in Sources */,
 				2EBEE7BB2527C89E00880E72 /* AudienceConstants.swift in Sources */,
