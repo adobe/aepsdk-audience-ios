@@ -344,7 +344,7 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing privacy status opted in, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[\"http://www.adobe.com\",\"http://www.testsite.com\"]}"]
+        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
@@ -358,7 +358,7 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("segments=1606170,2461982", visitorProfile?["testCookieName"])
         XCTAssertEqual("segments=1234567,7890123", visitorProfile?["anotherCookieName"])
         XCTAssertEqual(2, mockNetworkService.calledNetworkRequests.count)
-        XCTAssertEqual("http://www.adobe.com", mockNetworkService.calledNetworkRequests[0]?.url.absoluteString)
-        XCTAssertEqual("http://www.testsite.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
+        XCTAssertEqual("www.adobe.com", mockNetworkService.calledNetworkRequests[0]?.url.absoluteString)
+        XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
     }
 }

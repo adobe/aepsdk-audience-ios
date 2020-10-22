@@ -268,18 +268,16 @@ public class Audience: NSObject, Extension {
     ///   - timeout: the Audience Manager network request timeout
     private func processDestsArray(response: AudienceHitResponse, timeout: TimeInterval) {
         // check "dests" for urls to forward
-        let destinations = (response.dests ?? [String]()) as [String]
+        let destinations = (response.dests ?? [AudienceDestObject]()) as [AudienceDestObject]
         if !destinations.isEmpty {
-            for dest in destinations {
-                if !dest.isEmpty {
-                    guard let url = URL(string: dest) else {
-                        Log.error(label: "\(name):\(#function)", "Building destination URL failed, skipping forwarding for: \(dest).")
-                        continue
-                    }
-                    Log.debug(label: "\(name):\(#function)", "Forwarding to url: \(dest).")
-                    let networkRequest = NetworkRequest(url: url, httpMethod: .get, connectPayload: "", httpHeaders: [String: String](), connectTimeout: timeout, readTimeout: timeout)
-                    ServiceProvider.shared.networkService.connectAsync(networkRequest: networkRequest, completionHandler: nil) // fire and forget
+            for destination in destinations {
+                guard let url = URL(string: destination.url ?? "") else {
+                    Log.error(label: "\(name):\(#function)", "Building destination URL failed, skipping forwarding for: \(String(describing: destination.url)).")
+                    continue
                 }
+                Log.debug(label: "\(name):\(#function)", "Forwarding to url: \(url).")
+                let networkRequest = NetworkRequest(url: url, httpMethod: .get, connectPayload: "", httpHeaders: [String: String](), connectTimeout: timeout, readTimeout: timeout)
+                ServiceProvider.shared.networkService.connectAsync(networkRequest: networkRequest, completionHandler: nil) // fire and forget
             }
         } else {
             Log.debug(label: "\(name):\(#function)", "No destinations found in response.")

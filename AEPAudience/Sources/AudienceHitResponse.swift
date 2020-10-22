@@ -20,7 +20,7 @@ struct AudienceHitResponse: Codable {
     let stuff: [AudienceStuffObject]?
 
     /// Dests array as received in the audience manager network response json
-    let dests: [String]?
+    let dests: [AudienceDestObject]?
 
     /// DCS region hint as received in the audience manager network response json
     let region: Int?
