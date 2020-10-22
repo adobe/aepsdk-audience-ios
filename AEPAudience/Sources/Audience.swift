@@ -17,17 +17,17 @@ import Foundation
 /// Audience extension for the Adobe Experience Platform SDK
 @objc(AEPMobileAudience)
 public class Audience: NSObject, Extension {
-    private(set) var hitQueue: HitQueuing?
     public let runtime: ExtensionRuntime
     public let name = AudienceConstants.EXTENSION_NAME
     public let friendlyName = AudienceConstants.FRIENDLY_NAME
     public static let extensionVersion = AudienceConstants.EXTENSION_VERSION
     public let metadata: [String: String]? = nil
     private(set) var state: AudienceState?
+    private(set) var hitQueue: HitQueuing?
 
     // MARK: Extension
 
-    public required init?(runtime: ExtensionRuntime) {
+    public required init(runtime: ExtensionRuntime) {
         self.runtime = runtime
         super.init()
 
