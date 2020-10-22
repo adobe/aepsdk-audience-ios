@@ -73,7 +73,7 @@ public class Audience: NSObject, Extension {
 
         return configurationStatus == .set
     }
-    
+
     // MARK: Event Listeners
 
     /// Processes Configuration Response content events to retrieve the configuration data and privacy status settings.
@@ -87,10 +87,10 @@ public class Audience: NSObject, Extension {
             handleOptOut(event: event)
             createSharedState(data: state?.getStateData() ?? [:], event: event)
         }
-        
-        // update privacy status in hitqueue
-        hitQueue?.handlePrivacyChange(status: privacyStatus)
-        
+
+        // if privacy status is opted out, audience manager data in the AudienceState will be cleared.
+        state?.setMobilePrivacy(status: privacyStatus)
+
         // update hit queue with privacy status
         hitQueue?.handlePrivacyChange(status: privacyStatus)
     }
@@ -185,6 +185,47 @@ public class Audience: NSObject, Extension {
         hitQueue?.queue(entity: DataEntity(uniqueIdentifier: UUID().uuidString, timestamp: Date(), data: hitData))
     }
     
+    func dispatchResponse(visitorProfle: [String: String], event: Event) {
+        var eventData = [String: Any]()
+        eventData[AudienceConstants.EventDataKeys.VISITOR_PROFILE] = visitorProfle
+        let responseEvent = event.createResponseEvent(name: "Audience Manager Profile", type: EventType.audienceManager, source: EventSource.responseContent, data: eventData)
+        dispatch(event: responseEvent)
+    }
+
+    func queueHit(event: Event) {
+        if state?.getPrivacyStatus() == PrivacyStatus.optedOut {
+            Log.debug(label: getLogTagWith(functionName: #function), "Unable to process AAM event as privacy status is OPT_OUT:  \(event.description)")
+            // dispatch with an empty visitior profile in response if privacy is opt-out.
+            dispatchResponse(visitorProfle: ["": ""], event: event)
+            return
+        }
+
+        if state?.getPrivacyStatus() == PrivacyStatus.unknown {
+            Log.debug(label: getLogTagWith(functionName: #function), "Unable to process AAM event as privacy status is Unknown:  \(event.description)")
+            // dispatch with an empty visitior profile in response if privacy is unknown.
+            dispatchResponse(visitorProfle: ["": ""], event: event)
+            return
+        }
+
+        let configurationSharedState = getSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event)?.value ?? ["": ""]
+        let identitySharedState = getSharedState(extensionName: AudienceConstants.SharedStateKeys.IDENTITY, event: event)?.value ?? ["": ""]
+
+        let eventData = event.data as? [String: String] ?? ["": ""]
+
+        guard let url = URL.buildAudienceHitURL(audienceState: state, configurationSharedState: configurationSharedState, identitySharedState: identitySharedState, customerEventData: eventData) else {
+            Log.debug(label: getLogTagWith(functionName: #function), "Dropping Audience hit, failed to create hit URL")
+            return
+        }
+
+        let aamTimeout: TimeInterval = configurationSharedState[AudienceConstants.Configuration.AAM_TIMEOUT] as? TimeInterval ?? AudienceConstants.Default.TIMEOUT
+        guard let hitData = try? JSONEncoder().encode(AudienceHit(url: url, timeout: aamTimeout, event: event)) else {
+            Log.debug(label: getLogTagWith(functionName: #function), "Dropping Audience hit, failed to encode AudienceHit")
+            return
+        }
+
+        hitQueue?.queue(entity: DataEntity(uniqueIdentifier: UUID().uuidString, timestamp: Date(), data: hitData))
+    }
+
     func dispatchResponse(visitorProfle: [String: String], event: Event) {
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_PROFILE] = visitorProfle
@@ -335,7 +376,6 @@ public class Audience: NSObject, Extension {
     /// - Parameters:
     ///   - entity: The `DataEntity` that was processed by the hit processor
     ///   - responseData: the network response data if any
-    // todo: may need to be updated, added for testing AMSDK-10741
     private func handleNetworkResponse(hit: DataEntity, data: Data?) {
         if state?.getPrivacyStatus() != .optedOut, let data = hit.data, let hit = try? JSONDecoder().decode(AudienceHit.self, from: data) {
             processNetworkResponse(event: hit.event, response: data)

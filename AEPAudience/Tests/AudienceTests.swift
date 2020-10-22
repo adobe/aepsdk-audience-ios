@@ -84,8 +84,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("testDpuuid", audience?.state?.getDpuuid())
         XCTAssertEqual(["profilekey": "profileValue"], audience?.state?.getVisitorProfile())
         // uuid and visitor profile should be persisted in the datastore
-        XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY, fallback: ""))
-        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY, fallback: [:]) as! [String : String])
+        XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, fallback: ""))
+        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, fallback: [:]) as! [String : String])
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedUnknown() {
@@ -112,8 +112,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("testDpuuid", audience?.state?.getDpuuid())
         XCTAssertEqual(["profilekey": "profileValue"], audience?.state?.getVisitorProfile())
         // uuid and visitor profile should be persisted in the datastore
-        XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY, fallback: ""))
-        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY, fallback: [:]) as! [String : String])
+        XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, fallback: ""))
+        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, fallback: [:]) as! [String : String])
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedOut_When_AamServerAndUuidPresent() {

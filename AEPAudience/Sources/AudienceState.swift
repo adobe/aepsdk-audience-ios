@@ -104,7 +104,7 @@ public class AudienceState {
     /// Sets the `PrivacyStatus` in the AudienceState instance.
     /// If the `PrivacyStatus` is `PrivacyStatus.optedOut`, any stored identifiers are cleared.
     /// - Parameter:
-    ///   - privacyStatus: The value for the new privacyStatus
+    ///   - status: The value for the new privacyStatus
     func setMobilePrivacy(status: PrivacyStatus) {
         self.privacyStatus = status
         if privacyStatus == .optedOut {
