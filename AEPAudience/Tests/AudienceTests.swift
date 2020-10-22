@@ -21,6 +21,7 @@ class AudienceTests: XCTestCase {
     var mockHitQueue: MockHitQueue!
     var responseCallbackArgs = [(DataEntity, Data?)]()
     let dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
+    var audienceState: AudienceState!
 
     override func setUp() {
         ServiceProvider.shared.networkService = MockNetworking()
@@ -29,7 +30,8 @@ class AudienceTests: XCTestCase {
         mockHitQueue = MockHitQueue(processor: AudienceHitProcessor(responseHandler: { [weak self] entity, data in
             self?.responseCallbackArgs.append((entity, data))
         }))
-        audience = Audience(runtime: mockRuntime, hitQueue: mockHitQueue)
+        audienceState = AudienceState() // replace with mock audience state if needed
+        audience = Audience(runtime: mockRuntime, hitQueue: mockHitQueue, state: audienceState)
         audience.onRegistered()
     }
 
@@ -303,12 +305,30 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual(0, audience.hitQueue?.count())
     }
 
-    func testHandleLifecycleResponse_LifecycleResponseHasEmptyData() {
+    func testHandleLifecycleResponse_LifecycleResponseHasNoData() {
         // setup
         // dispatch a configuration response event containing privacy status opted in, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedOut)
         // create the lifecycle event with empty data and simulate having the configuration data in shared state
         let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
+        mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
+        let _ = audience.readyForEvent(lifecycleEvent)
+
+        // test
+        mockRuntime.simulateComingEvent(event: lifecycleEvent)
+
+        // verify
+        XCTAssertEqual(0, audience.hitQueue?.count())
+    }
+
+    func testHandleLifecycleResponse_LifecycleResponseHasEmptyData() {
+        // setup
+        // dispatch a configuration response event containing privacy status opted in, aam server, and aam forwarding status equal to false
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn)
+        // create lifecycle response content
+        let lifecycleContextData:[String: Any] = [String: Any]()
+        // create the lifecycle event and simulate having the configuration data in shared state
+        let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
         let _ = audience.readyForEvent(lifecycleEvent)
 
@@ -360,5 +380,49 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual(2, mockNetworkService.calledNetworkRequests.count)
         XCTAssertEqual("www.adobe.com", mockNetworkService.calledNetworkRequests[0]?.url.absoluteString)
         XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
+    }
+
+    func testHandleAnalyticsResponse_WithStuffAndEmptyDestsInResponse() {
+        // setup
+        let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
+        // dispatch a configuration response event containing privacy status opted in, aam server, and aam forwarding status equal to false
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn)
+        // create analytics response content
+        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[]}"]
+        // create the analytics event
+        let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
+        mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
+        let _ = audience.readyForEvent(analyticsEvent)
+
+        // test
+        mockRuntime.simulateComingEvent(event: analyticsEvent)
+
+        // verify
+        let visitorProfile = audience?.state?.getVisitorProfile()
+        XCTAssertEqual("segments=1606170,2461982", visitorProfile?["testCookieName"])
+        XCTAssertEqual("segments=1234567,7890123", visitorProfile?["anotherCookieName"])
+        XCTAssertEqual(0, mockNetworkService.calledNetworkRequests.count)
+    }
+
+    func testHandleAnalyticsResponse_WithStuffAndNoDestsInResponse() {
+        // setup
+        let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
+        // dispatch a configuration response event containing privacy status opted in, aam server, and aam forwarding status equal to false
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn)
+        // create analytics response content
+        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\"}"]
+        // create the analytics event
+        let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
+        mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
+        let _ = audience.readyForEvent(analyticsEvent)
+
+        // test
+        mockRuntime.simulateComingEvent(event: analyticsEvent)
+
+        // verify
+        let visitorProfile = audience?.state?.getVisitorProfile()
+        XCTAssertEqual("segments=1606170,2461982", visitorProfile?["testCookieName"])
+        XCTAssertEqual("segments=1234567,7890123", visitorProfile?["anotherCookieName"])
+        XCTAssertEqual(0, mockNetworkService.calledNetworkRequests.count)
     }
 }

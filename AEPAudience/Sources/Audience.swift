@@ -42,12 +42,14 @@ public class Audience: NSObject, Extension {
     }
 
     // internal init added for tests
-    internal init(runtime: ExtensionRuntime, hitQueue: HitQueuing) {
-        self.runtime = runtime
-        super.init()
-        state = AudienceState()
-        self.hitQueue = hitQueue
-    }
+    #if DEBUG
+        internal init(runtime: ExtensionRuntime, hitQueue: HitQueuing, state: AudienceState) {
+            self.runtime = runtime
+            super.init()
+            self.state = state
+            self.hitQueue = hitQueue
+        }
+    #endif
 
     /// Invoked when the `EventHub` has successfully registered the Audience extension.
     public func onRegistered() {
@@ -128,7 +130,7 @@ public class Audience: NSObject, Extension {
         if !response.isEmpty {
             // bail if we don't have configuration yet
             guard let configSharedState = getSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event)?.value else { return }
-            let aamForwardingStatus = getAnalyticsAAMForwardingStatus(configurationSharedState: configSharedState)
+            let aamForwardingStatus = isAnalyticsAAMForwardingEnabled(configurationSharedState: configSharedState)
             // a signal with data request will be made if aam forwarding is false
             if !aamForwardingStatus {
                 queueHit(event: event)
@@ -232,7 +234,9 @@ public class Audience: NSObject, Extension {
             Log.debug(label: "\(name):\(#function)", "Will not process the network response as privacy is opted-out.")
             return
         }
-        let timeout = getAudienceManagerTimeout(configurationSharedState: configSharedState)
+
+        let timeout: TimeInterval = configSharedState[AudienceConstants.Configuration.AAM_TIMEOUT] as? TimeInterval ?? AudienceConstants.Default.TIMEOUT
+
         // if we have an error decoding the response, log it and bail early
         guard let audienceResponse = try? JSONDecoder().decode(AudienceHitResponse.self, from: response) else {
             Log.debug(label: "\(name):\(#function)", "Failed to decode Audience Manager response.")
@@ -267,20 +271,20 @@ public class Audience: NSObject, Extension {
     ///   - response: the `AudienceHitResponse` if any
     ///   - timeout: the Audience Manager network request timeout
     private func processDestsArray(response: AudienceHitResponse, timeout: TimeInterval) {
-        // check "dests" for urls to forward
-        let destinations = (response.dests ?? [[String:String]]()) as [[String:String]]
-        if !destinations.isEmpty {
-            for destination in destinations {
-                guard let url = URL(string: destination[AudienceConstants.ResponseKeys.JSON_URL_KEY] ?? "") else {
-                    Log.error(label: "\(name):\(#function)", "Building destination URL failed, skipping forwarding for: \(String(describing: destination[AudienceConstants.ResponseKeys.JSON_DESTS_KEY])).")
-                    continue
-                }
-                Log.debug(label: "\(name):\(#function)", "Forwarding to url: \(url).")
-                let networkRequest = NetworkRequest(url: url, httpMethod: .get, connectPayload: "", httpHeaders: [String: String](), connectTimeout: timeout, readTimeout: timeout)
-                ServiceProvider.shared.networkService.connectAsync(networkRequest: networkRequest, completionHandler: nil) // fire and forget
-            }
-        } else {
+        // bail if the dests array is not present in the response
+        guard let destinations: [[String:String]] = response.dests else {
             Log.debug(label: "\(name):\(#function)", "No destinations found in response.")
+            return
+        }
+
+        for destination in destinations {
+            guard let url = URL(string: destination[AudienceConstants.ResponseKeys.JSON_URL_KEY] ?? "") else {
+                Log.error(label: "\(name):\(#function)", "Building destination URL failed, skipping forwarding for: \(String(describing: destination[AudienceConstants.ResponseKeys.JSON_DESTS_KEY])).")
+                continue
+            }
+            Log.debug(label: "\(name):\(#function)", "Forwarding to url: \(url).")
+            let networkRequest = NetworkRequest(url: url, httpMethod: .get, connectPayload: "", httpHeaders: [String: String](), connectTimeout: timeout, readTimeout: timeout)
+            ServiceProvider.shared.networkService.connectAsync(networkRequest: networkRequest, completionHandler: nil) // fire and forget
         }
     }
 
@@ -313,20 +317,19 @@ public class Audience: NSObject, Extension {
     ///   - event: the `Lifecycle` response content event
     private func convertLifecycleKeys(event: Event) -> [String: String] {
         var convertedKeys = [String: String]()
-        guard let lifecycleEventData:[String: Any] = event.data else {
-            return [String: String]()
+        guard let lifecycleEventData = event.data as? [String:String] else {
+            Log.debug(label: "\(name):\(#function)", "No data found in the lifecycle response event.")
+            return convertedKeys
         }
 
-        if !lifecycleEventData.isEmpty {
-            for keyValuePair in AudienceConstants.MapToContextDataKeys {
-                guard let value = lifecycleEventData[keyValuePair.key] else {
-                    Log.debug(label: "\(name):\(#function)", "\(keyValuePair.key) not found in lifecycle context data.")
-                    continue
-                }
-                convertedKeys[keyValuePair.value] = value as? String
+        // convert the found event data keys into context data keys
+        // each pairedKey object has an event data key as a key and a context data key as a value
+        for pairedKey in AudienceConstants.MapToContextDataKeys {
+            guard let value = lifecycleEventData[pairedKey.key] else {
+                Log.trace(label: "\(name):\(#function)", "\(pairedKey.key) not found in lifecycle context data.")
+                continue
             }
-        } else {
-            Log.debug(label: "\(name):\(#function)", "No data found in the lifecycle response event.")
+            convertedKeys[pairedKey.value] = value
         }
 
         return convertedKeys
@@ -350,34 +353,14 @@ public class Audience: NSObject, Extension {
         return "\(name):\(functionName)"
     }
 
-    /// Reads the Audience Manager timeout from the configuration shared state. If not found, returns the default Audience Manager timeout of 2 seconds.
+    /// Returns the Analytics AAM forwarding value from the configuration shared state.
     /// - Parameter configurationSharedState: the data associated with the configuration shared state
-    private func getAudienceManagerTimeout(configurationSharedState: [String: Any]?) -> TimeInterval {
-        guard let timeout = configurationSharedState?[AudienceConstants.Configuration.AAM_TIMEOUT] as? Int else {
-            return TimeInterval(AudienceConstants.Default.TIMEOUT)
-        }
-
-        return TimeInterval(timeout)
-    }
-
-    /// Reads the Analytics AAM forwarding status from the configuration shared state.
-    /// - Parameter configurationSharedState: the data associated with the configuration shared state
-    private func getAnalyticsAAMForwardingStatus(configurationSharedState: [String: Any]?) -> Bool {
+    private func isAnalyticsAAMForwardingEnabled(configurationSharedState: [String: Any]?) -> Bool {
         guard let status = configurationSharedState?[AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING] as? Bool else {
             return false
         }
 
         return status
-    }
-
-    /// Reads the Experience Cloud Org Id from the configuration shared state.
-    /// - Parameter configurationSharedState: the data associated with the configuration shared state
-    private func getOrgId(configurationSharedState: [String: Any]?) -> String {
-        guard let orgId = configurationSharedState?[AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID] as? String else {
-            return ""
-        }
-
-        return orgId
     }
 
 }
