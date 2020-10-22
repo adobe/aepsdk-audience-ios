@@ -342,9 +342,17 @@ public class Audience: NSObject, Extension {
     ///   - entity: The `DataEntity` that was processed by the hit processor
     ///   - responseData: the network response data if any
     private func handleNetworkResponse(entity: DataEntity, responseData: Data?) {
-        if state?.getPrivacyStatus() != .optedOut, let data = entity.data, let hit = try? JSONDecoder().decode(AudienceHit.self, from: data) {
-            processNetworkResponse(event: hit.event, response: data)
+        if state?.getPrivacyStatus() == .optedOut {
+            Log.debug(label: getLogTagWith(functionName: #function), "Unable to process network response as privacy status is OPT_OUT.")
+            return
         }
+
+        guard let data = entity.data as Data?, let hit = try? JSONDecoder().decode(AudienceHit.self, from: data) else {
+            Log.debug(label: "\(name):\(#function)", "Failed to decode the Audience Hit, aborting network response processing.")
+            return
+        }
+
+        processNetworkResponse(event: hit.event, response: responseData ?? Data())
     }
 
     // MARK: Helper
