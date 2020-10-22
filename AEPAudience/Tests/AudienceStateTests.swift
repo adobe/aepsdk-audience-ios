@@ -16,7 +16,7 @@ import XCTest
 @testable import AEPServices
 
 class AudienceStateTests: XCTestCase {
-    let dataStore = NamedCollectionDataStore(name: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_DATA_STORE)
+    let dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
     var audienceState: AudienceState!
     // test strings
     static let emptyString = ""
@@ -82,7 +82,7 @@ class AudienceStateTests: XCTestCase {
     
     func testGetUuid_WhenUuidEmptyInMemoryAndPersistence() {
         // setup
-        dataStore.set(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY, value: AudienceStateTests.emptyString)
+        dataStore.set(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, value: AudienceStateTests.emptyString)
         
         // test
         let returnedValue = audienceState.getUuid()
@@ -93,7 +93,7 @@ class AudienceStateTests: XCTestCase {
     
     func testGetUuid_WhenUuidValueEmptyInMemoryAndValueInPersistence() {
         // setup
-        dataStore.set(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY, value: AudienceStateTests.persistedUuid)
+        dataStore.set(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, value: AudienceStateTests.persistedUuid)
         
         // test
         let returnedValue = audienceState.getUuid()
@@ -105,7 +105,7 @@ class AudienceStateTests: XCTestCase {
     func testGetUuid_WhenUuidValueInMemoryAndValueEmptyInPersistence() {
         // setup
         audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)
-        dataStore.set(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY, value: AudienceStateTests.emptyString)
+        dataStore.set(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, value: AudienceStateTests.emptyString)
         
         // test
         let returnedValue = audienceState.getUuid()
@@ -117,7 +117,7 @@ class AudienceStateTests: XCTestCase {
     func testGetUuid_WhenUuidValueInMemoryAndValueInPersistence() {
         // setup
         audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)
-        dataStore.set(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY, value: AudienceStateTests.persistedUuid)
+        dataStore.set(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, value: AudienceStateTests.persistedUuid)
         
         // test
         let returnedValue = audienceState.getUuid()
@@ -128,7 +128,7 @@ class AudienceStateTests: XCTestCase {
     
     func testGetVisitorProfile_WhenVisitorProfileEmptyInMemoryAndPersistence() {
         // setup
-        dataStore.set(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY, value: AudienceStateTests.emptyProfile)
+        dataStore.set(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, value: AudienceStateTests.emptyProfile)
         
         // test
         let returnedValue = audienceState.getVisitorProfile() 
@@ -139,7 +139,7 @@ class AudienceStateTests: XCTestCase {
     
     func testGetVisitorProfile_WhenVisitorProfileEmptyInMemoryAndValueInPersistence() {
         // setup
-        dataStore.set(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY, value: AudienceStateTests.persistedVisitorProfile)
+        dataStore.set(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, value: AudienceStateTests.persistedVisitorProfile)
         
         // test
         let returnedValue = audienceState.getVisitorProfile()
@@ -153,7 +153,7 @@ class AudienceStateTests: XCTestCase {
     func testGetVisitorProfile_WhenVisitorProfileValueInMemoryAndValueEmptyInPersistence() {
         // setup
         audienceState.setVisitorProfile(visitorProfile: AudienceStateTests.inMemoryVisitorProfile)
-        dataStore.set(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY, value: AudienceStateTests.emptyProfile)
+        dataStore.set(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, value: AudienceStateTests.emptyProfile)
         
         // test
         let returnedValue = audienceState.getVisitorProfile()
@@ -167,7 +167,7 @@ class AudienceStateTests: XCTestCase {
     func testGetVisitorProfile_WhenVisitorProfileValueInMemoryAndValueInPersistence() {
         // setup
         audienceState.setVisitorProfile(visitorProfile: AudienceStateTests.inMemoryVisitorProfile)
-        dataStore.set(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY, value: AudienceStateTests.persistedVisitorProfile)
+        dataStore.set(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, value: AudienceStateTests.persistedVisitorProfile)
         
         // test
         let returnedValue = audienceState.getVisitorProfile()
@@ -202,7 +202,7 @@ class AudienceStateTests: XCTestCase {
     
     func testSetDpid_WithPrivacyStatusOptedOut() {
         // setup
-        audienceState.setMobilePrivacyStatus(privacyStatus: PrivacyStatus.optedOut)
+        audienceState.setMobilePrivacy(status: PrivacyStatus.optedOut)
         
         // test
         audienceState.setDpid(dpid: AudienceStateTests.inMemoryDpid)
@@ -213,7 +213,7 @@ class AudienceStateTests: XCTestCase {
     
     func testSetDpid_WithPrivacyStatusUnknown() {
         // setup
-        audienceState.setMobilePrivacyStatus(privacyStatus: PrivacyStatus.unknown)
+        audienceState.setMobilePrivacy(status: PrivacyStatus.unknown)
         
         // test
         audienceState.setDpid(dpid: AudienceStateTests.inMemoryDpid)
@@ -246,7 +246,7 @@ class AudienceStateTests: XCTestCase {
     
     func testSetDpuuid_WithPrivacyStatusOptedOut() {
         // setup
-        audienceState.setMobilePrivacyStatus(privacyStatus: PrivacyStatus.optedOut)
+        audienceState.setMobilePrivacy(status: PrivacyStatus.optedOut)
         
         // test
         audienceState.setDpuuid(dpuuid: AudienceStateTests.inMemoryDpuuid)
@@ -257,7 +257,7 @@ class AudienceStateTests: XCTestCase {
     
     func testSetDpuuid_WithPrivacyStatusUnknown() {
         // setup
-        audienceState.setMobilePrivacyStatus(privacyStatus: PrivacyStatus.unknown)
+        audienceState.setMobilePrivacy(status: PrivacyStatus.unknown)
         
         // test
         audienceState.setDpuuid(dpuuid: AudienceStateTests.inMemoryDpuuid)
@@ -275,7 +275,7 @@ class AudienceStateTests: XCTestCase {
         
         // verify
         XCTAssertTrue(audienceState.getUuid().isEmpty)
-        XCTAssertEqual(AudienceStateTests.emptyString, dataStore.getString(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY, fallback: ""))
+        XCTAssertEqual(AudienceStateTests.emptyString, dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, fallback: ""))
     }
     
     func testSetUuid_WithValidString() {
@@ -287,31 +287,31 @@ class AudienceStateTests: XCTestCase {
         
         // verify
         XCTAssertEqual(AudienceStateTests.inMemoryUuid, audienceState.getUuid())
-        XCTAssertEqual(AudienceStateTests.inMemoryUuid, dataStore.getString(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY, fallback: ""))
+        XCTAssertEqual(AudienceStateTests.inMemoryUuid, dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, fallback: ""))
     }
     
     func testSetUuid_WithPrivacyStatusOptedOut() {
         // setup
-        audienceState.setMobilePrivacyStatus(privacyStatus: PrivacyStatus.optedOut)
+        audienceState.setMobilePrivacy(status: PrivacyStatus.optedOut)
         
         // test
         audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)
         
         // verify
         XCTAssertTrue(audienceState.getUuid().isEmpty)
-        XCTAssertFalse(dataStore.contains(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY))
+        XCTAssertFalse(dataStore.contains(key: AudienceConstants.DataStoreKeys.USER_ID_KEY))
     }
     
     func testSetUuid_WithPrivacyStatusUnknown() {
         // setup
-        audienceState.setMobilePrivacyStatus(privacyStatus: PrivacyStatus.unknown)
+        audienceState.setMobilePrivacy(status: PrivacyStatus.unknown)
         
         // test
         audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)
         
         // verify
         XCTAssertEqual(AudienceStateTests.inMemoryUuid, audienceState.getUuid())
-        XCTAssertEqual(AudienceStateTests.inMemoryUuid, dataStore.getString(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY, fallback: ""))
+        XCTAssertEqual(AudienceStateTests.inMemoryUuid, dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, fallback: ""))
     }
     
     func testSetVisitorProfile_WithEmptyDictionary() {
@@ -323,7 +323,7 @@ class AudienceStateTests: XCTestCase {
         
         // verify
         XCTAssertTrue(audienceState.getVisitorProfile().isEmpty)
-        XCTAssertEqual(AudienceStateTests.emptyProfile, dataStore.getObject(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY, fallback: AudienceStateTests.emptyProfile))
+        XCTAssertEqual(AudienceStateTests.emptyProfile, dataStore.getObject(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, fallback: AudienceStateTests.emptyProfile))
     }
     
     func testSetVisitorProfile_WithValidDictionary() {
@@ -335,36 +335,36 @@ class AudienceStateTests: XCTestCase {
         
         // verify
         XCTAssertEqual(AudienceStateTests.inMemoryVisitorProfile, audienceState.getVisitorProfile())
-        XCTAssertEqual(AudienceStateTests.inMemoryVisitorProfile, (dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY) as? [String : String] ?? AudienceStateTests.emptyProfile))
+        XCTAssertEqual(AudienceStateTests.inMemoryVisitorProfile, (dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE_KEY) as? [String : String] ?? AudienceStateTests.emptyProfile))
     }
     
     func testSetVisitorProfile_WithPrivacyStatusOptedOut() {
         // setup
-        audienceState.setMobilePrivacyStatus(privacyStatus: PrivacyStatus.optedOut)
+        audienceState.setMobilePrivacy(status: PrivacyStatus.optedOut)
         
         // test
         audienceState.setVisitorProfile(visitorProfile: AudienceStateTests.inMemoryVisitorProfile)
         
         // verify
         XCTAssertTrue(audienceState.getVisitorProfile().isEmpty)
-        XCTAssertFalse(dataStore.contains(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY))
+        XCTAssertFalse(dataStore.contains(key: AudienceConstants.DataStoreKeys.PROFILE_KEY))
     }
     
     func testSetVisitorProfile_WithPrivacyStatusUnknown() {
         // setup
-        audienceState.setMobilePrivacyStatus(privacyStatus: PrivacyStatus.unknown)
+        audienceState.setMobilePrivacy(status: PrivacyStatus.unknown)
         
         // test
         audienceState.setVisitorProfile(visitorProfile: AudienceStateTests.inMemoryVisitorProfile)
         
         // verify
         XCTAssertEqual(AudienceStateTests.inMemoryVisitorProfile, audienceState.getVisitorProfile())
-        XCTAssertEqual(AudienceStateTests.inMemoryVisitorProfile, (dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY) as? [String : String] ?? AudienceStateTests.emptyProfile))
+        XCTAssertEqual(AudienceStateTests.inMemoryVisitorProfile, (dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE_KEY) as? [String : String] ?? AudienceStateTests.emptyProfile))
     }
     
     func testClearIdentifiers_Happy() {
         // setup
-        audienceState.setMobilePrivacyStatus(privacyStatus: PrivacyStatus.optedIn)
+        audienceState.setMobilePrivacy(status: PrivacyStatus.optedIn)
         audienceState.setDpid(dpid: AudienceStateTests.inMemoryDpid)
         audienceState.setDpuuid(dpuuid: AudienceStateTests.inMemoryDpuuid)
         audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)
@@ -377,34 +377,34 @@ class AudienceStateTests: XCTestCase {
         XCTAssertTrue(audienceState.getDpid().isEmpty)
         XCTAssertTrue(audienceState.getDpuuid().isEmpty)
         XCTAssertTrue(audienceState.getUuid().isEmpty)
-        XCTAssertFalse(dataStore.contains(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY))
+        XCTAssertFalse(dataStore.contains(key: AudienceConstants.DataStoreKeys.USER_ID_KEY))
         XCTAssertTrue(audienceState.getVisitorProfile().isEmpty)
-        XCTAssertFalse(dataStore.contains(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY))
+        XCTAssertFalse(dataStore.contains(key: AudienceConstants.DataStoreKeys.PROFILE_KEY))
     }
     
     func testClearIdentifiers_CalledOnOptOut() {
         // setup
-        audienceState.setMobilePrivacyStatus(privacyStatus: PrivacyStatus.optedIn)
+        audienceState.setMobilePrivacy(status: PrivacyStatus.optedIn)
         audienceState.setDpid(dpid: AudienceStateTests.inMemoryDpid)
         audienceState.setDpuuid(dpuuid: AudienceStateTests.inMemoryDpuuid)
         audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)
         audienceState.setVisitorProfile(visitorProfile: AudienceStateTests.inMemoryVisitorProfile)
         
         // test
-        audienceState.setMobilePrivacyStatus(privacyStatus: PrivacyStatus.optedOut)
+        audienceState.setMobilePrivacy(status: PrivacyStatus.optedOut)
         
         // verify
         XCTAssertTrue(audienceState.getDpid().isEmpty)
         XCTAssertTrue(audienceState.getDpuuid().isEmpty)
         XCTAssertTrue(audienceState.getUuid().isEmpty)
-        XCTAssertFalse(dataStore.contains(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY))
+        XCTAssertFalse(dataStore.contains(key: AudienceConstants.DataStoreKeys.USER_ID_KEY))
         XCTAssertTrue(audienceState.getVisitorProfile().isEmpty)
-        XCTAssertFalse(dataStore.contains(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY))
+        XCTAssertFalse(dataStore.contains(key: AudienceConstants.DataStoreKeys.PROFILE_KEY))
     }
     
     func testGetStateData_Happy() {
         // setup
-        audienceState.setMobilePrivacyStatus(privacyStatus: PrivacyStatus.optedIn)
+        audienceState.setMobilePrivacy(status: PrivacyStatus.optedIn)
         audienceState.setDpid(dpid: AudienceStateTests.inMemoryDpid)
         audienceState.setDpuuid(dpuuid: AudienceStateTests.inMemoryDpuuid)
         audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)
@@ -422,7 +422,7 @@ class AudienceStateTests: XCTestCase {
     
     func testGetStateData_EmptyDataOnOptedOut() {
         // setup
-        audienceState.setMobilePrivacyStatus(privacyStatus: PrivacyStatus.optedOut)
+        audienceState.setMobilePrivacy(status: PrivacyStatus.optedOut)
         audienceState.setDpid(dpid: AudienceStateTests.inMemoryDpid)
         audienceState.setDpuuid(dpuuid: AudienceStateTests.inMemoryDpuuid)
         audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)

@@ -18,7 +18,7 @@ import XCTest
 class AudienceTests: XCTestCase {
     var audience: Audience!
     var mockRuntime: TestableExtensionRuntime!
-    let dataStore = NamedCollectionDataStore(name: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_DATA_STORE)
+    let dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
 
     override func setUp() {
         ServiceProvider.shared.networkService = MockNetworking()
@@ -44,10 +44,10 @@ class AudienceTests: XCTestCase {
     // ========================================================================================================
     func testHandleConfigurationResponse_PrivacyStatusOptedIn() {
         // setup
-        audience.state.setUuid(uuid: "testUuid")
-        audience.state.setDpuuid(dpuuid: "testDpuuid")
-        audience.state.setDpid(dpid: "testDpid")
-        audience.state.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
+        audience.state?.setUuid(uuid: "testUuid")
+        audience.state?.setDpuuid(dpuuid: "testDpuuid")
+        audience.state?.setDpid(dpid: "testDpid")
+        audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
         // create config data containing a privacy status and an aam server
         let data = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue, AudienceConstants.Configuration.AAM_SERVER: "testserver.com"] as [String: Any]
         // create the configuration response content event with the data
@@ -59,23 +59,23 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: event)
 
         // verify
-        XCTAssertEqual(.optedIn, audience?.state.getPrivacyStatus()) // audience state privacy status should have updated to opt-in
+        XCTAssertEqual(.optedIn, audience?.state?.getPrivacyStatus()) // audience state privacy status should have updated to opt-in
         // audience manager variables should be in memory
-        XCTAssertEqual("testDpid", audience?.state.getDpid())
-        XCTAssertEqual("testUuid", audience?.state.getUuid())
-        XCTAssertEqual("testDpuuid", audience?.state.getDpuuid())
-        XCTAssertEqual(["profilekey": "profileValue"], audience?.state.getVisitorProfile())
+        XCTAssertEqual("testDpid", audience?.state?.getDpid())
+        XCTAssertEqual("testUuid", audience?.state?.getUuid())
+        XCTAssertEqual("testDpuuid", audience?.state?.getDpuuid())
+        XCTAssertEqual(["profilekey": "profileValue"], audience?.state?.getVisitorProfile())
         // uuid and visitor profile should be persisted in the datastore
-        XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY, fallback: ""))
-        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY, fallback: [:]) as! [String : String])
+        XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, fallback: ""))
+        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, fallback: [:]) as! [String : String])
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedUnknown() {
         // setup
-        audience.state.setUuid(uuid: "testUuid")
-        audience.state.setDpuuid(dpuuid: "testDpuuid")
-        audience.state.setDpid(dpid: "testDpid")
-        audience.state.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
+        audience.state?.setUuid(uuid: "testUuid")
+        audience.state?.setDpuuid(dpuuid: "testDpuuid")
+        audience.state?.setDpid(dpid: "testDpid")
+        audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
         // create config data containing a privacy status and an aam server
         let data = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.unknown.rawValue, AudienceConstants.Configuration.AAM_SERVER: "testserver.com"] as [String: Any]
         // create the configuration response content event with the data
@@ -87,23 +87,23 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: event)
 
         // verify
-        XCTAssertEqual(.unknown, audience?.state.getPrivacyStatus()) // audience state privacy status should have updated to unknown
+        XCTAssertEqual(.unknown, audience?.state?.getPrivacyStatus()) // audience state privacy status should have updated to unknown
         // audience manager variables should be in memory
-        XCTAssertEqual("testDpid", audience?.state.getDpid())
-        XCTAssertEqual("testUuid", audience?.state.getUuid())
-        XCTAssertEqual("testDpuuid", audience?.state.getDpuuid())
-        XCTAssertEqual(["profilekey": "profileValue"], audience?.state.getVisitorProfile())
+        XCTAssertEqual("testDpid", audience?.state?.getDpid())
+        XCTAssertEqual("testUuid", audience?.state?.getUuid())
+        XCTAssertEqual("testDpuuid", audience?.state?.getDpuuid())
+        XCTAssertEqual(["profilekey": "profileValue"], audience?.state?.getVisitorProfile())
         // uuid and visitor profile should be persisted in the datastore
-        XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_USER_ID_KEY, fallback: ""))
-        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.AUDIENCE_MANAGER_SHARED_PREFS_PROFILE_KEY, fallback: [:]) as! [String : String])
+        XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, fallback: ""))
+        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, fallback: [:]) as! [String : String])
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedOut_When_AamServerAndUuidPresent() {
         // setup
-        audience.state.setUuid(uuid: "testUuid")
-        audience.state.setDpuuid(dpuuid: "testDpuuid")
-        audience.state.setDpid(dpid: "testDpid")
-        audience.state.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
+        audience.state?.setUuid(uuid: "testUuid")
+        audience.state?.setDpuuid(dpuuid: "testDpuuid")
+        audience.state?.setDpid(dpid: "testDpid")
+        audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
         // create config data containing a privacy status and an aam server
         let data = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue, AudienceConstants.Configuration.AAM_SERVER: "testserver.com"] as [String: Any]
         // create the configuration response content event with the data
@@ -117,21 +117,21 @@ class AudienceTests: XCTestCase {
         // verify
         let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
         XCTAssertTrue(mockNetworkService.connectAsyncCalled) // network request for opt-out hit should have been sent
-        XCTAssertEqual(.optedOut, audience?.state.getPrivacyStatus()) // audience state privacy status should have updated to opt-out
+        XCTAssertEqual(.optedOut, audience?.state?.getPrivacyStatus()) // audience state privacy status should have updated to opt-out
         // audience manager variables should be cleared
-        XCTAssertEqual("", audience?.state.getDpid())
-        XCTAssertEqual("", audience?.state.getUuid())
-        XCTAssertEqual("", audience?.state.getDpuuid())
-        XCTAssertEqual([:], audience?.state.getVisitorProfile())
+        XCTAssertEqual("", audience?.state?.getDpid())
+        XCTAssertEqual("", audience?.state?.getUuid())
+        XCTAssertEqual("", audience?.state?.getDpuuid())
+        XCTAssertEqual([:], audience?.state?.getVisitorProfile())
         XCTAssertEqual("https://testserver.com/demoptout.jpg?d_uuid=testUuid", mockNetworkService.connectAsyncCalledWithNetworkRequest?.url.absoluteString)
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedOut_When_UuidIsEmpty() {
         // setup
-        audience.state.setUuid(uuid: "")
-        audience.state.setDpuuid(dpuuid: "testDpuuid")
-        audience.state.setDpid(dpid: "testDpid")
-        audience.state.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
+        audience.state?.setUuid(uuid: "")
+        audience.state?.setDpuuid(dpuuid: "testDpuuid")
+        audience.state?.setDpid(dpid: "testDpid")
+        audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
         // create config data containing a privacy status and an aam server
         let data = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue, AudienceConstants.Configuration.AAM_SERVER: "testserver.com"] as [String: Any]
         // create the configuration response content event with the data
@@ -145,21 +145,21 @@ class AudienceTests: XCTestCase {
         // verify
         let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
         XCTAssertFalse(mockNetworkService.connectAsyncCalled) // network request for opt-out hit should not have been sent because no uuid is stored
-        XCTAssertEqual(.optedOut, audience?.state.getPrivacyStatus()) // audience state privacy status should have updated to opt-out
+        XCTAssertEqual(.optedOut, audience?.state?.getPrivacyStatus()) // audience state privacy status should have updated to opt-out
         // audience manager variables should be cleared
-        XCTAssertEqual("", audience?.state.getDpid())
-        XCTAssertEqual("", audience?.state.getUuid())
-        XCTAssertEqual("", audience?.state.getDpuuid())
-        XCTAssertEqual([:], audience?.state.getVisitorProfile())
+        XCTAssertEqual("", audience?.state?.getDpid())
+        XCTAssertEqual("", audience?.state?.getUuid())
+        XCTAssertEqual("", audience?.state?.getDpuuid())
+        XCTAssertEqual([:], audience?.state?.getVisitorProfile())
         XCTAssertNil(mockNetworkService.connectAsyncCalledWithNetworkRequest?.url.absoluteString)
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedOut_When_AamServerIsNotPresentInTheConfigurationEvent() {
         // setup
-        audience.state.setUuid(uuid: "testUuid")
-        audience.state.setDpuuid(dpuuid: "testDpuuid")
-        audience.state.setDpid(dpid: "testDpid")
-        audience.state.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
+        audience.state?.setUuid(uuid: "testUuid")
+        audience.state?.setDpuuid(dpuuid: "testDpuuid")
+        audience.state?.setDpid(dpid: "testDpid")
+        audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
         // create config data containing a privacy status only
         let data = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue] as [String: Any]
         // create the configuration response content event with the data
@@ -173,21 +173,21 @@ class AudienceTests: XCTestCase {
         // verify
         let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
         XCTAssertFalse(mockNetworkService.connectAsyncCalled) // network request for opt-out hit should not have been sent because no aam server is available in the config
-        XCTAssertEqual(.optedOut, audience?.state.getPrivacyStatus()) // audience state should have updated to opt-out
+        XCTAssertEqual(.optedOut, audience?.state?.getPrivacyStatus()) // audience state should have updated to opt-out
         // audience manager variables should be cleared
-        XCTAssertEqual("", audience?.state.getDpid())
-        XCTAssertEqual("", audience?.state.getUuid())
-        XCTAssertEqual("", audience?.state.getDpuuid())
-        XCTAssertEqual([:], audience?.state.getVisitorProfile())
+        XCTAssertEqual("", audience?.state?.getDpid())
+        XCTAssertEqual("", audience?.state?.getUuid())
+        XCTAssertEqual("", audience?.state?.getDpuuid())
+        XCTAssertEqual([:], audience?.state?.getVisitorProfile())
         XCTAssertNil(mockNetworkService.connectAsyncCalledWithNetworkRequest?.url.absoluteString)
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedOut_When_AamServerIsEmpty() {
         // setup
-        audience.state.setUuid(uuid: "testUuid")
-        audience.state.setDpuuid(dpuuid: "testDpuuid")
-        audience.state.setDpid(dpid: "testDpid")
-        audience.state.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
+        audience.state?.setUuid(uuid: "testUuid")
+        audience.state?.setDpuuid(dpuuid: "testDpuuid")
+        audience.state?.setDpid(dpid: "testDpid")
+        audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
         // create config data containing a privacy status and an empty aam server
         let data = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue, AudienceConstants.Configuration.AAM_SERVER: ""] as [String: Any]
         // create the configuration response content event with the data
@@ -201,12 +201,12 @@ class AudienceTests: XCTestCase {
         // verify
         let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
         XCTAssertFalse(mockNetworkService.connectAsyncCalled) // network request for opt-out hit should not have been sent because the aam server is empty in the config
-        XCTAssertEqual(.optedOut, audience?.state.getPrivacyStatus()) // audience state should have updated to opt-out
+        XCTAssertEqual(.optedOut, audience?.state?.getPrivacyStatus()) // audience state should have updated to opt-out
         // audience manager variables should be cleared
-        XCTAssertEqual("", audience?.state.getDpid())
-        XCTAssertEqual("", audience?.state.getUuid())
-        XCTAssertEqual("", audience?.state.getDpuuid())
-        XCTAssertEqual([:], audience?.state.getVisitorProfile())
+        XCTAssertEqual("", audience?.state?.getDpid())
+        XCTAssertEqual("", audience?.state?.getUuid())
+        XCTAssertEqual("", audience?.state?.getDpuuid())
+        XCTAssertEqual([:], audience?.state?.getVisitorProfile())
         XCTAssertNil(mockNetworkService.connectAsyncCalledWithNetworkRequest?.url.absoluteString)
     }
 }
