@@ -20,13 +20,13 @@
 		2EBEE7C325282CD300880E72 /* AudienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7C225282CD300880E72 /* AudienceTests.swift */; };
 		2EBEE7C825282EC000880E72 /* TestableExtensionRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7C725282EC000880E72 /* TestableExtensionRuntime.swift */; };
 		318A232B740E8D5E33F3EEEE /* Pods_AEPAudience_AEPAudienceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5315CFF443DE47651DC95741 /* Pods_AEPAudience_AEPAudienceTests.framework */; };
+		D65C46DF25437B4500998A2B /* MockHitQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733ECF253F3C8600AE65A9 /* MockHitQueue.swift */; };
 		D6733D80252B9B8500AE65A9 /* AudienceState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733D7F252B9B8500AE65A9 /* AudienceState.swift */; };
 		D6733D87252BCCC500AE65A9 /* AudienceStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733D83252BCCB900AE65A9 /* AudienceStateTests.swift */; };
 		D6733E1F253777EC00AE65A9 /* Networking+Audience.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733E1E253777EC00AE65A9 /* Networking+Audience.swift */; };
 		D6733E862538AD1000AE65A9 /* URL+Audience.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733E282537843200AE65A9 /* URL+Audience.swift */; };
 		D6733E99253A1C8200AE65A9 /* AudienceHitResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733E98253A1C8200AE65A9 /* AudienceHitResponse.swift */; };
 		D6733ECC253E3A2700AE65A9 /* AudienceStuffObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733ECB253E3A2600AE65A9 /* AudienceStuffObject.swift */; };
-		D6733ED0253F3C8700AE65A9 /* MockHitQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733ECF253F3C8600AE65A9 /* MockHitQueue.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -378,7 +378,6 @@
 				D6733E1F253777EC00AE65A9 /* Networking+Audience.swift in Sources */,
 				2E45B6AE2534FB98003D3534 /* AudienceHit.swift in Sources */,
 				D6733ECC253E3A2700AE65A9 /* AudienceStuffObject.swift in Sources */,
-				D6733ED0253F3C8700AE65A9 /* MockHitQueue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,6 +388,7 @@
 				2EBEE7C825282EC000880E72 /* TestableExtensionRuntime.swift in Sources */,
 				2E45B6BA2537A071003D3534 /* MockNetworking.swift in Sources */,
 				2E45B6B625379FA7003D3534 /* AudienceHitProcessorTests.swift in Sources */,
+				D65C46DF25437B4500998A2B /* MockHitQueue.swift in Sources */,
 				2EBEE7C325282CD300880E72 /* AudienceTests.swift in Sources */,
 				D6733D87252BCCC500AE65A9 /* AudienceStateTests.swift in Sources */,
 			);
