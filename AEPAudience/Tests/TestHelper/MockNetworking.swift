@@ -19,6 +19,7 @@ class MockNetworking: Networking {
     public var connectAsyncCalledWithNetworkRequest: NetworkRequest?
     public var connectAsyncCalledWithCompletionHandler: ((HttpConnection) -> Void)?
     public var expectedResponse: HttpConnection?
+    public var calledNetworkRequests: [NetworkRequest?] = []
 
     func connectAsync(networkRequest: NetworkRequest, completionHandler: ((HttpConnection) -> Void)? = nil) {
         print("Do nothing \(networkRequest)")
@@ -28,11 +29,13 @@ class MockNetworking: Networking {
         if let expectedResponse = expectedResponse, let completionHandler = completionHandler {
             completionHandler(expectedResponse)
         }
+        calledNetworkRequests.append(networkRequest)
     }
 
     func reset() {
         connectAsyncCalled = false
         connectAsyncCalledWithNetworkRequest = nil
         connectAsyncCalledWithCompletionHandler = nil
+        calledNetworkRequests = []
     }
 }

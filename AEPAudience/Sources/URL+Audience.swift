@@ -121,7 +121,7 @@ extension URL {
         components.host = aamServer
         components.path = AudienceConstants.URLKeys.OPT_OUT_URL_PATH
         components.queryItems = [
-            URLQueryItem(name: AudienceConstants.URLKeys.OPT_OUT_URL_AAM_UUID, value: uuid),
+            URLQueryItem(name: AudienceConstants.URLKeys.OPT_OUT_URL_AAM_UUID, value: uuid)
         ]
 
         guard let url = components.url else {
