@@ -72,7 +72,7 @@ jobs:
             fi
       # slack notification
       - slack/notify:
-          channel: $SLACK_DEFAULT_CHANNEL
+          channel: ${SLACK_DEFAULT_CHANNEL}
           event: fail
           template: basic_fail_1
 
