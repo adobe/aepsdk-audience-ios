@@ -30,8 +30,8 @@ class AudienceTests: XCTestCase {
         mockHitQueue = MockHitQueue(processor: AudienceHitProcessor(responseHandler: { [weak self] entity, data in
             self?.responseCallbackArgs.append((entity, data))
         }))
-        audienceState = AudienceState() // replace with mock audience state if needed
-        audience = Audience(runtime: mockRuntime, hitQueue: mockHitQueue, state: audienceState)
+        audienceState = AudienceState(hitQueue: mockHitQueue)
+        audience = Audience(runtime: mockRuntime, state: audienceState)
         audience.onRegistered()
     }
 
@@ -248,7 +248,7 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
 
         // verify
-        XCTAssertEqual(1, audience.hitQueue?.count())
+        XCTAssertEqual(1, audience.state?.hitQueue.count())
     }
 
     func testHandleLifecycleResponse_ConfigurationMissingAAMServer() {
@@ -266,7 +266,7 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
 
         // verify
-        XCTAssertEqual(0, audience.hitQueue?.count())
+        XCTAssertEqual(0, audience.state?.hitQueue.count())
     }
 
     func testHandleLifecycleResponse_ConfigurationHasAAMForwardingTrue() {
@@ -284,7 +284,7 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
 
         // verify
-        XCTAssertEqual(0, audience.hitQueue?.count())
+        XCTAssertEqual(0, audience.state?.hitQueue.count())
     }
 
     func testHandleLifecycleResponse_ConfigurationHasPrivacyStatusOptedOut() {
@@ -302,7 +302,7 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
 
         // verify
-        XCTAssertEqual(0, audience.hitQueue?.count())
+        XCTAssertEqual(0, audience.state?.hitQueue.count())
     }
 
     func testHandleLifecycleResponse_LifecycleResponseHasNoData() {
@@ -318,7 +318,7 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
 
         // verify
-        XCTAssertEqual(0, audience.hitQueue?.count())
+        XCTAssertEqual(0, audience.state?.hitQueue.count())
     }
 
     func testHandleLifecycleResponse_LifecycleResponseHasEmptyData() {
@@ -336,7 +336,7 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
 
         // verify
-        XCTAssertEqual(0, audience.hitQueue?.count())
+        XCTAssertEqual(0, audience.state?.hitQueue.count())
     }
 
     func testHandleLifecycleResponse_ConfigurationSharedStateIsPending() {
@@ -352,7 +352,7 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
 
         // verify
-        XCTAssertEqual(0, audience.hitQueue?.count())
+        XCTAssertEqual(0, audience.state?.hitQueue.count())
     }
 
     // ==========================================================================

@@ -18,6 +18,8 @@ import XCTest
 class AudienceStateTests: XCTestCase {
     let dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
     var audienceState: AudienceState!
+    var mockHitQueue: MockHitQueue!
+    var responseCallbackArgs = [(DataEntity, Data?)]()
     // test strings
     static let emptyString = ""
     static let emptyProfile = [String:String]()
@@ -33,7 +35,10 @@ class AudienceStateTests: XCTestCase {
         for key in UserDefaults.standard.dictionaryRepresentation().keys {
             UserDefaults.standard.removeObject(forKey: key)
         }
-        audienceState = AudienceState()
+        mockHitQueue = MockHitQueue(processor: AudienceHitProcessor(responseHandler: { [weak self] entity, data in
+            self?.responseCallbackArgs.append((entity, data))
+        }))
+        audienceState = AudienceState(hitQueue: mockHitQueue)
     }
 
     func testGetDpid_WhenDpidEmptyInMemory() {

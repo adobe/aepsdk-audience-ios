@@ -23,7 +23,6 @@ extension URL {
     ///   - configurationSharedState: the current `Configuration` shared state
     ///   - identitySharedState: the current `Identity` shared state
     ///   - customerEventData: the customer event data present in the triggering event
-    // todo: this is just a placeholder and the passed in arguments may change
     static func buildAudienceHitURL(audienceState: AudienceState?, configurationSharedState: [String: Any]?, identitySharedState: [String: Any]?, customerEventData: [String: String]) -> URL? {
         guard let aamServer = configurationSharedState?[AudienceConstants.Configuration.AAM_SERVER] as? String else {
             Log.error(label: LOG_TAG, "Building Audience hit URL failed - (Audience Server not found in configuration shared state), returning nil.")
