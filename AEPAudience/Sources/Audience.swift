@@ -104,14 +104,14 @@ public class Audience: NSObject, Extension {
         if state?.getPrivacyStatus() == PrivacyStatus.optedOut {
             Log.debug(label: getLogTagWith(functionName: #function), "Unable to process AAM event as privacy status is OPT_OUT:  \(event.description)")
             // dispatch with an empty visitor profile in response if privacy is opt-out.
-            dispatchResponse(visitorProfle: ["": ""], event: event)
+            dispatchResponse(visitorProfile: ["": ""], event: event)
             return
         }
 
         if state?.getPrivacyStatus() == PrivacyStatus.unknown {
             Log.debug(label: getLogTagWith(functionName: #function), "Unable to process AAM event as privacy status is Unknown:  \(event.description)")
             // dispatch with an empty visitor profile in response if privacy is unknown.
-            dispatchResponse(visitorProfle: ["": ""], event: event)
+            dispatchResponse(visitorProfile: ["": ""], event: event)
             return
         }
 
@@ -205,9 +205,9 @@ public class Audience: NSObject, Extension {
         createSharedState(data: audienceSharedState ?? [:], event: hit.event)
     }
 
-    private func dispatchResponse(visitorProfle: [String: String], event: Event) {
+    private func dispatchResponse(visitorProfile: [String: String], event: Event) {
         var eventData = [String: Any]()
-        eventData[AudienceConstants.EventDataKeys.VISITOR_PROFILE] = visitorProfle
+        eventData[AudienceConstants.EventDataKeys.VISITOR_PROFILE] = visitorProfile
         let responseEvent = event.createResponseEvent(name: "Audience Manager Profile", type: EventType.audienceManager, source: EventSource.responseContent, data: eventData)
         dispatch(event: responseEvent)
     }
