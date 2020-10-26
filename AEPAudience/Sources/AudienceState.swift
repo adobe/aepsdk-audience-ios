@@ -201,9 +201,9 @@ public class AudienceState {
         let processedStuff = processStuffArray(stuff: audienceResponse.stuff ?? [AudienceStuffObject]())
 
         if !processedStuff.isEmpty {
-            Log.trace(label: getLogTagWith(functionName: #function), "Response received: \(processedStuff).")
+            Log.trace(label: getLogTagWith(functionName: #function), "Stuff in response received: \(processedStuff).")
         } else {
-            Log.trace(label: getLogTagWith(functionName: #function), "Response was empty.")
+            Log.trace(label: getLogTagWith(functionName: #function), "Stuff in response was empty.")
         }
 
         // save profile in defaults

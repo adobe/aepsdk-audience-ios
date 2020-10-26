@@ -184,27 +184,49 @@ public class Audience: NSObject, Extension {
 
     // MARK: Network Response Handler
 
-    /// Invoked by the `IdentityHitProcessor` each time we receive a network response
+    /// Invoked by the `AudienceHitProcessor` each time we receive a network response
     /// - Parameters:
     ///   - entity: The `DataEntity` that was processed by the hit processor
     ///   - responseData: the network response data if any
     private func handleNetworkResponse(entity: DataEntity, responseData: Data?) {
+        var visitorProfile: [String:String] = [:]
         if state?.getPrivacyStatus() == .optedOut {
             Log.debug(label: getLogTagWith(functionName: #function), "Unable to process network response as privacy status is OPT_OUT.")
             return
         }
 
         guard let data = entity.data as Data?, let hit = try? JSONDecoder().decode(AudienceHit.self, from: data) else {
-            Log.debug(label: "\(name):\(#function)", "Failed to decode the Audience Hit, aborting network response processing.")
+            Log.debug(label: getLogTagWith(functionName: #function), "Failed to decode the Audience Hit, aborting network response processing.")
+            return
+        }
+
+        // if we have no response from the audience server log it and bail early
+        if responseData == nil {
+            Log.debug(label: getLogTagWith(functionName: #function), "No response from the server.")
+            createSharedState(data: state?.getStateData() ?? [:], event: hit.event)
+            dispatchResponse(visitorProfile: visitorProfile, event: hit.event)
             return
         }
 
         // process the network response and create a new shared state for the audience extension
         let audienceSharedState = state?.processNetworkResponse(event: hit.event, response: responseData ?? Data())
 
+        // update audience manager shared state
         createSharedState(data: audienceSharedState ?? [:], event: hit.event)
+
+        // retrieve the visitor profile
+        visitorProfile = state?.getVisitorProfile() ?? [:]
+
+        // dispatch the updated visitor profile in response.
+        dispatchResponse(visitorProfile: visitorProfile, event: hit.event)
     }
 
+    // MARK: Helpers
+
+    /// Dispatches a visitor profile dictionary from a processed audience hit response.
+    /// - Parameters:
+    ///   - visitorProfile: The visitor profile returned in an audience hit response if any
+    ///   - event: the event which triggered the audience hit
     private func dispatchResponse(visitorProfile: [String: String], event: Event) {
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_PROFILE] = visitorProfile
@@ -212,8 +234,9 @@ public class Audience: NSObject, Extension {
         dispatch(event: responseEvent)
     }
 
-    // MARK: Helper
-
+    /// Helper to return a log tag
+    /// - Parameters:
+    ///   - functionName: the function name to be used in generating a log tag
     func getLogTagWith(functionName: String) -> String {
         return "\(name):\(functionName)"
     }

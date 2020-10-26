@@ -25,14 +25,14 @@ struct AudienceHitResponse: Codable {
     /// DCS region hint as received in the audience manager network response json
     let region: Int?
 
-    /// TID as received in the audience manager network response json
+    /// The transaction id as received in the audience manager network response json
     let tid: String?
 
     enum CodingKeys: String, CodingKey {
         case uuid = "uuid"
         case stuff = "stuff"
         case dests = "dests"
-        case region = "region"
+        case region = "dcs_region"
         case tid = "tid"
     }
 }
