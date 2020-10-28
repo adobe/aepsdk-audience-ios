@@ -49,7 +49,7 @@ enum AudienceConstants {
         static let VISITOR_ID_BLOB_KEY                            = "d_blob"
         static let VISITOR_ID_LOCATION_HINT_KEY                   = "dcs_region"
         static let VISITOR_ID_PARAMETER_KEY_CUSTOMER              = "d_cid_ic"
-        static let VISITOR_ID_CID_DELIMITER                       = "%01"
+        static let VISITOR_ID_CID_DELIMITER                       = Character(Unicode.Scalar.init(01))
     }
 
     enum URLKeys {

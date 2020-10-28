@@ -67,17 +67,15 @@ extension URL {
                 let idType = id.type!
                 let idValue = id.identifier ?? ""
                 let idAuthState = id.authenticationState.rawValue
-                // remove the percent encoding on the VISITOR_ID_CID_DELIMITER constant as the query parameters are automatically url encoded
-                let cidDelimiter = AudienceConstants.DestinationKeys.VISITOR_ID_CID_DELIMITER.removingPercentEncoding!
 
                 var visitorIdString = ""
                 visitorIdString.append(idType)
-                visitorIdString.append(cidDelimiter)
+                visitorIdString.append(AudienceConstants.DestinationKeys.VISITOR_ID_CID_DELIMITER)
                 if !idValue.isEmpty {
                     visitorIdString.append(idValue)
                 }
 
-                visitorIdString.append(cidDelimiter)
+                visitorIdString.append(AudienceConstants.DestinationKeys.VISITOR_ID_CID_DELIMITER)
                 visitorIdString.append(String(idAuthState))
 
                 queryItems += [URLQueryItem(name: AudienceConstants.DestinationKeys.VISITOR_ID_PARAMETER_KEY_CUSTOMER, value: visitorIdString)]
