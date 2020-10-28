@@ -19,11 +19,11 @@ extension URL {
 
     /// Creates a new Audience Manager hit URL
     /// - Parameters:
-    ///   - audienceState: the current `AudienceState` containing the Audience Manager extension variables
+    ///   - uuid: the current Audience Manager Unique User ID
     ///   - configurationSharedState: the current `Configuration` shared state
     ///   - identitySharedState: the current `Identity` shared state
     ///   - customerEventData: the customer event data present in the triggering event
-    static func buildAudienceHitURL(audienceState: AudienceState?, configurationSharedState: [String: Any]?, identitySharedState: [String: Any]?, customerEventData: [String: String]) -> URL? {
+    static func buildAudienceHitURL(uuid: String?, configurationSharedState: [String: Any]?, identitySharedState: [String: Any]?, customerEventData: [String: String]) -> URL? {
         guard let aamServer = configurationSharedState?[AudienceConstants.Configuration.AAM_SERVER] as? String else {
             Log.error(label: LOG_TAG, "Building Audience hit URL failed - (Audience Server not found in configuration shared state), returning nil.")
             return nil
@@ -69,15 +69,17 @@ extension URL {
                 let idType = id.type!
                 let idValue = id.identifier ?? ""
                 let idAuthState = id.authenticationState.rawValue
+                // remove the percent encoding on the VISITOR_ID_CID_DELIMITER constant as the query parameters are automatically url encoded
+                let cidDelimiter = AudienceConstants.DestinationKeys.VISITOR_ID_CID_DELIMITER.removingPercentEncoding!
 
                 var visitorIdString = ""
                 visitorIdString.append(idType)
-                visitorIdString.append(AudienceConstants.DestinationKeys.VISITOR_ID_CID_DELIMITER)
+                visitorIdString.append(cidDelimiter)
                 if !idValue.isEmpty {
                     visitorIdString.append(idValue)
                 }
 
-                visitorIdString.append(AudienceConstants.DestinationKeys.VISITOR_ID_CID_DELIMITER)
+                visitorIdString.append(cidDelimiter)
                 visitorIdString.append(String(idAuthState))
 
                 queryItems += [URLQueryItem(name: AudienceConstants.DestinationKeys.VISITOR_ID_PARAMETER_KEY_CUSTOMER, value: visitorIdString)]
@@ -90,10 +92,8 @@ extension URL {
             queryItems += [URLQueryItem(name: AudienceConstants.DestinationKeys.EXPERIENCE_CLOUD_ORG_ID, value: experienceCloudOrgId)]
         }
 
-        // Attach uuid from Audience state
-        let uuid = audienceState?.getUuid() ?? ""
-
-        if !uuid.isEmpty {
+        // Attach uuid
+        if uuid != nil {
             queryItems += [URLQueryItem(name: AudienceConstants.DestinationKeys.USER_ID_KEY, value: uuid)]
         }
 

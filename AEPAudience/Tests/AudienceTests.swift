@@ -55,10 +55,6 @@ class AudienceTests: XCTestCase {
         return configData
     }
 
-    /// Tests that when audience receives a audience reset event
-    func testAudienceResetHappy() {
-    }
-
     // ==========================================================================
     // handleConfigurationResponse
     // ==========================================================================
@@ -604,7 +600,7 @@ class AudienceTests: XCTestCase {
     func testHandleAudienceResetRequest_AudienceManagerIdentifiersClearedFromAudienceState() {
         // setup
         let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer"] as [String: Any]
-        let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: 1234567] as [String: Any]
+        let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "1234567"] as [String: Any]
         // add data to audience state
         audience?.state?.setMobilePrivacy(status: .optedIn)
         audience?.state?.setDpid(dpid: "testDpid")
@@ -623,7 +619,7 @@ class AudienceTests: XCTestCase {
         var retrievedConfigState = audience?.state?.getLastValidConfigSharedState()
         var retrievedIdentityState = audience?.state?.getLastValidIdentitySharedState()
         XCTAssertEqual("testServer", retrievedConfigState?[AudienceConstants.Configuration.AAM_SERVER] as? String)
-        XCTAssertEqual(1234567, retrievedIdentityState?[AudienceConstants.Identity.VISITOR_ID_MID] as? Int)
+        XCTAssertEqual("1234567", retrievedIdentityState?[AudienceConstants.Identity.VISITOR_ID_MID] as? String)
 
         // create audience identity reset event
         let audienceIdentityResetRequestEvent = Event(name: "Test Audience Reset Request", type: EventType.audienceManager, source: EventSource.requestReset, data: [String: Any]())
@@ -641,7 +637,7 @@ class AudienceTests: XCTestCase {
         retrievedConfigState = audience?.state?.getLastValidConfigSharedState()
         retrievedIdentityState = audience?.state?.getLastValidIdentitySharedState()
         XCTAssertEqual("testServer", retrievedConfigState?[AudienceConstants.Configuration.AAM_SERVER] as? String)
-        XCTAssertEqual(1234567, retrievedIdentityState?[AudienceConstants.Identity.VISITOR_ID_MID] as? Int)
+        XCTAssertEqual("1234567", retrievedIdentityState?[AudienceConstants.Identity.VISITOR_ID_MID] as? String)
         XCTAssertEqual(PrivacyStatus.optedIn, audience?.state?.getPrivacyStatus())
     }
 
@@ -771,6 +767,24 @@ class AudienceTests: XCTestCase {
         // create the audience content request event with signal data
         let traits = ["trait":"traitValue"]
         let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: traits)
+        mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
+        let _ = audience.readyForEvent(event)
+
+        // test
+        mockRuntime.simulateComingEvent(event: event)
+
+        // verify
+        XCTAssertEqual(1, audience.state?.hitQueue.count())
+    }
+
+    func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_ProvidedTraitsAreNil() {
+        // setup
+        audience.state?.setUuid(uuid: "testUuid")
+        audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // create the audience content request event with nil traits
+        let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: nil)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
         let _ = audience.readyForEvent(event)
 

@@ -30,6 +30,7 @@
 		D6DAC37A2549CEB200BD81EB /* AudiencePublicAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC3742549CDD400BD81EB /* AudiencePublicAPITests.swift */; };
 		D6DAC3802549D1CC00BD81EB /* MockExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC37F2549D1CC00BD81EB /* MockExtension.swift */; };
 		D6DAC3842549D22000BD81EB /* EventHub+Testable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC3832549D22000BD81EB /* EventHub+Testable.swift */; };
+		D6DAC3882549FC5B00BD81EB /* URL+AudienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC3872549FC5B00BD81EB /* URL+AudienceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 		D6DAC3742549CDD400BD81EB /* AudiencePublicAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudiencePublicAPITests.swift; sourceTree = "<group>"; };
 		D6DAC37F2549D1CC00BD81EB /* MockExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExtension.swift; sourceTree = "<group>"; };
 		D6DAC3832549D22000BD81EB /* EventHub+Testable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EventHub+Testable.swift"; sourceTree = "<group>"; };
+		D6DAC3872549FC5B00BD81EB /* URL+AudienceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+AudienceTests.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +138,7 @@
 				2E45B6B525379FA7003D3534 /* AudienceHitProcessorTests.swift */,
 				D6733D83252BCCB900AE65A9 /* AudienceStateTests.swift */,
 				D6DAC3742549CDD400BD81EB /* AudiencePublicAPITests.swift */,
+				D6DAC3872549FC5B00BD81EB /* URL+AudienceTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -401,6 +404,7 @@
 				2EBEE7C325282CD300880E72 /* AudienceTests.swift in Sources */,
 				D6DAC3842549D22000BD81EB /* EventHub+Testable.swift in Sources */,
 				D6DAC3802549D1CC00BD81EB /* MockExtension.swift in Sources */,
+				D6DAC3882549FC5B00BD81EB /* URL+AudienceTests.swift in Sources */,
 				D6733D87252BCCC500AE65A9 /* AudienceStateTests.swift in Sources */,
 				D6DAC37A2549CEB200BD81EB /* AudiencePublicAPITests.swift in Sources */,
 			);

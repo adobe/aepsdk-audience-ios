@@ -91,7 +91,7 @@ public class Audience: NSObject, Extension {
         if privacyStatus == .optedOut {
             // send opt-out hit
             state?.handleOptOut(event: event)
-            createSharedState(data: state?.getStateData() ?? [:], event: event)
+            updateSharedState(event: event, data: state?.getStateData() ?? [:])
         }
 
         // if privacy status is opted out, audience manager data in the AudienceState will be cleared.
@@ -135,7 +135,7 @@ public class Audience: NSObject, Extension {
     /// - Parameter event: The event coming from the reset API
     private func handleAudienceResetRequest(event: Event) {
         state?.clearIdentifiers()
-        createSharedState(data: state?.getStateData() ?? [:], event: event)
+        updateSharedState(event: event, data: state?.getStateData() ?? [:])
     }
 
     /// Processes Lifecycle Response content and sends a signal to Audience Manager if aam forwarding is disabled.
@@ -144,10 +144,8 @@ public class Audience: NSObject, Extension {
     private func handleLifecycleResponse(event: Event) {
         guard let response = event.data else { return }
         if !response.isEmpty {
-            guard let lastValidConfiguration = state?.getLastValidConfigSharedState() else {
-                return
-            }
-            guard let aamForwardingStatus = lastValidConfiguration[AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING] as? Bool else { return }
+            let lastValidConfiguration = state?.getLastValidConfigSharedState()
+            guard let aamForwardingStatus = lastValidConfiguration?[AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING] as? Bool else { return }
             if state?.getPrivacyStatus() == PrivacyStatus.optedOut {
                 Log.debug(label: getLogTagWith(functionName: #function), "Unable to process lifecycle response as privacy status is OPT_OUT:  \(event.description)")
                 // dispatch with an empty visitor profile in response if privacy is opt-out.
@@ -173,7 +171,7 @@ public class Audience: NSObject, Extension {
             // process the network response and create a new shared state for the audience extension
             let audienceSharedState = state?.processNetworkResponse(event: event, response: responseAsData)
 
-            createSharedState(data: audienceSharedState ?? [:], event: event)
+            updateSharedState(event: event, data: audienceSharedState ?? [:])
         }
     }
 
@@ -208,7 +206,7 @@ public class Audience: NSObject, Extension {
         // if we have no response from the audience server log it and bail early
         if responseData == nil {
             Log.debug(label: getLogTagWith(functionName: #function), "No response from the server.")
-            createSharedState(data: state?.getStateData() ?? [:], event: hit.event)
+            updateSharedState(event: hit.event, data: state?.getStateData() ?? [:])
             dispatchResponse(visitorProfile: visitorProfile, event: hit.event)
             return
         }
@@ -217,7 +215,7 @@ public class Audience: NSObject, Extension {
         let audienceSharedState = state?.processNetworkResponse(event: hit.event, response: responseData ?? Data())
 
         // update audience manager shared state
-        createSharedState(data: audienceSharedState ?? [:], event: hit.event)
+        updateSharedState(event: hit.event, data: audienceSharedState ?? [:])
 
         // retrieve the visitor profile
         visitorProfile = state?.getVisitorProfile() ?? [:]

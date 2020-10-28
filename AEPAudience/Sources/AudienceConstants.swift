@@ -44,7 +44,7 @@ enum AudienceConstants {
         static let DATA_PROVIDER_ID_KEY          = "d_dpid"
         static let DATA_PROVIDER_USER_ID_KEY     = "d_dpuuid"
         static let USER_ID_KEY                   = "d_uuid"
-        static let EXPERIENCE_CLOUD_ORG_ID                         = "d_orgid"
+        static let EXPERIENCE_CLOUD_ORG_ID                        = "d_orgid"
         static let VISITOR_ID_MID_KEY                             = "d_mid"
         static let VISITOR_ID_BLOB_KEY                            = "d_blob"
         static let VISITOR_ID_LOCATION_HINT_KEY                   = "dcs_region"

@@ -144,7 +144,7 @@ public class AudienceState {
             eventData = event.data as? [String: String] ?? ["": ""]
         }
 
-        guard let url = URL.buildAudienceHitURL(audienceState: self, configurationSharedState: lastValidConfigSharedState, identitySharedState: lastValidIdentitySharedState, customerEventData: eventData) else {
+        guard let url = URL.buildAudienceHitURL(uuid: getUuid(), configurationSharedState: lastValidConfigSharedState, identitySharedState: lastValidIdentitySharedState, customerEventData: eventData) else {
             Log.debug(label: getLogTagWith(functionName: #function), "Dropping Audience hit, failed to create hit URL")
             return
         }
