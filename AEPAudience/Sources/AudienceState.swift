@@ -182,7 +182,7 @@ public class AudienceState {
             return [String: Any]()
         }
 
-        let timeout: TimeInterval = lastValidConfigSharedState[AudienceConstants.Configuration.AAM_TIMEOUT] as? TimeInterval ?? AudienceConstants.Default.TIMEOUT
+        let timeout = lastValidConfigSharedState[AudienceConstants.Configuration.AAM_TIMEOUT] as? TimeInterval ?? AudienceConstants.Default.TIMEOUT
 
         // if we have an error decoding the response, log it and bail early
         guard let audienceResponse = try? JSONDecoder().decode(AudienceHitResponse.self, from: response) else {
@@ -309,8 +309,6 @@ public class AudienceState {
         self.dpuuid = ""
         self.dpid = ""
         self.visitorProfile = [:]
-        self.lastValidConfigSharedState = [:]
-        self.lastValidIdentitySharedState = [:]
     }
 
     /// Helper to return a log tag

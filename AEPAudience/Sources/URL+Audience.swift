@@ -28,12 +28,12 @@ extension URL {
             Log.error(label: LOG_TAG, "Building Audience hit URL failed - (Audience Server not found in configuration shared state), returning nil.")
             return nil
         }
-        
+
         // bail if the aam server is empty
         if aamServer.isEmpty {
             return nil
         }
-        
+
         var components = URLComponents()
         components.scheme = "https"
         components.host = aamServer
@@ -98,8 +98,6 @@ extension URL {
         }
 
         // Attach platform suffix
-        //let systemInfoService = ServiceProvider.shared.systemInfoService
-        //if(systemInfoService.get)
         queryItems += [URLQueryItem(name: AudienceConstants.URLKeys.PLATFORM_KEY, value: "ios")]
 
         // Attach URL suffix        

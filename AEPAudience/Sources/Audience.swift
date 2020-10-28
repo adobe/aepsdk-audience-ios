@@ -112,7 +112,6 @@ public class Audience: NSObject, Extension {
             Log.debug(label: getLogTagWith(functionName: #function), "Unable to process AAM event as privacy status is Unknown:  \(event.description)")
             // dispatch with an empty visitor profile in response if privacy is unknown.
             dispatchResponse(visitorProfile: ["": ""], event: event)
-            return
         }
 
         state?.updateLastValidIdentitySharedState(newIdentitySharedState: getSharedState(extensionName: AudienceConstants.SharedStateKeys.IDENTITY, event: event)?.value ?? ["": ""])
@@ -149,6 +148,12 @@ public class Audience: NSObject, Extension {
                 return
             }
             guard let aamForwardingStatus = lastValidConfiguration[AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING] as? Bool else { return }
+            if state?.getPrivacyStatus() == PrivacyStatus.optedOut {
+                Log.debug(label: getLogTagWith(functionName: #function), "Unable to process lifecycle response as privacy status is OPT_OUT:  \(event.description)")
+                // dispatch with an empty visitor profile in response if privacy is opt-out.
+                return
+            }
+
             // a signal with data request will be made if aam forwarding is false
             if !aamForwardingStatus {
                 state?.queueHit(event: event)

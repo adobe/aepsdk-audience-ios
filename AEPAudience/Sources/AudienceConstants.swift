@@ -60,7 +60,7 @@ enum AudienceConstants {
     }
 
     enum Default {
-        static let TIMEOUT = TimeInterval(2000)
+        static let TIMEOUT = TimeInterval(2)
     }
 
     enum ResponseKeys {
