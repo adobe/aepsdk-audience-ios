@@ -76,48 +76,48 @@ jobs:
           event: fail
           custom: |
           {
-          	"blocks": [
-          		{
-          			"type": "header",
-          			"text": {
-          				"type": "plain_text",
-          				"text": "Build Failed :x:",
-          				"emoji": true
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "Build Failed :x:",
+                  "emoji": true
+                }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Project:*\n${CIRCLE_PROJECT_REPONAME}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*When:*\n$(date +'%m/%d/%Y %T')"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Author:*\n${CIRCLE_USERNAME}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Branch:*\n${CIRCLE_BRANCH}"
                   }
+                ]
               },
               {
-          		  "type": "section",
-          			"fields": [
-          			   {
-          					    "type": "mrkdwn",
-          					    "text": "*Project:*\n${CIRCLE_PROJECT_REPONAME}"
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "emoji": true,
+                      "text": "View Job"
                     },
-                    {
-          					     "type": "mrkdwn",
-          					     "text": "*When:*\n$(date +'%m/%d/%Y %T')"
-                    },
-                    {
-          					     "type": "mrkdwn",
-          		           "text": "*Author:*\n${CIRCLE_USERNAME}"
-                    },
-                    {
-          					     "type": "mrkdwn",
-                         "text": "*Branch:*\n${CIRCLE_BRANCH}"
-                    }
-                  ]
-              },
-              {
-          			"type": "actions",
-          			"elements": [
-          				{
-          					"type": "button",
-          					"text": {
-          					     "type": "plain_text",
-          						   "emoji": true,
-          					     "text": "View Job"
-                         },
-          				"url": "${CIRCLE_BUILD_URL}",
-          				"style": "primary"
+                    "url": "${CIRCLE_BUILD_URL}",
+                    "style": "primary"
                   }
                 ]
               }
@@ -129,48 +129,48 @@ jobs:
           event: pass
           custom: |
           {
-          	"blocks": [
-          		{
-          			"type": "header",
-          			"text": {
-          				"type": "plain_text",
-          				"text": "Build Successful :tada:",
-          				"emoji": true
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "Build Successful :tada:",
+                  "emoji": true
+                }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Project:*\n${CIRCLE_PROJECT_REPONAME}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*When:*\n$(date +'%m/%d/%Y %T')"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Author:*\n${CIRCLE_USERNAME}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Branch:*\n${CIRCLE_BRANCH}"
                   }
+                ]
               },
               {
-          		  "type": "section",
-          			"fields": [
-          			   {
-          					    "type": "mrkdwn",
-          					    "text": "*Project:*\n${CIRCLE_PROJECT_REPONAME}"
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "emoji": true,
+                      "text": "View Job"
                     },
-                    {
-          					     "type": "mrkdwn",
-          					     "text": "*When:*\n$(date +'%m/%d/%Y %T')"
-                    },
-                    {
-          					     "type": "mrkdwn",
-          		           "text": "*Author:*\n${CIRCLE_USERNAME}"
-                    },
-                    {
-          					     "type": "mrkdwn",
-                         "text": "*Branch:*\n${CIRCLE_BRANCH}"
-                    }
-                  ]
-              },
-              {
-          			"type": "actions",
-          			"elements": [
-          				{
-          					"type": "button",
-          					"text": {
-          					     "type": "plain_text",
-          						   "emoji": true,
-          					     "text": "View Job"
-                         },
-          				"url": "${CIRCLE_BUILD_URL}",
-          				"style": "primary"
+                    "url": "${CIRCLE_BUILD_URL}",
+                    "style": "primary"
                   }
                 ]
               }
