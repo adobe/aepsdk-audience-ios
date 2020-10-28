@@ -36,6 +36,8 @@ public class AudienceState {
     private var lastValidConfigSharedState = [String: Any]()
     /// The last valid identity shared state received from the Identity extension
     private var lastValidIdentitySharedState = [String: Any]()
+    /// The Audience Manager Analytics forwarding enabled status
+    private var aamForwardingStatus = false
 
     private(set) var hitQueue: HitQueuing
 
@@ -113,6 +115,7 @@ public class AudienceState {
     func setMobilePrivacy(status: PrivacyStatus) {
         self.privacyStatus = status
         if privacyStatus == .optedOut {
+            sendOptOutHit()
             clearIdentifiers()
         }
         // update hit queue with privacy status
@@ -120,9 +123,11 @@ public class AudienceState {
     }
 
     /// Updates the last valid configuration shared state to `newConfigSharedState`
+    /// The aam forwarding status will be retrieved from the new configuration shared state and stored in the `AudienceState`.
     /// - Parameter newConfigSharedState: The new configuration shared state to replace the current last valid configuration shared state
     func updateLastValidConfigSharedState(newConfigSharedState: [String: Any]) {
         self.lastValidConfigSharedState = newConfigSharedState
+        self.aamForwardingStatus = lastValidConfigSharedState[AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING] as? Bool ?? false
     }
 
     /// Updates the last valid identity shared state to `newIdentitySharedState`
@@ -158,9 +163,8 @@ public class AudienceState {
         hitQueue.queue(entity: DataEntity(uniqueIdentifier: UUID().uuidString, timestamp: Date(), data: hitData))
     }
 
-    /// Sends an opt-out hit if the current privacy status is opted-out
-    /// - Parameter event: the event responsible for sending this opt-out hit
-    func handleOptOut(event: Event) {
+    /// Sends an opt-out hit to the configured Audience Manager server
+    func sendOptOutHit() {
         guard let aamServer = lastValidConfigSharedState[AudienceConstants.Configuration.AAM_SERVER] as? String else { return }
 
         // only send the opt-out hit if the audience manager server and uuid are not empty
@@ -265,6 +269,12 @@ public class AudienceState {
     /// - Returns: The `lastValidIdentitySharedState` stored in the AudienceState
     func getLastValidIdentitySharedState() -> [String:Any] {
         return self.lastValidIdentitySharedState
+    }
+
+    /// Returns the aam forwarding enabled status from the AudienceState instance.
+    /// - Returns: A string containing the `uuid`
+    func getAamForwardingStatus() -> Bool {
+        return self.aamForwardingStatus
     }
 
     /// Get the data for this AudienceState instance to share with other extensions.

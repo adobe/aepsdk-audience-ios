@@ -81,16 +81,12 @@ public class Audience: NSObject, Extension {
     ///   - event: The configuration response event
     private func handleConfigurationResponse(event: Event) {
         // bail if the config data is not valid
-        guard let configSharedState = getSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event)?.value else {
-            return
-        }
+        guard let configSharedState = getSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event)?.value else { return }
         state?.updateLastValidConfigSharedState(newConfigSharedState: configSharedState)
         // get the privacy status
         guard let privacyStatusStr = configSharedState[AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY] as? String else { return }
         let privacyStatus = PrivacyStatus(rawValue: privacyStatusStr) ?? PrivacyStatus.unknown
         if privacyStatus == .optedOut {
-            // send opt-out hit
-            state?.handleOptOut(event: event)
             updateSharedState(event: event, data: state?.getStateData() ?? [:])
         }
 
@@ -144,16 +140,15 @@ public class Audience: NSObject, Extension {
     private func handleLifecycleResponse(event: Event) {
         guard let response = event.data else { return }
         if !response.isEmpty {
-            let lastValidConfiguration = state?.getLastValidConfigSharedState()
-            guard let aamForwardingStatus = lastValidConfiguration?[AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING] as? Bool else { return }
             if state?.getPrivacyStatus() == PrivacyStatus.optedOut {
                 Log.debug(label: getLogTagWith(functionName: #function), "Unable to process lifecycle response as privacy status is OPT_OUT:  \(event.description)")
                 // dispatch with an empty visitor profile in response if privacy is opt-out.
+                dispatchResponse(visitorProfile: ["": ""], event: event)
                 return
             }
 
             // a signal with data request will be made if aam forwarding is false
-            if !aamForwardingStatus {
+            if !(state?.getAamForwardingStatus() ?? false) {
                 state?.queueHit(event: event)
             }
         }
@@ -212,10 +207,10 @@ public class Audience: NSObject, Extension {
         }
 
         // process the network response and create a new shared state for the audience extension
-        let audienceSharedState = state?.processNetworkResponse(event: hit.event, response: responseData ?? Data())
+        let newAudienceSharedState = state?.processNetworkResponse(event: hit.event, response: responseData ?? Data())
 
         // update audience manager shared state
-        updateSharedState(event: hit.event, data: audienceSharedState ?? [:])
+        updateSharedState(event: hit.event, data: newAudienceSharedState ?? [:])
 
         // retrieve the visitor profile
         visitorProfile = state?.getVisitorProfile() ?? [:]

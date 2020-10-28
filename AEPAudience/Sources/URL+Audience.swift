@@ -24,13 +24,11 @@ extension URL {
     ///   - identitySharedState: the current `Identity` shared state
     ///   - customerEventData: the customer event data present in the triggering event
     static func buildAudienceHitURL(uuid: String?, configurationSharedState: [String: Any]?, identitySharedState: [String: Any]?, customerEventData: [String: String]) -> URL? {
-        guard let aamServer = configurationSharedState?[AudienceConstants.Configuration.AAM_SERVER] as? String else {
-            Log.error(label: LOG_TAG, "Building Audience hit URL failed - (Audience Server not found in configuration shared state), returning nil.")
-            return nil
-        }
+        let aamServer = configurationSharedState?[AudienceConstants.Configuration.AAM_SERVER] as? String ?? ""
 
         // bail if the aam server is empty
         if aamServer.isEmpty {
+            Log.error(label: LOG_TAG, "Building Audience hit URL failed - (Audience Server not found in configuration shared state), returning nil.")
             return nil
         }
 
