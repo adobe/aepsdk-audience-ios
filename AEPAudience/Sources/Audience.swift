@@ -128,7 +128,10 @@ public class Audience: NSObject, Extension {
     ///   - event: The lifecycle response event
     private func handleLifecycleResponse(event: Event) {
         Log.debug(label: getLogTagWith(functionName: #function), "Received a Lifecycle Response event.")
-        guard let response = event.data else { return }
+        guard let response = event.data else {
+            Log.debug(label: getLogTagWith(functionName: #function), "The Lifecycle Response event data was not present, ignoring the event.")
+            return
+        }
         if !response.isEmpty {
             // a signal with data request will be made if aam forwarding is false
             if !(state?.getAamForwardingStatus() ?? false) {

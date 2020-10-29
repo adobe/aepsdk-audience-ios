@@ -557,6 +557,104 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[1]?.connectTimeout)
     }
 
+    func testHandleAnalyticsResponse_WithInvalidStuffKeyAndValidDestsInResponse() {
+        // setup
+        let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // create analytics response content
+        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
+        // create the analytics event
+        let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
+        mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
+        let _ = audience.readyForEvent(analyticsEvent)
+
+        // test
+        mockRuntime.simulateComingEvent(event: analyticsEvent)
+
+        // verify
+        let visitorProfile = audience?.state?.getVisitorProfile()
+        XCTAssertEqual(["anotherCookieName": "segments=1234567,7890123"], visitorProfile)
+        XCTAssertEqual(2, mockNetworkService.calledNetworkRequests.count)
+        XCTAssertEqual("www.adobe.com", mockNetworkService.calledNetworkRequests[0]?.url.absoluteString)
+        XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
+        XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
+        XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[1]?.connectTimeout)
+    }
+
+    func testHandleAnalyticsResponse_WithInvalidStuffValueAndValidDestsInResponse() {
+        // setup
+        let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // create analytics response content
+        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
+        // create the analytics event
+        let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
+        mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
+        let _ = audience.readyForEvent(analyticsEvent)
+
+        // test
+        mockRuntime.simulateComingEvent(event: analyticsEvent)
+
+        // verify
+        let visitorProfile = audience?.state?.getVisitorProfile()
+        XCTAssertEqual(["anotherCookieName": "segments=1234567,7890123"], visitorProfile)
+        XCTAssertEqual(2, mockNetworkService.calledNetworkRequests.count)
+        XCTAssertEqual("www.adobe.com", mockNetworkService.calledNetworkRequests[0]?.url.absoluteString)
+        XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
+        XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
+        XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[1]?.connectTimeout)
+    }
+
+    func testHandleAnalyticsResponse_WithNoStuffArrayAndValidDestsInResponse() {
+        // setup
+        let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // create analytics response content
+        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
+        // create the analytics event
+        let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
+        mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
+        let _ = audience.readyForEvent(analyticsEvent)
+
+        // test
+        mockRuntime.simulateComingEvent(event: analyticsEvent)
+
+        // verify
+        let visitorProfile = audience?.state?.getVisitorProfile()
+        XCTAssertEqual([:], visitorProfile)
+        XCTAssertEqual(2, mockNetworkService.calledNetworkRequests.count)
+        XCTAssertEqual("www.adobe.com", mockNetworkService.calledNetworkRequests[0]?.url.absoluteString)
+        XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
+        XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
+        XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[1]?.connectTimeout)
+    }
+
+    func testHandleAnalyticsResponse_WithOneInvalidDestinationInResponse() {
+        // setup
+        let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // create analytics response content
+        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"\"},{\"c\":\"www.google.com\"}]}"]
+        // create the analytics event
+        let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
+        mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
+        let _ = audience.readyForEvent(analyticsEvent)
+
+        // test
+        mockRuntime.simulateComingEvent(event: analyticsEvent)
+
+        // verify
+        let visitorProfile = audience?.state?.getVisitorProfile()
+        XCTAssertEqual([:], visitorProfile)
+        XCTAssertEqual(1, mockNetworkService.calledNetworkRequests.count)
+        XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[0]?.url.absoluteString)
+        XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
+    }
+
     // ==========================================================================
     // handleAudienceIdentityRequest
     // ==========================================================================
