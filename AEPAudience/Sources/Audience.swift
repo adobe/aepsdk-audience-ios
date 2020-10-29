@@ -87,7 +87,8 @@ public class Audience: NSObject, Extension {
         guard let privacyStatusStr = configSharedState[AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY] as? String else { return }
         let privacyStatus = PrivacyStatus(rawValue: privacyStatusStr) ?? PrivacyStatus.unknown
         if privacyStatus == .optedOut {
-            updateSharedState(event: event, data: state?.getStateData() ?? [:])
+            Log.debug(label: getLogTagWith(functionName: #function), "Privacy status is opted-out. Queued Audience hits and stored Audience Identifiers will be cleared.")
+            createSharedState(data: state?.getStateData() ?? [:], event: event)
         }
 
         // if privacy status is opted out, audience manager data in the AudienceState will be cleared.
@@ -97,28 +98,15 @@ public class Audience: NSObject, Extension {
     // Handles the signalWithData API by sending the AAM hit with passed event data then dispatching a response event with the visitorProfile
     /// - Parameter event: The event coming from the signalWithData API
     private func handleAudienceContentRequest(event: Event) {
-        if state?.getPrivacyStatus() == PrivacyStatus.optedOut {
-            Log.debug(label: getLogTagWith(functionName: #function), "Unable to process AAM event as privacy status is OPT_OUT:  \(event.description)")
-            // dispatch with an empty visitor profile in response if privacy is opt-out.
-            dispatchResponse(visitorProfile: ["": ""], event: event)
-            return
-        }
-
-        if state?.getPrivacyStatus() == PrivacyStatus.unknown {
-            Log.debug(label: getLogTagWith(functionName: #function), "Unable to process AAM event as privacy status is Unknown:  \(event.description)")
-            // dispatch with an empty visitor profile in response if privacy is unknown.
-            dispatchResponse(visitorProfile: ["": ""], event: event)
-        }
-
+        Log.debug(label: getLogTagWith(functionName: #function), "Received an Audience Manager signalWithData event, attempting to queue the hit.")
         state?.updateLastValidIdentitySharedState(newIdentitySharedState: getSharedState(extensionName: AudienceConstants.SharedStateKeys.IDENTITY, event: event)?.value ?? ["": ""])
-
-        state?.queueHit(event: event)
+        state?.queueHit(event: event, dispatchResponse: dispatchResponse(visitorProfile:event:))
     }
 
     // Handles the getVisitorProfile API by getting the current visitorProfile then dispatching a response event with the visitorProfile
     /// - Parameter event: The event coming from the getVisitorProfile API
     private func handleAudienceIdentityRequest(event: Event) {
-        // Dispatch with dpid, dpuuid and visitorProfile
+        Log.debug(label: getLogTagWith(functionName: #function), "Received an Audience Manager getVisitorProfile event, retrieving and dispatching the stored visitor profile.")
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_PROFILE] = state?.getVisitorProfile()
         let responseEvent = event.createResponseEvent(name: "Audience Response Identity", type: EventType.audienceManager, source: EventSource.responseIdentity, data: eventData)
@@ -130,26 +118,22 @@ public class Audience: NSObject, Extension {
     // Handles the reset API which clears all the identifiers and visitorProfile then dispatches a sharedStateUpdate
     /// - Parameter event: The event coming from the reset API
     private func handleAudienceResetRequest(event: Event) {
+        Log.debug(label: getLogTagWith(functionName: #function), "Received a reset event, clearing all stored Audience Manager identities and visitor profile.")
         state?.clearIdentifiers()
-        updateSharedState(event: event, data: state?.getStateData() ?? [:])
+        createSharedState(data: state?.getStateData() ?? [:], event: event)
     }
 
     /// Processes Lifecycle Response content and sends a signal to Audience Manager if aam forwarding is disabled.
     /// - Parameter:
     ///   - event: The lifecycle response event
     private func handleLifecycleResponse(event: Event) {
+        Log.debug(label: getLogTagWith(functionName: #function), "Received a Lifecycle Response event.")
         guard let response = event.data else { return }
         if !response.isEmpty {
-            if state?.getPrivacyStatus() == PrivacyStatus.optedOut {
-                Log.debug(label: getLogTagWith(functionName: #function), "Unable to process lifecycle response as privacy status is OPT_OUT:  \(event.description)")
-                // dispatch with an empty visitor profile in response if privacy is opt-out.
-                dispatchResponse(visitorProfile: ["": ""], event: event)
-                return
-            }
-
             // a signal with data request will be made if aam forwarding is false
             if !(state?.getAamForwardingStatus() ?? false) {
-                state?.queueHit(event: event)
+                Log.debug(label: getLogTagWith(functionName: #function), "The Lifecycle Response event data was valid and aam forwarding status is false, attempting to queue an Audience Hit.")
+                state?.queueHit(event: event, dispatchResponse: dispatchResponse(visitorProfile:event:))
             }
         }
     }
@@ -158,65 +142,33 @@ public class Audience: NSObject, Extension {
     /// - Parameter:
     ///   - event: The analytics response event
     private func handleAnalyticsResponse(event: Event) {
+        Log.debug(label: getLogTagWith(functionName: #function), "Received an Analtyics Response event.")
         guard let response = event.data?[AudienceConstants.Analytics.SERVER_RESPONSE] as? String else { return }
         if !response.isEmpty {
             guard let responseAsData: Data = response.data(using: .utf8) else {
                 return
             }
-            // process the network response and create a new shared state for the audience extension
-            let audienceSharedState = state?.processNetworkResponse(event: event, response: responseAsData)
+            Log.debug(label: getLogTagWith(functionName: #function), "The Analytics response was valid, processing the response.")
+            // process the analytics network response
+            state?.processNetworkResponse(event: event, response: responseAsData)
 
-            updateSharedState(event: event, data: audienceSharedState ?? [:])
+            // create a new shared state for the audience extension
+            createSharedState(data: state?.getStateData() ?? [:], event: event)
         }
-    }
-
-    /// Updates the Audience shared state versioned at `event` with `data`
-    /// - Parameters:
-    ///   - event: the event to version the shared state at
-    ///   - data: data for the shared state
-    private func updateSharedState(event: Event, data: [String: Any]) {
-        let sharedStateData = data
-        Log.trace(label: getLogTagWith(functionName: #function), "Updating Audience shared state")
-        createSharedState(data: sharedStateData as [String: Any], event: event)
     }
 
     // MARK: Network Response Handler
 
     /// Invoked by the `AudienceHitProcessor` each time we receive a network response
     /// - Parameters:
-    ///   - entity: The `DataEntity` that was processed by the hit processor
+    ///   - entity: The data entity responsible for the hit
     ///   - responseData: the network response data if any
     private func handleNetworkResponse(entity: DataEntity, responseData: Data?) {
-        var visitorProfile: [String:String] = [:]
-        if state?.getPrivacyStatus() == .optedOut {
-            Log.debug(label: getLogTagWith(functionName: #function), "Unable to process network response as privacy status is OPT_OUT.")
-            return
-        }
-
         guard let data = entity.data as Data?, let hit = try? JSONDecoder().decode(AudienceHit.self, from: data) else {
             Log.debug(label: getLogTagWith(functionName: #function), "Failed to decode the Audience Hit, aborting network response processing.")
             return
         }
-
-        // if we have no response from the audience server log it and bail early
-        if responseData == nil {
-            Log.debug(label: getLogTagWith(functionName: #function), "No response from the server.")
-            updateSharedState(event: hit.event, data: state?.getStateData() ?? [:])
-            dispatchResponse(visitorProfile: visitorProfile, event: hit.event)
-            return
-        }
-
-        // process the network response and create a new shared state for the audience extension
-        let newAudienceSharedState = state?.processNetworkResponse(event: hit.event, response: responseData ?? Data())
-
-        // update audience manager shared state
-        updateSharedState(event: hit.event, data: newAudienceSharedState ?? [:])
-
-        // retrieve the visitor profile
-        visitorProfile = state?.getVisitorProfile() ?? [:]
-
-        // dispatch the updated visitor profile in response.
-        dispatchResponse(visitorProfile: visitorProfile, event: hit.event)
+        state?.handleHitResponse(hit: hit, responseData: responseData, dispatchResponse: dispatchResponse(visitorProfile:event:), createSharedState: createSharedState(data:event:))
     }
 
     // MARK: Helpers

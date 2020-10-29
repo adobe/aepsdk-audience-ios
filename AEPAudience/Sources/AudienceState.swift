@@ -50,6 +50,129 @@ public class AudienceState {
 
     // MARK: Public methods
 
+    /// Queues an AAM hit with the passed in event data then dispatches a response event with the visitorProfile
+    /// - Parameters:
+    ///   - event: the event to version the shared state at
+    ///   - dispatchResponse: a function which when invoked dispatches a response `Event` with the visitor profile to the `EventHub`
+    func queueHit(event: Event, dispatchResponse: ([String:String], Event) -> Void) {
+        var eventData = [String:String]()
+        if privacyStatus == PrivacyStatus.optedOut {
+            Log.debug(label: getLogTagWith(functionName: #function), "Unable to process AAM event as privacy status is opted-out:  \(event.description)")
+            // dispatch with an empty visitor profile in response if privacy is opt-out.
+            dispatchResponse(["": ""], event)
+            return
+        }
+
+        if privacyStatus == PrivacyStatus.unknown {
+            Log.debug(label: getLogTagWith(functionName: #function), "Queueing the Audience Hit, privacy status is unknown:  \(event.description)")
+            // dispatch with an empty visitor profile in response if privacy is unknown.
+            dispatchResponse(["": ""], event)
+        }
+
+        // if the event is a lifecycle event, convert the lifecycle keys to audience manager keys
+        if event.type == EventType.lifecycle {
+            eventData = convertLifecycleKeys(event: event)
+        } else {
+            eventData = event.data as? [String: String] ?? ["": ""]
+        }
+
+        guard let url = URL.buildAudienceHitURL(uuid: getUuid(), configurationSharedState: lastValidConfigSharedState, identitySharedState: lastValidIdentitySharedState, customerEventData: eventData) else {
+            Log.debug(label: getLogTagWith(functionName: #function), "Dropping Audience hit, failed to create hit URL")
+            return
+        }
+
+        let aamTimeout: TimeInterval = lastValidConfigSharedState[AudienceConstants.Configuration.AAM_TIMEOUT] as? TimeInterval ?? AudienceConstants.Default.TIMEOUT
+        guard let hitData = try? JSONEncoder().encode(AudienceHit(url: url, timeout: aamTimeout, event: event)) else {
+            Log.debug(label: getLogTagWith(functionName: #function), "Dropping Audience hit, failed to encode AudienceHit")
+            return
+        }
+
+        hitQueue.queue(entity: DataEntity(uniqueIdentifier: UUID().uuidString, timestamp: Date(), data: hitData))
+    }
+
+    /// Sends an opt-out hit to the configured Audience Manager server
+    func sendOptOutHit() {
+        guard let aamServer = lastValidConfigSharedState[AudienceConstants.Configuration.AAM_SERVER] as? String else { return }
+
+        // only send the opt-out hit if the audience manager server and uuid are not empty
+        if !getUuid().isEmpty && !aamServer.isEmpty {
+            ServiceProvider.shared.networkService.sendOptOutRequest(aamServer: aamServer, uuid: uuid)
+        }
+    }
+
+    /// Invoked by the Audience Manager extension each time we receive a network response for a processed hit
+    /// - Parameters:
+    ///   - hit: the hit that was processed
+    ///   - responseData: the response data if any
+    ///   - dispatchResponse: a function which when invoked dispatches a response `Event` with the visitor profile to the `EventHub`
+    ///   - createSharedState: a function which when invoked creates a shared state for the Audience Manager extension
+    func handleHitResponse(hit: AudienceHit, responseData: Data?, dispatchResponse: ([String:String], Event) -> Void, createSharedState: (([String: Any], Event) -> Void)) {
+        if getPrivacyStatus() == .optedOut {
+            Log.debug(label: getLogTagWith(functionName: #function), "Unable to process network response as privacy status is OPT_OUT.")
+            return
+        }
+
+        // if we have no response from the audience server log it and bail early
+        if responseData == nil {
+            Log.debug(label: getLogTagWith(functionName: #function), "No response from the server.")
+            createSharedState(getStateData(), hit.event)
+            dispatchResponse(getVisitorProfile(), hit.event)
+            return
+        }
+
+        // process the network response
+        processNetworkResponse(event: hit.event, response: responseData ?? Data())
+
+        // update audience manager shared state
+        createSharedState(getStateData(), hit.event)
+
+        // dispatch the updated visitor profile in response.
+        dispatchResponse(getVisitorProfile(), hit.event)
+    }
+
+    /// Processes a response from the Audience Manager server or Analytics extension. This function attempts to forward any necessary requests found in the AAM "dests" array, and to create a dictionary out of the contents of the "stuff" array.
+    /// - Parameters:
+    ///   - event: the response event to be processed
+    ///   - response: the JSON response received
+    func processNetworkResponse(event: Event, response: Data) {
+        // bail if we don't have configuration yet
+        if lastValidConfigSharedState.isEmpty { return }
+        // quick out if privacy somehow became opted out after receiving a network response
+        if privacyStatus == .optedOut {
+            Log.debug(label: getLogTagWith(functionName: #function), "Will not process the network response as privacy is opted-out.")
+            return
+        }
+
+        let timeout = lastValidConfigSharedState[AudienceConstants.Configuration.AAM_TIMEOUT] as? TimeInterval ?? AudienceConstants.Default.TIMEOUT
+
+        // if we have an error decoding the response, log it and bail early
+        guard let audienceResponse = try? JSONDecoder().decode(AudienceHitResponse.self, from: response) else {
+            Log.debug(label: getLogTagWith(functionName: #function), "Failed to decode Audience Manager response.")
+            return
+        }
+
+        // process dests array
+        processDestsArray(response: audienceResponse, timeout: timeout)
+
+        // save uuid for use with subsequent calls
+        let uuid = audienceResponse.uuid ?? ""
+        setUuid(uuid: uuid)
+
+        // process stuff array
+        let processedStuff = processStuffArray(stuff: audienceResponse.stuff ?? [AudienceStuffObject]())
+
+        if !processedStuff.isEmpty {
+            Log.trace(label: getLogTagWith(functionName: #function), "Stuff in response received: \(processedStuff).")
+        } else {
+            Log.trace(label: getLogTagWith(functionName: #function), "Stuff in response was empty.")
+        }
+
+        // save profile in defaults
+        setVisitorProfile(visitorProfile: processedStuff)
+    }
+
+    // Mark: setters
+
     /// Sets the value of the dpid property in the AudienceState instance.
     /// Setting the identifier is ignored if the global privacy is set to `PrivacyStatus.optedOut`.
     /// - Parameter:
@@ -134,87 +257,6 @@ public class AudienceState {
     /// - Parameter newIdentitySharedState: The new identity shared state to replace the current last valid identity shared state.
     func updateLastValidIdentitySharedState(newIdentitySharedState: [String: Any]) {
         self.lastValidIdentitySharedState = newIdentitySharedState
-    }
-
-    /// Queues an AAM hit with the passed in event data then dispatches a response event with the visitorProfile
-    /// - Parameters:
-    ///   - event: the event to version the shared state at
-    func queueHit(event: Event) {
-        var eventData = [String:String]()
-
-        // if the event is a lifecycle event, convert the lifecycle keys to audience manager keys
-        if event.type == EventType.lifecycle {
-            eventData = convertLifecycleKeys(event: event)
-        } else {
-            eventData = event.data as? [String: String] ?? ["": ""]
-        }
-
-        guard let url = URL.buildAudienceHitURL(uuid: getUuid(), configurationSharedState: lastValidConfigSharedState, identitySharedState: lastValidIdentitySharedState, customerEventData: eventData) else {
-            Log.debug(label: getLogTagWith(functionName: #function), "Dropping Audience hit, failed to create hit URL")
-            return
-        }
-
-        let aamTimeout: TimeInterval = lastValidConfigSharedState[AudienceConstants.Configuration.AAM_TIMEOUT] as? TimeInterval ?? AudienceConstants.Default.TIMEOUT
-        guard let hitData = try? JSONEncoder().encode(AudienceHit(url: url, timeout: aamTimeout, event: event)) else {
-            Log.debug(label: getLogTagWith(functionName: #function), "Dropping Audience hit, failed to encode AudienceHit")
-            return
-        }
-
-        hitQueue.queue(entity: DataEntity(uniqueIdentifier: UUID().uuidString, timestamp: Date(), data: hitData))
-    }
-
-    /// Sends an opt-out hit to the configured Audience Manager server
-    func sendOptOutHit() {
-        guard let aamServer = lastValidConfigSharedState[AudienceConstants.Configuration.AAM_SERVER] as? String else { return }
-
-        // only send the opt-out hit if the audience manager server and uuid are not empty
-        if !getUuid().isEmpty && !aamServer.isEmpty {
-            ServiceProvider.shared.networkService.sendOptOutRequest(aamServer: aamServer, uuid: uuid)
-        }
-    }
-
-    /// Processes a response from the Audience Manager server or Analytics extension. This function attempts to forward any necessary requests found in the AAM "dests" array, and to create a dictionary out of the contents of the "stuff" array.
-    /// - Parameters:
-    ///   - event: the response event to be processed
-    ///   - response: the JSON response received
-    func processNetworkResponse(event: Event, response: Data) -> [String: Any] {
-        // bail if we don't have configuration yet
-        if lastValidConfigSharedState.isEmpty { return [String: Any]() }
-        // quick out if privacy somehow became opted out after receiving a network response
-        if privacyStatus == .optedOut {
-            Log.debug(label: getLogTagWith(functionName: #function), "Will not process the network response as privacy is opted-out.")
-            return [String: Any]()
-        }
-
-        let timeout = lastValidConfigSharedState[AudienceConstants.Configuration.AAM_TIMEOUT] as? TimeInterval ?? AudienceConstants.Default.TIMEOUT
-
-        // if we have an error decoding the response, log it and bail early
-        guard let audienceResponse = try? JSONDecoder().decode(AudienceHitResponse.self, from: response) else {
-            Log.debug(label: getLogTagWith(functionName: #function), "Failed to decode Audience Manager response.")
-            return [String: Any]()
-        }
-
-        // process dests array
-        processDestsArray(response: audienceResponse, timeout: timeout)
-
-        // save uuid for use with subsequent calls
-        let uuid = audienceResponse.uuid ?? ""
-        setUuid(uuid: uuid)
-
-        // process stuff array
-        let processedStuff = processStuffArray(stuff: audienceResponse.stuff ?? [AudienceStuffObject]())
-
-        if !processedStuff.isEmpty {
-            Log.trace(label: getLogTagWith(functionName: #function), "Stuff in response received: \(processedStuff).")
-        } else {
-            Log.trace(label: getLogTagWith(functionName: #function), "Stuff in response was empty.")
-        }
-
-        // save profile in defaults
-        setVisitorProfile(visitorProfile: processedStuff)
-
-        // return audience manager shared state
-        return getStateData()
     }
 
     // MARK: getters
