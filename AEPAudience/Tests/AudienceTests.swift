@@ -42,6 +42,7 @@ class AudienceTests: XCTestCase {
         }
     }
 
+    // MARK: helpers
     private func dispatchConfigurationEventForTesting(aamServer: String?, aamForwardingStatus: Bool, privacyStatus: PrivacyStatus, aamTimeout: TimeInterval?) -> [String:Any]{
         // setup configuration data
         let configData = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: privacyStatus.rawValue, AudienceConstants.Configuration.AAM_SERVER: aamServer as Any, AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING: aamForwardingStatus, AudienceConstants.Configuration.AAM_TIMEOUT: aamTimeout as Any] as [String: Any]
@@ -54,6 +55,8 @@ class AudienceTests: XCTestCase {
         // return config data for use as shared state
         return configData
     }
+
+    //MARK: Audience Unit Tests
 
     // ==========================================================================
     // handleConfigurationResponse

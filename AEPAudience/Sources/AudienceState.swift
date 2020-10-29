@@ -107,7 +107,7 @@ public class AudienceState {
     ///   - dispatchResponse: a function which when invoked dispatches a response `Event` with the visitor profile to the `EventHub`
     ///   - createSharedState: a function which when invoked creates a shared state for the Audience Manager extension
     func handleHitResponse(hit: AudienceHit, responseData: Data?, dispatchResponse: ([String:String], Event) -> Void, createSharedState: (([String: Any], Event) -> Void)) {
-        if getPrivacyStatus() == .optedOut {
+        if privacyStatus == .optedOut {
             Log.debug(label: getLogTagWith(functionName: #function), "Unable to process network response as privacy status is OPT_OUT.")
             return
         }
