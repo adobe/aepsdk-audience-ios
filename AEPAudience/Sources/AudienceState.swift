@@ -120,8 +120,8 @@ public class AudienceState {
             return
         }
 
-        // process the network response
-        processNetworkResponse(event: hit.event, response: responseData ?? Data())
+        // process the response data from the audience hit
+        processResponseData(event: hit.event, response: responseData ?? Data())
 
         // update audience manager shared state
         createSharedState(getStateData(), hit.event)
@@ -134,7 +134,7 @@ public class AudienceState {
     /// - Parameters:
     ///   - event: the response event to be processed
     ///   - response: the JSON response received
-    func processNetworkResponse(event: Event, response: Data) {
+    func processResponseData(event: Event, response: Data) {
         // bail if we don't have configuration yet
         if lastValidConfigSharedState.isEmpty { return }
         // quick out if privacy somehow became opted out after receiving a network response

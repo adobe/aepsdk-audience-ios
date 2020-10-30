@@ -95,16 +95,16 @@ public class Audience: NSObject, Extension {
         state?.setMobilePrivacy(status: privacyStatus)
     }
 
-    // Handles the signalWithData API by sending the AAM hit with passed event data then dispatching a response event with the visitorProfile
-    /// - Parameter event: The event coming from the signalWithData API
+    /// Handles the signalWithData API by attempting to send the Audience Manager hit containing the passed-in event data. If a response is received for the processed `AudienceHit`, a response content event with visitor profile data is dispatched.
+    /// - Parameter event: The event coming from the signalWithData API invocation
     private func handleAudienceContentRequest(event: Event) {
         Log.debug(label: getLogTagWith(functionName: #function), "Received an Audience Manager signalWithData event, attempting to queue the hit.")
         state?.updateLastValidIdentitySharedState(newIdentitySharedState: getSharedState(extensionName: AudienceConstants.SharedStateKeys.IDENTITY, event: event)?.value ?? ["": ""])
         state?.queueHit(event: event, dispatchResponse: dispatchResponse(visitorProfile:event:))
     }
 
-    // Handles the getVisitorProfile API by getting the current visitorProfile then dispatching a response event with the visitorProfile
-    /// - Parameter event: The event coming from the getVisitorProfile API
+    /// Handles the getVisitorProfile API by dispatching a response content event containing the visitor profile stored in the `AudienceState`.
+    /// - Parameter event: The event coming from the getVisitorProfile API invocation
     private func handleAudienceIdentityRequest(event: Event) {
         Log.debug(label: getLogTagWith(functionName: #function), "Received an Audience Manager getVisitorProfile event, retrieving and dispatching the stored visitor profile.")
         var eventData = [String: Any]()
@@ -115,8 +115,8 @@ public class Audience: NSObject, Extension {
         dispatch(event: responseEvent)
     }
 
-    // Handles the reset API which clears all the identifiers and visitorProfile then dispatches a sharedStateUpdate
-    /// - Parameter event: The event coming from the reset API
+    /// Handles the reset API by clearing all the identifiers and visitorProfile in the `AudienceState`.
+    /// - Parameter event: The event coming from the reset API invocation
     private func handleAudienceResetRequest(event: Event) {
         Log.debug(label: getLogTagWith(functionName: #function), "Received a reset event, clearing all stored Audience Manager identities and visitor profile.")
         state?.clearIdentifiers()
@@ -153,7 +153,7 @@ public class Audience: NSObject, Extension {
             }
             Log.debug(label: getLogTagWith(functionName: #function), "The Analytics response was valid, processing the response.")
             // process the analytics network response
-            state?.processNetworkResponse(event: event, response: responseAsData)
+            state?.processResponseData(event: event, response: responseAsData)
 
             // create a new shared state for the audience extension
             createSharedState(data: state?.getStateData() ?? [:], event: event)
