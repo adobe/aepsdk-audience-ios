@@ -142,6 +142,7 @@ enum AudienceConstants {
         static let LIFECYCLE_CONTEXT_DATA  = "lifecyclecontextdata"
         static let LIFECYCLE_PAUSE         = "pause"
         static let LIFECYCLE_START         = "start"
+        static let LIFECYCLE_START_EVENT_NAME = "LifecycleStart"
         static let LOCALE                  = "locale"
         static let MAX_SESSION_LENGTH      = "maxsessionlength"
         static let MONTHLY_ENGAGED_EVENT   = "monthlyenguserevent"

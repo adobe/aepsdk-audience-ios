@@ -124,10 +124,15 @@ public class Audience: NSObject, Extension {
     }
 
     /// Processes Lifecycle Response content and sends a signal to Audience Manager if aam forwarding is disabled.
+    /// The Audience Manager shared state will be updated on Lifecycle Start events.
     /// - Parameter:
     ///   - event: The lifecycle response event
     private func handleLifecycleResponse(event: Event) {
         Log.debug(label: getLogTagWith(functionName: #function), "Received a Lifecycle Response event.")
+        // update Audience Manager shared state on lifecycle start events
+        if event.name == AudienceConstants.Lifecycle.LIFECYCLE_START_EVENT_NAME {
+            createSharedState(data: state?.getStateData() ?? [:], event: nil)
+        }
         guard let response = event.data else {
             Log.debug(label: getLogTagWith(functionName: #function), "The Lifecycle Response event data was not present, ignoring the event.")
             return

@@ -36,10 +36,8 @@ class AudienceTests: XCTestCase {
     }
 
     override func tearDown() {
-        // clean the datastore after each test
-        for key in UserDefaults.standard.dictionaryRepresentation().keys {
-            UserDefaults.standard.removeObject(forKey: key)
-        }
+        // clean the defaults after each test
+        UserDefaults.clear()
     }
 
     // MARK: helpers
@@ -413,6 +411,64 @@ class AudienceTests: XCTestCase {
 
         // verify
         XCTAssertEqual(0, audience.state?.hitQueue.count())
+    }
+    
+    func testHandleLifecycleStartEvent_When_UuidIsPresentInAudienceState() {
+        // set a uuid in the audience state
+        audience?.state?.setUuid(uuid: "audienceStateUuid")
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // create lifecycle response content
+        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
+        // create the lifecycle event and simulate having the configuration data in shared state
+        let lifecycleEvent = Event(name: AudienceConstants.Lifecycle.LIFECYCLE_START_EVENT_NAME, type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
+        mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
+        let _ = audience.readyForEvent(lifecycleEvent)
+
+        // test
+        mockRuntime.simulateComingEvent(event: lifecycleEvent)
+
+        // verify retrieved shared state contains the set uuid
+        let audienceSharedState = mockRuntime.getLatestAudienceSharedState()
+        XCTAssertEqual(audienceSharedState as! [String: String], [AudienceConstants.EventDataKeys.UUID: "audienceStateUuid"])
+    }
+
+    func testHandleLifecycleStartEvent_When_UuidIsNotPresentInAudienceStateButIsPresentInDataStore() {
+        // set a uuid in the datastore
+        dataStore.set(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, value: "dataStoreUuid")
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // create lifecycle response content
+        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
+        // create the lifecycle event and simulate having the configuration data in shared state
+        let lifecycleEvent = Event(name: AudienceConstants.Lifecycle.LIFECYCLE_START_EVENT_NAME, type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
+        mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
+        let _ = audience.readyForEvent(lifecycleEvent)
+
+        // test
+        mockRuntime.simulateComingEvent(event: lifecycleEvent)
+
+        // verify retrieved shared state contains the uuid retrieved from the data store
+        let audienceSharedState = mockRuntime.getLatestAudienceSharedState()
+        XCTAssertEqual(audienceSharedState as! [String: String], [AudienceConstants.EventDataKeys.UUID: "dataStoreUuid"])
+    }
+
+    func testHandleLifecycleStartEvent_When_UuidIsNotPresentInAudienceStateOrInDataStore() {
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // create lifecycle response content
+        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
+        // create the lifecycle event and simulate having the configuration data in shared state
+        let lifecycleEvent = Event(name: AudienceConstants.Lifecycle.LIFECYCLE_START_EVENT_NAME, type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
+        mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
+        let _ = audience.readyForEvent(lifecycleEvent)
+
+        // test
+        mockRuntime.simulateComingEvent(event: lifecycleEvent)
+
+        // verify retrieved shared state is empty
+        let audienceSharedState = mockRuntime.getLatestAudienceSharedState()
+        XCTAssertEqual(audienceSharedState as! [String: String], [:])
     }
 
     // ==========================================================================

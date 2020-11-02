@@ -31,6 +31,7 @@
 		D6DAC3802549D1CC00BD81EB /* MockExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC37F2549D1CC00BD81EB /* MockExtension.swift */; };
 		D6DAC3842549D22000BD81EB /* EventHub+Testable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC3832549D22000BD81EB /* EventHub+Testable.swift */; };
 		D6DAC3882549FC5B00BD81EB /* URL+AudienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC3872549FC5B00BD81EB /* URL+AudienceTests.swift */; };
+		D6DAC3AE2550956900BD81EB /* UserDefaults+Clear.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC3AD2550956900BD81EB /* UserDefaults+Clear.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,7 @@
 		D6DAC37F2549D1CC00BD81EB /* MockExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExtension.swift; sourceTree = "<group>"; };
 		D6DAC3832549D22000BD81EB /* EventHub+Testable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EventHub+Testable.swift"; sourceTree = "<group>"; };
 		D6DAC3872549FC5B00BD81EB /* URL+AudienceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+AudienceTests.swift"; sourceTree = "<group>"; };
+		D6DAC3AD2550956900BD81EB /* UserDefaults+Clear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Clear.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,6 +180,7 @@
 				D6733ECF253F3C8600AE65A9 /* MockHitQueue.swift */,
 				D6DAC37F2549D1CC00BD81EB /* MockExtension.swift */,
 				D6DAC3832549D22000BD81EB /* EventHub+Testable.swift */,
+				D6DAC3AD2550956900BD81EB /* UserDefaults+Clear.swift */,
 			);
 			path = TestHelper;
 			sourceTree = "<group>";
@@ -397,6 +400,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6DAC3AE2550956900BD81EB /* UserDefaults+Clear.swift in Sources */,
 				2EBEE7C825282EC000880E72 /* TestableExtensionRuntime.swift in Sources */,
 				2E45B6BA2537A071003D3534 /* MockNetworking.swift in Sources */,
 				2E45B6B625379FA7003D3534 /* AudienceHitProcessorTests.swift in Sources */,
