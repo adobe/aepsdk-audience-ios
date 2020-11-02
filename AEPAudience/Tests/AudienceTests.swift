@@ -412,7 +412,7 @@ class AudienceTests: XCTestCase {
         // verify
         XCTAssertEqual(0, audience.state?.hitQueue.count())
     }
-    
+
     func testHandleLifecycleStartEvent_When_UuidIsPresentInAudienceState() {
         // set a uuid in the audience state
         audience?.state?.setUuid(uuid: "audienceStateUuid")
