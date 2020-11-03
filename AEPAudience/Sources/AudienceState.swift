@@ -12,6 +12,7 @@
 
 import AEPServices
 import AEPCore
+import AEPIdentity
 import Foundation
 
 /// @class AudienceState
@@ -32,12 +33,24 @@ public class AudienceState {
     private var visitorProfile = [String: String]()
     /// The current privacy status provided by the Configuration extension, defaults to `unknown`
     private var privacyStatus: PrivacyStatus
-    /// The last valid configuration shared state received from the Configuration extension
-    private var lastValidConfigSharedState = [String: Any]()
-    /// The last valid identity shared state received from the Identity extension
-    private var lastValidIdentitySharedState = [String: Any]()
-    /// The Audience Manager Analytics forwarding enabled status
+    /// The Audience Manager Analytics forwarding enabled status provided by the Configuration extension
     private var aamForwardingStatus = false
+    /// The Audience Manager server provided by the Configuration extension
+    private var aamServer = String()
+    /// The Audience Manager timeout provided by the Configuration extension
+    private var aamTimeout = TimeInterval()
+    /// The Experience Cloud Org ID provided by the Configuration extension
+    private var orgId = String()
+    /// The Experience Cloud ID provided by the Identity extension
+    private var ecid = String()
+    /// The Experience Cloud ID service blob value provided by the Identity extension
+    private var blob = String()
+    /// The Experience Cloud ID service location hint provided by the Identity extension
+    private var locationHint = String()
+    ///  The synced visitor ID's provided by the Identity extension
+    private var syncedVisitorIds = [CustomIdentity]()
+    /// The customer event data present in an event triggering a signalWithData hit
+    private var customerEventData = [String: String]()
 
     private(set) var hitQueue: HitQueuing
 
@@ -55,7 +68,6 @@ public class AudienceState {
     ///   - event: the event to version the shared state at
     ///   - dispatchResponse: a function which when invoked dispatches a response `Event` with the visitor profile to the `EventHub`
     func queueHit(event: Event, dispatchResponse: ([String:String], Event) -> Void) {
-        var eventData = [String:String]()
         if privacyStatus == PrivacyStatus.optedOut {
             Log.debug(label: getLogTagWith(functionName: #function), "Unable to process AAM event as privacy status is opted-out:  \(event.description)")
             // dispatch with an empty visitor profile in response if privacy is opt-out.
@@ -71,18 +83,17 @@ public class AudienceState {
 
         // if the event is a lifecycle event, convert the lifecycle keys to audience manager keys
         if event.type == EventType.lifecycle {
-            eventData = convertLifecycleKeys(event: event)
+            customerEventData = convertLifecycleKeys(event: event)
         } else {
-            eventData = event.data as? [String: String] ?? ["": ""]
+            customerEventData = event.data as? [String: String] ?? ["": ""]
         }
 
-        guard let url = URL.buildAudienceHitURL(uuid: getUuid(), configurationSharedState: lastValidConfigSharedState, identitySharedState: lastValidIdentitySharedState, customerEventData: eventData) else {
+        guard let url = URL.buildAudienceHitURL(state: self) else {
             Log.debug(label: getLogTagWith(functionName: #function), "Dropping Audience hit, failed to create hit URL")
             return
         }
 
-        let aamTimeout: TimeInterval = lastValidConfigSharedState[AudienceConstants.Configuration.AAM_TIMEOUT] as? TimeInterval ?? AudienceConstants.Default.TIMEOUT
-        guard let hitData = try? JSONEncoder().encode(AudienceHit(url: url, timeout: aamTimeout, event: event)) else {
+        guard let hitData = try? JSONEncoder().encode(AudienceHit(url: url, timeout: getAamTimeout(), event: event)) else {
             Log.debug(label: getLogTagWith(functionName: #function), "Dropping Audience hit, failed to encode AudienceHit")
             return
         }
@@ -92,7 +103,7 @@ public class AudienceState {
 
     /// Sends an opt-out hit to the configured Audience Manager server
     func sendOptOutHit() {
-        guard let aamServer = lastValidConfigSharedState[AudienceConstants.Configuration.AAM_SERVER] as? String else { return }
+        if aamServer.isEmpty { return }
 
         // only send the opt-out hit if the audience manager server and uuid are not empty
         if !getUuid().isEmpty && !aamServer.isEmpty {
@@ -135,15 +146,13 @@ public class AudienceState {
     ///   - event: the response event to be processed
     ///   - response: the JSON response received
     func processResponseData(event: Event, response: Data) {
-        // bail if we don't have configuration yet
-        if lastValidConfigSharedState.isEmpty { return }
+        // bail if we don't have an audience manager server from configuration yet
+        if aamServer.isEmpty { return }
         // quick out if privacy somehow became opted out after receiving a network response
         if privacyStatus == .optedOut {
             Log.debug(label: getLogTagWith(functionName: #function), "Will not process the network response as privacy is opted-out.")
             return
         }
-
-        let timeout = lastValidConfigSharedState[AudienceConstants.Configuration.AAM_TIMEOUT] as? TimeInterval ?? AudienceConstants.Default.TIMEOUT
 
         // if we have an error decoding the response, log it and bail early
         guard let audienceResponse = try? JSONDecoder().decode(AudienceHitResponse.self, from: response) else {
@@ -152,7 +161,7 @@ public class AudienceState {
         }
 
         // process dests array
-        processDestsArray(response: audienceResponse, timeout: timeout)
+        processDestsArray(response: audienceResponse, timeout: getAamTimeout())
 
         // save uuid for use with subsequent calls
         let uuid = audienceResponse.uuid ?? ""
@@ -245,18 +254,100 @@ public class AudienceState {
         hitQueue.handlePrivacyChange(status: privacyStatus)
     }
 
-    /// Updates the last valid configuration shared state to `newConfigSharedState`
-    /// The aam forwarding status will be retrieved from the new configuration shared state and stored in the `AudienceState`.
-    /// - Parameter newConfigSharedState: The new configuration shared state to replace the current last valid configuration shared state
-    func updateLastValidConfigSharedState(newConfigSharedState: [String: Any]) {
-        self.lastValidConfigSharedState = newConfigSharedState
-        self.aamForwardingStatus = lastValidConfigSharedState[AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING] as? Bool ?? false
+    /// Sets the audience manager analytics forwarding enabled status in the AudienceState instance.
+    /// Setting the forwarding status is ignored if the global privacy is set to `PrivacyStatus.optedOut`.
+    /// - Parameter:
+    ///   - status: The value for the new audience manager analytics forwarding enabled status
+    func setAamForwardingStatus(status: Bool) {
+        // allow setting if not opt-out
+        if privacyStatus == .optedOut {
+            return
+        }
+        self.aamForwardingStatus = status
     }
 
-    /// Updates the last valid identity shared state to `newIdentitySharedState`
-    /// - Parameter newIdentitySharedState: The new identity shared state to replace the current last valid identity shared state.
-    func updateLastValidIdentitySharedState(newIdentitySharedState: [String: Any]) {
-        self.lastValidIdentitySharedState = newIdentitySharedState
+    /// Sets the audience server in the AudienceState instance.
+    /// Setting the audience server is ignored if the global privacy is set to `PrivacyStatus.optedOut`.
+    /// - Parameter:
+    ///   - server: The value for the new server
+    func setAamServer(server: String) {
+        // allow setting if not opt-out
+        if privacyStatus == .optedOut {
+            return
+        }
+        self.aamServer = server
+    }
+
+    /// Sets the audience timeout in the AudienceState instance.
+    /// Setting the audience timeout is ignored if the global privacy is set to `PrivacyStatus.optedOut`.
+    /// - Parameter:
+    ///   - timeout: The value for the new timeout
+    func setAamTimeout(timeout: TimeInterval) {
+        // allow setting if not opt-out
+        if privacyStatus == .optedOut {
+            return
+        }
+        self.aamTimeout = timeout
+    }
+
+    /// Sets the experience cloud org id in the AudienceState instance.
+    /// Setting the experience cloud org id is ignored if the global privacy is set to `PrivacyStatus.optedOut`.
+    /// - Parameter:
+    ///   - orgId: The value for the new orgId
+    func setOrgId(orgId: String) {
+        // allow setting if not opt-out
+        if privacyStatus == .optedOut {
+            return
+        }
+        self.orgId = orgId
+    }
+
+    /// Sets the experience cloud id in the AudienceState instance.
+    /// Setting the experience cloud id is ignored if the global privacy is set to `PrivacyStatus.optedOut`.
+    /// - Parameter:
+    ///   - ecid: The value for the new ecid
+    func setEcid(ecid: String) {
+        // allow setting if not opt-out
+        if privacyStatus == .optedOut {
+            return
+        }
+        self.ecid = ecid
+    }
+
+    /// Sets the experience cloud blob in the AudienceState instance.
+    /// Setting the experience cloud blob is ignored if the global privacy is set to `PrivacyStatus.optedOut`.
+    /// - Parameter:
+    ///   - blob: The value for the new blob
+    func setBlob(blob: String) {
+        // allow setting if not opt-out
+        if privacyStatus == .optedOut {
+            return
+        }
+        self.blob = blob
+    }
+
+    /// Sets the experience cloud location hint in the AudienceState instance.
+    /// Setting the experience cloud location hint is ignored if the global privacy is set to `PrivacyStatus.optedOut`.
+    /// - Parameter:
+    ///   - locationHint: The value for the new location hint
+    func setLocationHint(locationHint: String) {
+        // allow setting if not opt-out
+        if privacyStatus == .optedOut {
+            return
+        }
+        self.locationHint = locationHint
+    }
+
+    /// Sets the visitor id list in the AudienceState instance.
+    /// Setting the visitor id list is ignored if the global privacy is set to `PrivacyStatus.optedOut`.
+    /// - Parameter:
+    ///   - visitorIds: The value for the new synced visitor ids
+    func setVisitorIds(visitorIds: [CustomIdentity]) {
+        // allow setting if not opt-out
+        if privacyStatus == .optedOut {
+            return
+        }
+        self.syncedVisitorIds = visitorIds
     }
 
     // MARK: getters
@@ -301,22 +392,61 @@ public class AudienceState {
         return self.privacyStatus
     }
 
-    /// Returns the last valid configuration shared state from the AudienceState instance.
-    /// - Returns: The `lastValidConfigSharedState` stored in the AudienceState
-    func getLastValidConfigSharedState() -> [String:Any] {
-        return self.lastValidConfigSharedState
-    }
-
-    /// Returns the last valid identity shared state from the AudienceState instance.
-    /// - Returns: The `lastValidIdentitySharedState` stored in the AudienceState
-    func getLastValidIdentitySharedState() -> [String:Any] {
-        return self.lastValidIdentitySharedState
-    }
-
     /// Returns the aam forwarding enabled status from the AudienceState instance.
-    /// - Returns: A string containing the `uuid`
+    /// - Returns: A boolean containing the aam forwarding status
     func getAamForwardingStatus() -> Bool {
         return self.aamForwardingStatus
+    }
+
+    /// Returns the audience manager server from the AudienceState instance.
+    /// - Returns: A string containing the audience manager server
+    func getAamServer() -> String {
+        return self.aamServer
+    }
+
+    /// Returns the audience manager timeout from the AudienceState instance.
+    /// - Returns: A `TimeInterval` containing the audience manager timeout
+    func getAamTimeout() -> TimeInterval {
+        if self.aamTimeout <= 0 {
+            return AudienceConstants.Default.TIMEOUT
+        }
+        return self.aamTimeout
+    }
+
+    /// Returns the experience cloud org id from the AudienceState instance.
+    /// - Returns: A string containing the experience cloud org id
+    func getOrgId() -> String {
+        return self.orgId
+    }
+
+    /// Returns the experience cloud id from the AudienceState instance.
+    /// - Returns: A string containing the experience cloud id
+    func getEcid() -> String {
+        return self.ecid
+    }
+
+    /// Returns the experience cloud blob from the AudienceState instance.
+    /// - Returns: A string containing the experience cloud blob
+    func getBlob() -> String {
+        return self.blob
+    }
+
+    /// Returns the experience cloud location hint from the AudienceState instance.
+    /// - Returns: A string containing the experience cloud location hint
+    func getLocationHint() -> String {
+        return self.locationHint
+    }
+
+    /// Returns the experience cloud visitor id list from the AudienceState instance.
+    /// - Returns: An array containing the synced visitor ids
+    func getVisitorIds() -> [CustomIdentity] {
+        return self.syncedVisitorIds
+    }
+
+    /// Returns the customer event data from the AudienceState instance.
+    /// - Returns: A dictionary containing the customer event data present in the signalWithData event
+    func getCustomerEventData() -> [String: String] {
+        return self.customerEventData
     }
 
     /// Get the data for this AudienceState instance to share with other extensions.
@@ -350,17 +480,27 @@ public class AudienceState {
 
     // MARK: helpers
 
-    /// Clear the identifiers for this AudienceState.
-    /// The cleared identifiers are: `uuid`, `dpid`, `dpuuid`, and `visitorProfile`
+    /// Clear the identifiers and cached shared states for this AudienceState.
+    /// The cleared Audience Manager identifiers are: `uuid`, `dpid`, `dpuuid`, and `visitorProfile`
     func clearIdentifiers() {
         // clear the persisted data
         dataStore.remove(key: AudienceConstants.DataStoreKeys.USER_ID_KEY)
         dataStore.remove(key: AudienceConstants.DataStoreKeys.PROFILE_KEY)
-        // reset the in-memory variables
+        // reset the in-memory audience manager variables
         self.uuid = ""
         self.dpuuid = ""
         self.dpid = ""
         self.visitorProfile = [:]
+        // clear configuration and identity variables
+        self.aamServer = ""
+        self.aamTimeout = AudienceConstants.Default.TIMEOUT
+        self.orgId = ""
+        self.ecid = ""
+        self.blob = ""
+        self.locationHint = ""
+        self.syncedVisitorIds = []
+        // clear stored customer event data
+        self.customerEventData = [:]
     }
 
     /// Helper to return a log tag

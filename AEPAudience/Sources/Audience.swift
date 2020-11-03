@@ -11,6 +11,7 @@
  */
 
 import AEPCore
+import AEPIdentity
 import AEPServices
 import Foundation
 
@@ -82,13 +83,26 @@ public class Audience: NSObject, Extension {
     private func handleConfigurationResponse(event: Event) {
         // bail if the config data is not valid
         guard let configSharedState = getSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event)?.value else { return }
-        state?.updateLastValidConfigSharedState(newConfigSharedState: configSharedState)
         // get the privacy status
         guard let privacyStatusStr = configSharedState[AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY] as? String else { return }
         let privacyStatus = PrivacyStatus(rawValue: privacyStatusStr) ?? PrivacyStatus.unknown
         if privacyStatus == .optedOut {
             Log.debug(label: getLogTagWith(functionName: #function), "Privacy status is opted-out. Queued Audience hits and stored Audience Identifiers will be cleared.")
             createSharedState(data: state?.getStateData() ?? [:], event: event)
+        }
+
+        // store the remaining configuration settings that the audience manager extension needs
+        if let aamServer = configSharedState[AudienceConstants.Configuration.AAM_SERVER] as? String, !aamServer.isEmpty {
+            state?.setAamServer(server: aamServer)
+        }
+        if let aamTimeout = configSharedState[AudienceConstants.Configuration.AAM_TIMEOUT] as? TimeInterval {
+            state?.setAamTimeout(timeout: aamTimeout)
+        }
+        if let aamForwardingStatus = configSharedState[AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING] as? Bool {
+            state?.setAamForwardingStatus(status: aamForwardingStatus)
+        }
+        if let orgId = configSharedState[AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID] as? String {
+            state?.setOrgId(orgId: orgId)
         }
 
         // if privacy status is opted out, audience manager data in the AudienceState will be cleared.
@@ -99,7 +113,22 @@ public class Audience: NSObject, Extension {
     /// - Parameter event: The event coming from the signalWithData API invocation
     private func handleAudienceContentRequest(event: Event) {
         Log.debug(label: getLogTagWith(functionName: #function), "Received an Audience Manager signalWithData event, attempting to queue the hit.")
-        state?.updateLastValidIdentitySharedState(newIdentitySharedState: getSharedState(extensionName: AudienceConstants.SharedStateKeys.IDENTITY, event: event)?.value ?? ["": ""])
+        // store the identity variables in the AudienceState
+        let identitySharedState = getSharedState(extensionName: AudienceConstants.SharedStateKeys.IDENTITY, event: event)?.value ?? ["": ""]
+        if let ecid = identitySharedState[AudienceConstants.Identity.VISITOR_ID_MID] as? String {
+            state?.setEcid(ecid: ecid)
+        }
+        if let blob = identitySharedState[AudienceConstants.Identity.VISITOR_ID_BLOB] as? String {
+            state?.setBlob(blob: blob)
+        }
+        if let locationHint = identitySharedState[AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT] as? String {
+            state?.setLocationHint(locationHint: locationHint)
+        }
+        if let syncedVisitorIds = identitySharedState[AudienceConstants.Identity.VISITOR_IDS_LIST] as? [CustomIdentity] {
+            state?.setVisitorIds(visitorIds: syncedVisitorIds)
+        }
+
+        // queue the signalWithData hit
         state?.queueHit(event: event, dispatchResponse: dispatchResponse(visitorProfile:event:))
     }
 

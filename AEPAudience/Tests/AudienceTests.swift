@@ -13,6 +13,7 @@
 import XCTest
 @testable import AEPAudience
 @testable import AEPCore
+@testable import AEPIdentity
 @testable import AEPServices
 
 class AudienceTests: XCTestCase {
@@ -85,7 +86,6 @@ class AudienceTests: XCTestCase {
         // uuid and visitor profile should be persisted in the datastore
         XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, fallback: ""))
         XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, fallback: [:]) as! [String : String])
-        XCTAssertNotNil(audience?.state?.getLastValidConfigSharedState())
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedUnknown() {
@@ -114,7 +114,6 @@ class AudienceTests: XCTestCase {
         // uuid and visitor profile should be persisted in the datastore
         XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, fallback: ""))
         XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, fallback: [:]) as! [String : String])
-        XCTAssertNotNil(audience?.state?.getLastValidConfigSharedState())
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedOut_When_AamServerAndUuidPresent() {
@@ -143,7 +142,6 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("", audience?.state?.getDpuuid())
         XCTAssertEqual([:], audience?.state?.getVisitorProfile())
         XCTAssertEqual("https://testserver.com/demoptout.jpg?d_uuid=testUuid", mockNetworkService.connectAsyncCalledWithNetworkRequest?.url.absoluteString)
-        XCTAssertNotNil(audience?.state?.getLastValidConfigSharedState())
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedOut_When_UuidIsEmpty() {
@@ -172,7 +170,6 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("", audience?.state?.getDpuuid())
         XCTAssertEqual([:], audience?.state?.getVisitorProfile())
         XCTAssertNil(mockNetworkService.connectAsyncCalledWithNetworkRequest?.url.absoluteString)
-        XCTAssertNotNil(audience?.state?.getLastValidConfigSharedState())
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedOut_When_AamServerIsMissing() {
@@ -201,7 +198,6 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("", audience?.state?.getDpuuid())
         XCTAssertEqual([:], audience?.state?.getVisitorProfile())
         XCTAssertNil(mockNetworkService.connectAsyncCalledWithNetworkRequest?.url.absoluteString)
-        XCTAssertNotNil(audience?.state?.getLastValidConfigSharedState())
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedOut_When_AamServerIsEmpty() {
@@ -230,7 +226,6 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("", audience?.state?.getDpuuid())
         XCTAssertEqual([:], audience?.state?.getVisitorProfile())
         XCTAssertNil(mockNetworkService.connectAsyncCalledWithNetworkRequest?.url.absoluteString)
-        XCTAssertNotNil(audience?.state?.getLastValidConfigSharedState())
     }
 
     func testHandleConfigurationResponse_When_ConfigDataIsEmpty() {
@@ -248,7 +243,9 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: event)
 
         // verify
-        XCTAssertEqual([:], audience?.state?.getLastValidConfigSharedState() as? [String:String])
+        XCTAssertEqual("", audience?.state?.getAamServer())
+        XCTAssertEqual("", audience?.state?.getOrgId())
+        XCTAssertEqual(2.0, audience?.state?.getAamTimeout())
         XCTAssertEqual(PrivacyStatus.unknown, audience?.state?.getPrivacyStatus())
     }
 
@@ -756,16 +753,21 @@ class AudienceTests: XCTestCase {
     // ==========================================================================
     func testHandleAudienceResetRequest_AudienceManagerIdentifiersClearedFromAudienceState() {
         // setup
-        let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer"] as [String: Any]
-        let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "1234567"] as [String: Any]
         // add data to audience state
+        let customIds = [CustomIdentity(origin: "d_cid_ic", type: "DSID_20915", identifier: "test_ad_id", authenticationState: .authenticated)]
         audience?.state?.setMobilePrivacy(status: .optedIn)
         audience?.state?.setDpid(dpid: "testDpid")
         audience?.state?.setDpuuid(dpuuid: "testDpuuid")
         audience?.state?.setUuid(uuid: "testUuid")
         audience?.state?.setVisitorProfile(visitorProfile: ["key1":"value1","key2":"value2","key3":"value3"])
-        audience?.state?.updateLastValidConfigSharedState(newConfigSharedState: configSharedState)
-        audience?.state?.updateLastValidIdentitySharedState(newIdentitySharedState: identitySharedState)
+        audience?.state?.setAamForwardingStatus(status: false)
+        audience?.state?.setAamServer(server: "testServer")
+        audience?.state?.setAamTimeout(timeout: 10.0)
+        audience?.state?.setOrgId(orgId: "testOrgId")
+        audience?.state?.setEcid(ecid: "1234567")
+        audience?.state?.setBlob(blob: "testBlob")
+        audience?.state?.setLocationHint(locationHint: "9")
+        audience?.state?.setVisitorIds(visitorIds: customIds)
 
         // verify data was set
         XCTAssertEqual(PrivacyStatus.optedIn, audience?.state?.getPrivacyStatus())
@@ -773,10 +775,14 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("testDpuuid", audience?.state?.getDpuuid())
         XCTAssertEqual("testUuid", audience?.state?.getUuid())
         XCTAssertEqual(["key1":"value1","key2":"value2","key3":"value3"], audience?.state?.getVisitorProfile())
-        var retrievedConfigState = audience?.state?.getLastValidConfigSharedState()
-        var retrievedIdentityState = audience?.state?.getLastValidIdentitySharedState()
-        XCTAssertEqual("testServer", retrievedConfigState?[AudienceConstants.Configuration.AAM_SERVER] as? String)
-        XCTAssertEqual("1234567", retrievedIdentityState?[AudienceConstants.Identity.VISITOR_ID_MID] as? String)
+        XCTAssertEqual(false, audience?.state?.getAamForwardingStatus())
+        XCTAssertEqual("testServer", audience?.state?.getAamServer())
+        XCTAssertEqual(10.0, audience?.state?.getAamTimeout())
+        XCTAssertEqual("testOrgId", audience?.state?.getOrgId())
+        XCTAssertEqual("1234567", audience?.state?.getEcid())
+        XCTAssertEqual("testBlob", audience?.state?.getBlob())
+        XCTAssertEqual("9", audience?.state?.getLocationHint())
+        XCTAssertEqual(customIds, audience?.state?.getVisitorIds())
 
         // create audience identity reset event
         let audienceIdentityResetRequestEvent = Event(name: "Test Audience Reset Request", type: EventType.audienceManager, source: EventSource.requestReset, data: [String: Any]())
@@ -785,17 +791,20 @@ class AudienceTests: XCTestCase {
         // test
         mockRuntime.simulateComingEvent(event: audienceIdentityResetRequestEvent)
 
-        // verify audience state was reset
+        // verify audience state was reset but privacy status is unchanged
+        XCTAssertEqual(PrivacyStatus.optedIn, audience?.state?.getPrivacyStatus())
         XCTAssertEqual("", audience?.state?.getDpid())
         XCTAssertEqual("", audience?.state?.getDpuuid())
         XCTAssertEqual("", audience?.state?.getUuid())
         XCTAssertEqual([:], audience?.state?.getVisitorProfile())
-        // shared states and privacy status should be persisted
-        retrievedConfigState = audience?.state?.getLastValidConfigSharedState()
-        retrievedIdentityState = audience?.state?.getLastValidIdentitySharedState()
-        XCTAssertEqual("testServer", retrievedConfigState?[AudienceConstants.Configuration.AAM_SERVER] as? String)
-        XCTAssertEqual("1234567", retrievedIdentityState?[AudienceConstants.Identity.VISITOR_ID_MID] as? String)
-        XCTAssertEqual(PrivacyStatus.optedIn, audience?.state?.getPrivacyStatus())
+        XCTAssertEqual(false, audience?.state?.getAamForwardingStatus())
+        XCTAssertEqual("", audience?.state?.getAamServer())
+        XCTAssertEqual(2.0, audience?.state?.getAamTimeout()) // the default aam timeout should be returned
+        XCTAssertEqual("", audience?.state?.getOrgId())
+        XCTAssertEqual("", audience?.state?.getEcid())
+        XCTAssertEqual("", audience?.state?.getBlob())
+        XCTAssertEqual("", audience?.state?.getLocationHint())
+        XCTAssertEqual([], audience?.state?.getVisitorIds())
     }
 
     // ==========================================================================

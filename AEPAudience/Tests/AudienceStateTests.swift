@@ -13,6 +13,7 @@
 import XCTest
 @testable import AEPAudience
 @testable import AEPCore
+@testable import AEPIdentity
 @testable import AEPServices
 
 class AudienceStateTests: XCTestCase {
@@ -29,7 +30,6 @@ class AudienceStateTests: XCTestCase {
     static let persistedUuid = "persistedUuid"
     static let inMemoryVisitorProfile = ["inMemoryTrait":"inMemoryValue"]
     static let persistedVisitorProfile = ["persistedTrait":"persistedValue"]
-    static let validConfigSharedState = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn, AudienceConstants.Configuration.AAM_SERVER: "www.testServer.com", AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING: false, AudienceConstants.Configuration.AAM_TIMEOUT: TimeInterval(10)] as [String: Any]
     static let expectedVisitorProfile = ["cookie1":"cookieValue1","cookie2":"cookieValue2"]
     
     override func setUp() {
@@ -41,6 +41,19 @@ class AudienceStateTests: XCTestCase {
             self?.responseCallbackArgs.append((entity, data))
         }))
         audienceState = AudienceState(hitQueue: mockHitQueue)
+    }
+    
+    // MARK: helpers
+    private func setupAudienceState(aamServer: String, aamTimeout: TimeInterval, aamForwardingStatus: Bool, orgId: String, privacyStatus: PrivacyStatus, ecid: String, blob: String, locationHint: String, visitorIds: [CustomIdentity]) {
+        audienceState.setAamServer(server: aamServer)
+        audienceState.setAamTimeout(timeout: aamTimeout)
+        audienceState.setAamForwardingStatus(status: aamForwardingStatus)
+        audienceState.setOrgId(orgId: orgId)
+        audienceState.setMobilePrivacy(status: privacyStatus)
+        audienceState.setEcid(ecid: ecid)
+        audienceState.setBlob(blob: blob)
+        audienceState.setLocationHint(locationHint: locationHint)
+        audienceState.setVisitorIds(visitorIds: visitorIds)
     }
 
     // MARK: AudienceState unit tests
@@ -459,8 +472,8 @@ class AudienceStateTests: XCTestCase {
         var audienceSharedState:[String: Any] = [:]
         let hit = AudienceHit.fakeHit()
         let hitResponse = AudienceHitResponse.fakeHitResponse()
-        // setup config shared state
-        audienceState.updateLastValidConfigSharedState(newConfigSharedState: AudienceStateTests.validConfigSharedState)
+        // setup configuration settings in audience state
+        setupAudienceState(aamServer: "www.testServer.com", aamTimeout: 10.0, aamForwardingStatus: false, orgId: "", privacyStatus: .optedIn, ecid: "", blob: "", locationHint: "", visitorIds: [])
         
         // test
         audienceState.handleHitResponse(hit: hit, responseData: try! JSONEncoder().encode(hitResponse), dispatchResponse: { visitorProfile, event in
@@ -487,7 +500,7 @@ class AudienceStateTests: XCTestCase {
         XCTAssertEqual(eventInCreateSharedState?.source, EventSource.requestIdentity)
     }
     
-    func testHandleHitResponseWithEmptyConfigSharedState() {
+    func testHandleHitResponseWithEmptyConfigurationSettingsInAudienceState() {
         // setup
         let semaphore = DispatchSemaphore(value: 0)
         let semaphore2 = DispatchSemaphore(value: 0)
@@ -497,8 +510,8 @@ class AudienceStateTests: XCTestCase {
         var audienceSharedState:[String: Any] = [:]
         let hit = AudienceHit.fakeHit()
         let hitResponse = AudienceHitResponse.fakeHitResponse()
-        // setup an empty config shared state
-        audienceState.updateLastValidConfigSharedState(newConfigSharedState: [:])
+        // setup empty configuration settings in audience state
+        setupAudienceState(aamServer: "", aamTimeout: 0.0, aamForwardingStatus: false, orgId: "", privacyStatus: .optedIn, ecid: "", blob: "", locationHint: "", visitorIds: [])
         
         // test
         audienceState.handleHitResponse(hit: hit, responseData: try! JSONEncoder().encode(hitResponse), dispatchResponse: { visitorProfile, event in
