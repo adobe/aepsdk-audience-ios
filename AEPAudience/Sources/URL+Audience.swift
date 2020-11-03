@@ -82,12 +82,12 @@ extension URL {
         }
 
         // Attach experience cloud org id from configruration shared state
-        if let experienceCloudOrgId = state?.getOrgId() as String? {
+        if let experienceCloudOrgId = state?.getOrgId() as String?, !experienceCloudOrgId.isEmpty {
             queryItems += [URLQueryItem(name: AudienceConstants.DestinationKeys.EXPERIENCE_CLOUD_ORG_ID, value: experienceCloudOrgId)]
         }
 
         // Attach uuid
-        if let uuid = state?.getUuid() as String?  {
+        if let uuid = state?.getUuid() as String?, !uuid.isEmpty  {
             queryItems += [URLQueryItem(name: AudienceConstants.DestinationKeys.USER_ID_KEY, value: uuid)]
         }
 
