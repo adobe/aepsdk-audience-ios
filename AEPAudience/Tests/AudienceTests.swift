@@ -23,6 +23,7 @@ class AudienceTests: XCTestCase {
     var responseCallbackArgs = [(DataEntity, Data?)]()
     let dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
     var audienceState: AudienceState!
+    static let configEvent = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: nil)
 
     override func setUp() {
         ServiceProvider.shared.networkService = MockNetworking()
@@ -242,10 +243,11 @@ class AudienceTests: XCTestCase {
         // test
         mockRuntime.simulateComingEvent(event: event)
 
-        // verify
+        // verify no config is set and default values are returned
+        XCTAssertEqual(false, audience?.state?.getAamForwardingStatus())
         XCTAssertEqual("", audience?.state?.getAamServer())
-        XCTAssertEqual("", audience?.state?.getOrgId())
         XCTAssertEqual(2.0, audience?.state?.getAamTimeout())
+        XCTAssertEqual("", audience?.state?.getOrgId())
         XCTAssertEqual(PrivacyStatus.unknown, audience?.state?.getPrivacyStatus())
     }
 
@@ -753,21 +755,17 @@ class AudienceTests: XCTestCase {
     // ==========================================================================
     func testHandleAudienceResetRequest_AudienceManagerIdentifiersClearedFromAudienceState() {
         // setup
-        // add data to audience state
-        let customIds = [CustomIdentity(origin: "d_cid_ic", type: "DSID_20915", identifier: "test_ad_id", authenticationState: .authenticated)]
-        audience?.state?.setMobilePrivacy(status: .optedIn)
         audience?.state?.setDpid(dpid: "testDpid")
         audience?.state?.setDpuuid(dpuuid: "testDpuuid")
         audience?.state?.setUuid(uuid: "testUuid")
         audience?.state?.setVisitorProfile(visitorProfile: ["key1":"value1","key2":"value2","key3":"value3"])
-        audience?.state?.setAamForwardingStatus(status: false)
-        audience?.state?.setAamServer(server: "testServer")
-        audience?.state?.setAamTimeout(timeout: 10.0)
-        audience?.state?.setOrgId(orgId: "testOrgId")
-        audience?.state?.setEcid(ecid: "1234567")
-        audience?.state?.setBlob(blob: "testBlob")
-        audience?.state?.setLocationHint(locationHint: "9")
-        audience?.state?.setVisitorIds(visitorIds: customIds)
+        // add config and identity data to the Audience State
+        let customIds = [CustomIdentity(origin: "d_cid_ic", type: "DSID_20915", identifier: "test_ad_id", authenticationState: .authenticated)]
+        let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer", AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING: false, AudienceConstants.Configuration.AAM_TIMEOUT: 10.0, AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrgId", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue] as [String: Any]
+        let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "1234567", AudienceConstants.Identity.VISITOR_ID_BLOB: "testBlob", AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT: "9", AudienceConstants.Identity.VISITOR_IDS_LIST: customIds] as [String: Any]
+        audience?.state?.handleConfigurationSharedStateUpdate(event: AudienceTests.configEvent, configSharedState: configSharedState, createSharedState: { data, event in
+        })
+        audience?.state?.handleIdentitySharedStateUpdate(identitySharedState: identitySharedState)
 
         // verify data was set
         XCTAssertEqual(PrivacyStatus.optedIn, audience?.state?.getPrivacyStatus())
