@@ -29,22 +29,17 @@ class URL_AudienceTests: XCTestCase {
         audienceState = AudienceState(hitQueue: mockHitQueue)
     }
 
-    // MARK: helpers
-    private func setupAudienceState(uuid: String, aamServer: String, orgId: String, privacyStatus: PrivacyStatus, ecid: String, blob: String, locationHint: String, visitorIds: [CustomIdentity]) {
-        audienceState.setUuid(uuid: uuid)
-        audienceState.setAamServer(server: aamServer)
-        audienceState.setOrgId(orgId: orgId)
-        audienceState.setMobilePrivacy(status: privacyStatus)
-        audienceState.setEcid(ecid: ecid)
-        audienceState.setBlob(blob: blob)
-        audienceState.setLocationHint(locationHint: locationHint)
-        audienceState.setVisitorIds(visitorIds: visitorIds)
-    }
-
     func testAudienceHitWithNoCustomerEventDataAndNoIdentityDataInSharedState() {
         // setup
         let expectedUrl = "https://testServer.com/event?d_orgid=testOrg@AdobeOrg&d_uuid=testUuid&d_ptfm=ios&d_dst=1&d_rtbd=json"
-        setupAudienceState(uuid: "testUuid", aamServer: "testServer.com", orgId: "testOrg@AdobeOrg", privacyStatus: .optedIn, ecid: "", blob: "", locationHint: "", visitorIds: [])
+        // create configuration shared state and configuration response content event
+        let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer.com", AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrg@AdobeOrg", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue]
+        let event = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: nil)
+        // process the created shared state and event in the audience state
+        audienceState?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: { data, event in
+        })
+        // set a uuid for testing
+        audienceState?.setUuid(uuid: "testUuid")
 
         // test
         let url = URL.buildAudienceHitURL(state: audienceState)
@@ -56,8 +51,19 @@ class URL_AudienceTests: XCTestCase {
     func testAudienceHitWithWithNoCustomerEventDataAndIdentityDataInSharedState() {
         // setup
         let expectedUrl = "https://testServer.com/event?d_mid=12345567&d_blob=blobValue&dcs_region=9&d_cid_ic=DSID_20915%01test_ad_id%011&d_orgid=testOrg@AdobeOrg&d_uuid=testUuid&d_ptfm=ios&d_dst=1&d_rtbd=json"
+        // create configuration shared state and configuration response content event
+        let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer.com", AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrg@AdobeOrg", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue]
+        let event = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: nil)
+        // create a fake synced id for use in the created identity shared state
         let customIds = [CustomIdentity(origin: "d_cid_ic", type: "DSID_20915", identifier: "test_ad_id", authenticationState: .authenticated)]
-        setupAudienceState(uuid: "testUuid", aamServer: "testServer.com", orgId: "testOrg@AdobeOrg", privacyStatus: .optedIn, ecid: "12345567", blob: "blobValue", locationHint: "9", visitorIds: customIds)
+        // create identity shared state
+        let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "12345567", AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT: "9", AudienceConstants.Identity.VISITOR_ID_BLOB: "blobValue", AudienceConstants.Identity.VISITOR_IDS_LIST: customIds] as [String : Any]
+        // process the created shared states in the audience state
+        audienceState?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: { data, event in
+        })
+        audienceState?.handleIdentitySharedStateUpdate(identitySharedState: identitySharedState)
+        // set a uuid for testing
+        audienceState?.setUuid(uuid: "testUuid")
 
         // test
         let url = URL.buildAudienceHitURL(state: audienceState)

@@ -180,6 +180,59 @@ public class AudienceState {
         setVisitorProfile(visitorProfile: processedStuff)
     }
 
+    /// Extracts the configuration settings from the passed in configuration shared state and caches them in the AudienceState instance.
+    /// - Parameter:
+    ///   - event: The configuration response content event
+    ///   - configSharedState: the configuration shared state data
+    ///   - createSharedState: a function which when invoked creates a shared state for the Audience Manager extension
+    func handleConfigurationSharedStateUpdate(event: Event, configSharedState: [String: Any], createSharedState: (([String: Any], Event) -> Void)) {
+        // store configuration settings that the audience manager extension needs
+        if let aamServer = configSharedState[AudienceConstants.Configuration.AAM_SERVER] as? String, !aamServer.isEmpty {
+            setAamServer(server: aamServer)
+        }
+        if let aamTimeout = configSharedState[AudienceConstants.Configuration.AAM_TIMEOUT] as? TimeInterval {
+            setAamTimeout(timeout: aamTimeout)
+        }
+        if let aamForwardingStatus = configSharedState[AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING] as? Bool {
+            setAamForwardingStatus(status: aamForwardingStatus)
+        }
+        if let orgId = configSharedState[AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID] as? String {
+            setOrgId(orgId: orgId)
+        }
+        // get the privacy status
+        guard let privacyStatusStr = configSharedState[AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY] as? String else { return }
+        let privacyStatus = PrivacyStatus(rawValue: privacyStatusStr) ?? PrivacyStatus.unknown
+        // if privacy is opted out: send the opt out hit, clear the audience state, then create a new audience shared state
+        if privacyStatus == .optedOut {
+            Log.debug(label: getLogTagWith(functionName: #function), "Privacy status is opted-out. Queued Audience hits and stored Audience Identifiers will be cleared.")
+            sendOptOutHit()
+            setMobilePrivacy(status: privacyStatus)
+            createSharedState(getStateData(), event)
+            return
+        }
+
+        // if privacy status is opted out, audience manager data in the AudienceState will be cleared.
+        setMobilePrivacy(status: privacyStatus)
+    }
+
+    /// Extracts the identity variavles from the passed in identity shared state and caches them in the AudienceState instance.
+    /// - Parameter:
+    ///   - identitySharedState: the identity shared state data
+    func handleIdentitySharedStateUpdate(identitySharedState: [String: Any]) {
+        if let ecid = identitySharedState[AudienceConstants.Identity.VISITOR_ID_MID] as? String {
+            setEcid(ecid: ecid)
+        }
+        if let blob = identitySharedState[AudienceConstants.Identity.VISITOR_ID_BLOB] as? String {
+            setBlob(blob: blob)
+        }
+        if let locationHint = identitySharedState[AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT] as? String {
+            setLocationHint(locationHint: locationHint)
+        }
+        if let syncedVisitorIds = identitySharedState[AudienceConstants.Identity.VISITOR_IDS_LIST] as? [CustomIdentity] {
+            setVisitorIds(visitorIds: syncedVisitorIds)
+        }
+    }
+
     // Mark: setters
 
     /// Sets the value of the dpid property in the AudienceState instance.
@@ -247,7 +300,6 @@ public class AudienceState {
     func setMobilePrivacy(status: PrivacyStatus) {
         self.privacyStatus = status
         if privacyStatus == .optedOut {
-            sendOptOutHit()
             clearIdentifiers()
         }
         // update hit queue with privacy status
