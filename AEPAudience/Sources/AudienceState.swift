@@ -85,7 +85,12 @@ public class AudienceState {
         if event.type == EventType.lifecycle {
             customerEventData = convertLifecycleKeys(event: event)
         } else {
-            customerEventData = event.data as? [String: String] ?? ["": ""]
+            if let signalData = event.data, !signalData.isEmpty {
+                let signaledTraits = signalData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] as? [String : String] ?? [:]
+                for trait in signaledTraits {
+                    customerEventData[trait.key] = trait.value
+                }
+            }
         }
 
         guard let url = URL.buildAudienceHitURL(state: self) else {

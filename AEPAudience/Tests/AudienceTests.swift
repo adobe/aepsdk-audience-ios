@@ -816,7 +816,9 @@ class AudienceTests: XCTestCase {
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
         // create the audience content request event with signal data
         let traits = ["trait":"traitValue"]
-        let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: traits)
+        var eventData = [String: Any]()
+        eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
+        let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
         let _ = audience.readyForEvent(event)
 
@@ -825,6 +827,8 @@ class AudienceTests: XCTestCase {
 
         // verify
         XCTAssertEqual(1, audience.state?.hitQueue.count())
+        // verify signaled trait is stored in audience state
+        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
     }
 
     func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_AamServerEmptyAndUuidPresent() {
@@ -835,7 +839,9 @@ class AudienceTests: XCTestCase {
         let configData = dispatchConfigurationEventForTesting(aamServer: "", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
         // create the audience content request event with signal data
         let traits = ["trait":"traitValue"]
-        let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: traits)
+        var eventData = [String: Any]()
+        eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
+        let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
         let _ = audience.readyForEvent(event)
 
@@ -844,6 +850,8 @@ class AudienceTests: XCTestCase {
 
         // verify
         XCTAssertEqual(0, audience.state?.hitQueue.count())
+        // verify signaled trait is stored in audience state
+        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
     }
 
     func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_AamServerNilAndUuidPresent() {
@@ -854,7 +862,9 @@ class AudienceTests: XCTestCase {
         let configData = dispatchConfigurationEventForTesting(aamServer: nil, aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
         // create the audience content request event with signal data
         let traits = ["trait":"traitValue"]
-        let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: traits)
+        var eventData = [String: Any]()
+        eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
+        let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
         let _ = audience.readyForEvent(event)
 
@@ -863,6 +873,8 @@ class AudienceTests: XCTestCase {
 
         // verify
         XCTAssertEqual(0, audience.state?.hitQueue.count())
+        // verify signaled trait is stored in audience state
+        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
     }
 
     func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_AamServerPresentAndUuidEmpty() {
@@ -873,7 +885,9 @@ class AudienceTests: XCTestCase {
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
         // create the audience content request event with signal data
         let traits = ["trait":"traitValue"]
-        let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: traits)
+        var eventData = [String: Any]()
+        eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
+        let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
         let _ = audience.readyForEvent(event)
 
@@ -882,6 +896,8 @@ class AudienceTests: XCTestCase {
 
         // verify
         XCTAssertEqual(1, audience.state?.hitQueue.count())
+        // verify signaled trait is stored in audience state
+        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
     }
 
     func testHandleAudienceContentRequest_PrivacyStatusUnknown_When_AamServerAndUuidPresent() {
@@ -892,7 +908,9 @@ class AudienceTests: XCTestCase {
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .unknown, aamTimeout: 10)
         // create the audience content request event with signal data
         let traits = ["trait":"traitValue"]
-        let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: traits)
+        var eventData = [String: Any]()
+        eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
+        let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
         let _ = audience.readyForEvent(event)
 
@@ -901,6 +919,8 @@ class AudienceTests: XCTestCase {
 
         // verify
         XCTAssertEqual(1, audience.state?.hitQueue.count())
+        // verify signaled trait is stored in audience state
+        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
     }
 
     func testHandleAudienceContentRequest_PrivacyStatusOptedOut_When_AamServerAndUuidPresent() {
@@ -911,7 +931,9 @@ class AudienceTests: XCTestCase {
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedOut, aamTimeout: 10)
         // create the audience content request event with signal data
         let traits = ["trait":"traitValue"]
-        let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: traits)
+        var eventData = [String: Any]()
+        eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
+        let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
         let _ = audience.readyForEvent(event)
 
@@ -920,6 +942,8 @@ class AudienceTests: XCTestCase {
 
         // verify
         XCTAssertEqual(0, audience.state?.hitQueue.count())
+        // verify signaled trait is not stored in audience state due to privacy opt out
+        XCTAssertEqual([:], audience?.state?.getCustomerEventData())
     }
 
     func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_TimeoutNotPresent() {
@@ -930,7 +954,9 @@ class AudienceTests: XCTestCase {
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: nil)
         // create the audience content request event with signal data
         let traits = ["trait":"traitValue"]
-        let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: traits)
+        var eventData = [String: Any]()
+        eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
+        let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
         let _ = audience.readyForEvent(event)
 
@@ -939,16 +965,21 @@ class AudienceTests: XCTestCase {
 
         // verify
         XCTAssertEqual(1, audience.state?.hitQueue.count())
+        // verify signaled trait is stored in audience state
+        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
     }
 
-    func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_ProvidedTraitsAreNil() {
+    func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_ProvidedTraitsAreEmpty() {
         // setup
         audience.state?.setUuid(uuid: "testUuid")
         audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
         // create the audience content request event with nil traits
-        let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: nil)
+        let traits:[String: String] = [:]
+        var eventData = [String: Any]()
+        eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
+        let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
         let _ = audience.readyForEvent(event)
 
@@ -957,6 +988,8 @@ class AudienceTests: XCTestCase {
 
         // verify
         XCTAssertEqual(1, audience.state?.hitQueue.count())
+        // verify no signaled trait is stored in audience state
+        XCTAssertEqual([:], audience?.state?.getCustomerEventData())
     }
 
 }
