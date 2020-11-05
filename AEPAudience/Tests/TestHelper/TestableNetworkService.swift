@@ -37,7 +37,7 @@ public class TestableNetworkService: Networking {
     public func mock(resolver:@escaping RequestResolver) {
         resolvers += [resolver]
     }
-    
+
     public func getRequest(at index:Int) -> NetworkRequest? {
         if index + 1 <= requests.count {
             return requests[index]

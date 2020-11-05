@@ -43,13 +43,13 @@ extension FileManager {
             } catch {
                 print("ERROR DESCRIPTION: \(error)")
             }
-            
+
             do {
                 try self.removeItem(at: URL(fileURLWithPath: "Library/Caches/com.adobe.module.audience"))
             } catch {
                 print("ERROR DESCRIPTION: \(error)")
             }
-            
+
             do {
                 try self.removeItem(at: URL(fileURLWithPath: "Library/Caches/com.adobe.mobile.diskcache", isDirectory: true))
             } catch {
