@@ -71,14 +71,14 @@ public class AudienceState {
         if privacyStatus == PrivacyStatus.optedOut {
             Log.debug(label: getLogTagWith(functionName: #function), "Unable to process AAM event as privacy status is opted-out:  \(event.description)")
             // dispatch with an empty visitor profile in response if privacy is opt-out.
-            dispatchResponse(["": ""], event)
+            dispatchResponse([:], event)
             return
         }
 
         if privacyStatus == PrivacyStatus.unknown {
             Log.debug(label: getLogTagWith(functionName: #function), "Queueing the Audience Hit, privacy status is unknown:  \(event.description)")
             // dispatch with an empty visitor profile in response if privacy is unknown.
-            dispatchResponse(["": ""], event)
+            dispatchResponse([:], event)
         }
 
         // if the event is a lifecycle event, convert the lifecycle keys to audience manager keys
