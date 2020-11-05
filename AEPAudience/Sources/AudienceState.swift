@@ -548,16 +548,17 @@ public class AudienceState {
         self.dpuuid = ""
         self.dpid = ""
         self.visitorProfile = [:]
-        // clear configuration and identity variables
-        self.aamServer = ""
-        self.aamTimeout = AudienceConstants.Default.TIMEOUT
-        self.orgId = ""
-        self.ecid = ""
-        self.blob = ""
-        self.locationHint = ""
-        self.syncedVisitorIds = []
-        // clear stored customer event data
-        self.customerEventData = [:]
+        // clear configuration and identity variables if privacy is opted out
+        if privacyStatus == .optedOut {
+            self.aamServer = ""
+            self.aamTimeout = AudienceConstants.Default.TIMEOUT
+            self.orgId = ""
+            self.ecid = ""
+            self.blob = ""
+            self.locationHint = ""
+            self.syncedVisitorIds = []
+            self.customerEventData = [:]
+        }
     }
 
     /// Helper to return a log tag
