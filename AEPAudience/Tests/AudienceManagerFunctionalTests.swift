@@ -377,7 +377,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         ServiceProvider.shared.networkService = mockNetworkService
         
         // test
-        let traits = ["trait": "b"] as [String: String]
+        let traits = ["மொழி": "தமிழ்", "traitb":"网页","traitc":"c","!@#$%^&*()_+":"!@#$%^&*()_+"] as [String: String]
         Audience.signalWithData(data: traits) { (_, _) in
             semaphore.signal()
         }
