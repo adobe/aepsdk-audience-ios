@@ -796,13 +796,14 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("", audience?.state?.getUuid())
         XCTAssertEqual([:], audience?.state?.getVisitorProfile())
         XCTAssertEqual(false, audience?.state?.getAamForwardingStatus())
-        XCTAssertEqual("", audience?.state?.getAamServer())
-        XCTAssertEqual(2.0, audience?.state?.getAamTimeout()) // the default aam timeout should be returned
-        XCTAssertEqual("", audience?.state?.getOrgId())
-        XCTAssertEqual("", audience?.state?.getEcid())
-        XCTAssertEqual("", audience?.state?.getBlob())
-        XCTAssertEqual("", audience?.state?.getLocationHint())
-        XCTAssertEqual([], audience?.state?.getVisitorIds())
+        // configuration and identity data should not be cleared if privacy is not opted out
+        XCTAssertEqual("testServer", audience?.state?.getAamServer())
+        XCTAssertEqual(10.0, audience?.state?.getAamTimeout()) // the default aam timeout should be returned
+        XCTAssertEqual("testOrgId", audience?.state?.getOrgId())
+        XCTAssertEqual("1234567", audience?.state?.getEcid())
+        XCTAssertEqual("testBlob", audience?.state?.getBlob())
+        XCTAssertEqual("9", audience?.state?.getLocationHint())
+        XCTAssertEqual(customIds, audience?.state?.getVisitorIds())
     }
 
     // ==========================================================================
