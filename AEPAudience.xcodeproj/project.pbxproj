@@ -32,6 +32,8 @@
 		D6DAC3842549D22000BD81EB /* EventHub+Testable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC3832549D22000BD81EB /* EventHub+Testable.swift */; };
 		D6DAC3882549FC5B00BD81EB /* URL+AudienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC3872549FC5B00BD81EB /* URL+AudienceTests.swift */; };
 		D6DAC3AE2550956900BD81EB /* UserDefaults+Clear.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC3AD2550956900BD81EB /* UserDefaults+Clear.swift */; };
+		D6DAC3DD2551CFB200BD81EB /* AudienceManagerFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC3DC2551CFB200BD81EB /* AudienceManagerFunctionalTests.swift */; };
+		D6DAC3E72553103C00BD81EB /* TestableNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC3E62553103B00BD81EB /* TestableNetworkService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +81,8 @@
 		D6DAC3832549D22000BD81EB /* EventHub+Testable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EventHub+Testable.swift"; sourceTree = "<group>"; };
 		D6DAC3872549FC5B00BD81EB /* URL+AudienceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+AudienceTests.swift"; sourceTree = "<group>"; };
 		D6DAC3AD2550956900BD81EB /* UserDefaults+Clear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Clear.swift"; sourceTree = "<group>"; };
+		D6DAC3DC2551CFB200BD81EB /* AudienceManagerFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceManagerFunctionalTests.swift; sourceTree = "<group>"; };
+		D6DAC3E62553103B00BD81EB /* TestableNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableNetworkService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +145,7 @@
 				D6733D83252BCCB900AE65A9 /* AudienceStateTests.swift */,
 				D6DAC3742549CDD400BD81EB /* AudiencePublicAPITests.swift */,
 				D6DAC3872549FC5B00BD81EB /* URL+AudienceTests.swift */,
+				D6DAC3DC2551CFB200BD81EB /* AudienceManagerFunctionalTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -181,6 +186,7 @@
 				D6DAC37F2549D1CC00BD81EB /* MockExtension.swift */,
 				D6DAC3832549D22000BD81EB /* EventHub+Testable.swift */,
 				D6DAC3AD2550956900BD81EB /* UserDefaults+Clear.swift */,
+				D6DAC3E62553103B00BD81EB /* TestableNetworkService.swift */,
 			);
 			path = TestHelper;
 			sourceTree = "<group>";
@@ -403,8 +409,10 @@
 				D6DAC3AE2550956900BD81EB /* UserDefaults+Clear.swift in Sources */,
 				2EBEE7C825282EC000880E72 /* TestableExtensionRuntime.swift in Sources */,
 				2E45B6BA2537A071003D3534 /* MockNetworking.swift in Sources */,
+				D6DAC3E72553103C00BD81EB /* TestableNetworkService.swift in Sources */,
 				2E45B6B625379FA7003D3534 /* AudienceHitProcessorTests.swift in Sources */,
 				D65C46DF25437B4500998A2B /* MockHitQueue.swift in Sources */,
+				D6DAC3DD2551CFB200BD81EB /* AudienceManagerFunctionalTests.swift in Sources */,
 				2EBEE7C325282CD300880E72 /* AudienceTests.swift in Sources */,
 				D6DAC3842549D22000BD81EB /* EventHub+Testable.swift in Sources */,
 				D6DAC3802549D1CC00BD81EB /* MockExtension.swift in Sources */,
