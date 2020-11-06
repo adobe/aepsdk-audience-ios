@@ -104,7 +104,19 @@ extension URL {
             Log.error(label: LOG_TAG, "Building Audience hit URL failed, returning nil.")
             return nil
         }
-        return url
+
+        // Url encode any reserved characters present in the trait key or value
+        var encodedUrlArray = url.absoluteString.split(separator: "&").map { String($0) }
+        for (index, queryItem) in encodedUrlArray.enumerated() {
+            if queryItem.starts(with: AudienceConstants.URLKeys.CUSTOMER_DATA_PREFIX) {
+                let urlEncodedQueryItem = queryItem.urlEncodeAamTrait(trait: queryItem)
+                encodedUrlArray[index] = urlEncodedQueryItem
+            }
+        }
+
+        let encodedUrl = URL(string: encodedUrlArray.joined(separator: "&"))
+
+        return encodedUrl
     }
 
     /// Builds the `URL` responsible for sending an opt-out hit
@@ -126,5 +138,15 @@ extension URL {
             return nil
         }
         return url
+    }
+}
+
+/// String extension which url encodes reserved query parameters present in a trait key or trait value
+extension String {
+    func urlEncodeAamTrait(trait: String) -> String {
+        // the character set contains the reserved query parameters except "=" which is used for trait key value pairs
+        let reservedCharacters = CharacterSet(charactersIn: ":/?#[]&'+*()!@$,;")
+        let processedTraitString = trait.removingPercentEncoding?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed.subtracting(reservedCharacters)) ?? ""
+        return processedTraitString
     }
 }

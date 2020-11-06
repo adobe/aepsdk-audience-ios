@@ -367,8 +367,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         XCTAssertEqual(0, mockNetworkService.requests.count)
     }
     
-    // todo: investigate url encoding of !@#$%^&*()_, currently its being encoded as !@%23$%25%5E%26*()_+
-    func skip_testSignalWithData_CheckDataEncodedCorrectly() {
+    func testSignalWithData_CheckDataEncodedCorrectly() {
         // setup
         let semaphore = DispatchSemaphore(value: 0)
         initExtensionsAndWait()
@@ -390,7 +389,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         XCTAssertTrue(requestUrl.contains("c_%E0%AE%AE%E0%AF%8A%E0%AE%B4%E0%AE%BF=%E0%AE%A4%E0%AE%AE%E0%AE%BF%E0%AE%B4%E0%AF%8D"))
         XCTAssertTrue(requestUrl.contains("c_traitb=%E7%BD%91%E9%A1%B5"))
         XCTAssertTrue(requestUrl.contains("c_traitc=c"))
-        XCTAssertTrue(requestUrl.contains("c_%21%40%23%24%25%5E%26%2A%28%29_%2B=21%40%23%24%25%5E%26%2A%28%29_%2B"))
+        XCTAssertTrue(requestUrl.contains("c_%21%40%23%24%25%5E%26%2A%28%29_%2B=%21%40%23%24%25%5E%26%2A%28%29_%2B"))
         XCTAssertTrue(requestUrl.contains("d_mid="))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
     }
