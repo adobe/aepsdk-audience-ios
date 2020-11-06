@@ -420,8 +420,8 @@ class AudienceTests: XCTestCase {
     func testHandleAnalyticsResponse_WithStuffAndDestsInResponse() {
         // setup
         let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
-        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
-        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
         let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
@@ -448,8 +448,8 @@ class AudienceTests: XCTestCase {
     func testHandleAnalyticsResponse_WithStuffAndDestsInResponse_And_NoAudienceTimeout() {
         // setup
         let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
-        // dispatch a configuration response event containing no aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
-        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: nil)
+        // dispatch a configuration response event containing no aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: nil)
         // create analytics response content
         let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
@@ -476,8 +476,8 @@ class AudienceTests: XCTestCase {
     func testHandleAnalyticsResponse_WithStuffAndEmptyDestsInResponse() {
         // setup
         let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
-        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
-        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
         let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[]}"]
         // create the analytics event
@@ -500,8 +500,8 @@ class AudienceTests: XCTestCase {
     func testHandleAnalyticsResponse_WithStuffAndNoDestsInResponse() {
         // setup
         let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
-        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
-        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
         let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\"}"]
         // create the analytics event
@@ -547,8 +547,8 @@ class AudienceTests: XCTestCase {
     func testHandleAnalyticsResponse_WithEmptyStuffAndValidDestsInResponse() {
         // setup
         let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
-        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
-        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
         let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
@@ -574,8 +574,8 @@ class AudienceTests: XCTestCase {
     func testHandleAnalyticsResponse_WithInvalidStuffKeyAndValidDestsInResponse() {
         // setup
         let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
-        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
-        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
         let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
@@ -601,8 +601,8 @@ class AudienceTests: XCTestCase {
     func testHandleAnalyticsResponse_WithInvalidStuffValueAndValidDestsInResponse() {
         // setup
         let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
-        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
-        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
         let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
@@ -628,8 +628,8 @@ class AudienceTests: XCTestCase {
     func testHandleAnalyticsResponse_WithNoStuffArrayAndValidDestsInResponse() {
         // setup
         let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
-        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
-        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
         let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
@@ -655,8 +655,8 @@ class AudienceTests: XCTestCase {
     func testHandleAnalyticsResponse_WithOneInvalidDestinationInResponse() {
         // setup
         let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
-        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
-        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
         let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
