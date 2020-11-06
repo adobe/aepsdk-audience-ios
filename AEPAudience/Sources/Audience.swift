@@ -145,6 +145,8 @@ public class Audience: NSObject, Extension {
     /// - Parameter:
     ///   - event: The analytics response event
     private func handleAnalyticsResponse(event: Event) {
+        // quick out if aam forwarding status is false
+        if let aamForwardingStatus = state?.getAamForwardingStatus(), aamForwardingStatus == false { return }
         Log.debug(label: getLogTagWith(functionName: #function), "Received an Analtyics Response event.")
         guard let response = event.data?[AudienceConstants.Analytics.SERVER_RESPONSE] as? String else { return }
         if !response.isEmpty {
