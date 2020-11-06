@@ -146,7 +146,9 @@ public class Audience: NSObject, Extension {
     ///   - event: The analytics response event
     private func handleAnalyticsResponse(event: Event) {
         Log.debug(label: getLogTagWith(functionName: #function), "Received an Analtyics Response event.")
-        guard let response = event.data?[AudienceConstants.Analytics.SERVER_RESPONSE] as? String else { return }
+        guard var response = event.data?[AudienceConstants.Analytics.SERVER_RESPONSE] as? String else { return }
+        // trim any whitespace to handle analytics responses returned when aam forwarding is disabled
+        response = response.trimmingCharacters(in: .whitespaces)
         if !response.isEmpty {
             guard let responseAsData: Data = response.data(using: .utf8) else {
                 return

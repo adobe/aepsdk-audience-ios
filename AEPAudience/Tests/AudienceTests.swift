@@ -40,6 +40,8 @@ class AudienceTests: XCTestCase {
     override func tearDown() {
         // clean the defaults after each test
         UserDefaults.clear()
+        // clear audience state by setting privacy to opt out
+        audienceState.setMobilePrivacy(status: PrivacyStatus.optedOut)
     }
 
     // MARK: helpers
@@ -412,64 +414,6 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual(0, audience.state?.hitQueue.count())
     }
 
-    func testHandleLifecycleStartEvent_When_UuidIsPresentInAudienceState() {
-        // set a uuid in the audience state
-        audience?.state?.setUuid(uuid: "audienceStateUuid")
-        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
-        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
-        // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
-        // create the lifecycle event and simulate having the configuration data in shared state
-        let lifecycleEvent = Event(name: AudienceConstants.Lifecycle.LIFECYCLE_START_EVENT_NAME, type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
-        mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(lifecycleEvent)
-
-        // test
-        mockRuntime.simulateComingEvent(event: lifecycleEvent)
-
-        // verify retrieved shared state contains the set uuid
-        let audienceSharedState = mockRuntime.getLatestAudienceSharedState()
-        XCTAssertEqual(audienceSharedState as! [String: String], [AudienceConstants.EventDataKeys.UUID: "audienceStateUuid"])
-    }
-
-    func testHandleLifecycleStartEvent_When_UuidIsNotPresentInAudienceStateButIsPresentInDataStore() {
-        // set a uuid in the datastore
-        dataStore.set(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, value: "dataStoreUuid")
-        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
-        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
-        // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
-        // create the lifecycle event and simulate having the configuration data in shared state
-        let lifecycleEvent = Event(name: AudienceConstants.Lifecycle.LIFECYCLE_START_EVENT_NAME, type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
-        mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(lifecycleEvent)
-
-        // test
-        mockRuntime.simulateComingEvent(event: lifecycleEvent)
-
-        // verify retrieved shared state contains the uuid retrieved from the data store
-        let audienceSharedState = mockRuntime.getLatestAudienceSharedState()
-        XCTAssertEqual(audienceSharedState as! [String: String], [AudienceConstants.EventDataKeys.UUID: "dataStoreUuid"])
-    }
-
-    func testHandleLifecycleStartEvent_When_UuidIsNotPresentInAudienceStateOrInDataStore() {
-        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
-        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
-        // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
-        // create the lifecycle event and simulate having the configuration data in shared state
-        let lifecycleEvent = Event(name: AudienceConstants.Lifecycle.LIFECYCLE_START_EVENT_NAME, type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
-        mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(lifecycleEvent)
-
-        // test
-        mockRuntime.simulateComingEvent(event: lifecycleEvent)
-
-        // verify retrieved shared state is empty
-        let audienceSharedState = mockRuntime.getLatestAudienceSharedState()
-        XCTAssertEqual(audienceSharedState as! [String: String], [:])
-    }
-
     // ==========================================================================
     // handleAnalyticsResponse
     // ==========================================================================
@@ -497,6 +441,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[1]?.connectTimeout)
+        // shared state will be created on valid analytics server response
+        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
     }
 
     func testHandleAnalyticsResponse_WithStuffAndDestsInResponse_And_NoAudienceTimeout() {
@@ -523,6 +469,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
         XCTAssertEqual(2, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
         XCTAssertEqual(2, mockNetworkService.calledNetworkRequests[1]?.connectTimeout)
+        // shared state will be created on valid analytics server response
+        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
     }
 
     func testHandleAnalyticsResponse_WithStuffAndEmptyDestsInResponse() {
@@ -545,6 +493,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("segments=1606170,2461982", visitorProfile?["testCookieName"])
         XCTAssertEqual("segments=1234567,7890123", visitorProfile?["anotherCookieName"])
         XCTAssertEqual(0, mockNetworkService.calledNetworkRequests.count)
+        // shared state will be created on valid analytics server response
+        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
     }
 
     func testHandleAnalyticsResponse_WithStuffAndNoDestsInResponse() {
@@ -567,15 +517,17 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("segments=1606170,2461982", visitorProfile?["testCookieName"])
         XCTAssertEqual("segments=1234567,7890123", visitorProfile?["anotherCookieName"])
         XCTAssertEqual(0, mockNetworkService.calledNetworkRequests.count)
+        // shared state will be created on valid analytics server response
+        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
     }
 
-    func testHandleAnalyticsResponse_WithEmptyResponse() {
+    func testHandleAnalyticsResponse_WithEmptyStringResponse() {
         // setup
         let mockNetworkService = ServiceProvider.shared.networkService as! MockNetworking
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{}"]
+        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: " "]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
@@ -588,6 +540,8 @@ class AudienceTests: XCTestCase {
         let visitorProfile = audience?.state?.getVisitorProfile()
         XCTAssertEqual([:], visitorProfile)
         XCTAssertEqual(0, mockNetworkService.calledNetworkRequests.count)
+        // no shared state should be created if the analytics response event is empty
+        XCTAssertEqual(0, mockRuntime.createdSharedStates.count)
     }
 
     func testHandleAnalyticsResponse_WithEmptyStuffAndValidDestsInResponse() {
@@ -613,6 +567,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[1]?.connectTimeout)
+        // shared state will be created on valid analytics server response
+        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
     }
 
     func testHandleAnalyticsResponse_WithInvalidStuffKeyAndValidDestsInResponse() {
@@ -638,6 +594,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[1]?.connectTimeout)
+        // shared state will be created on valid analytics server response
+        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
     }
 
     func testHandleAnalyticsResponse_WithInvalidStuffValueAndValidDestsInResponse() {
@@ -663,6 +621,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[1]?.connectTimeout)
+        // shared state will be created on valid analytics server response
+        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
     }
 
     func testHandleAnalyticsResponse_WithNoStuffArrayAndValidDestsInResponse() {
@@ -688,6 +648,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[1]?.connectTimeout)
+        // shared state will be created on valid analytics server response
+        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
     }
 
     func testHandleAnalyticsResponse_WithOneInvalidDestinationInResponse() {
@@ -711,6 +673,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual(1, mockNetworkService.calledNetworkRequests.count)
         XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[0]?.url.absoluteString)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
+        // shared state will be created on valid analytics server response
+        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
     }
 
     // ==========================================================================

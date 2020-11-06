@@ -45,6 +45,11 @@ class AudienceStateTests: XCTestCase {
         }))
         audienceState = AudienceState(hitQueue: mockHitQueue)
     }
+    
+    override func tearDown() {
+        // clear audience state by setting privacy to opt out
+        audienceState.setMobilePrivacy(status: PrivacyStatus.optedOut)
+    }
 
     // MARK: AudienceState unit tests
     func testGetDpid_WhenDpidEmptyInMemory() {
