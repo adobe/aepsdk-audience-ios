@@ -67,4 +67,8 @@ class TestableExtensionRuntime: ExtensionRuntime {
     func startEvents() {}
 
     func stopEvents() {}
+
+    func getLatestAudienceSharedState() -> [String: Any]? {
+        return createdSharedStates.last ?? [:]
+    }
 }

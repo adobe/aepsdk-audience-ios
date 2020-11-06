@@ -44,12 +44,12 @@ enum AudienceConstants {
         static let DATA_PROVIDER_ID_KEY          = "d_dpid"
         static let DATA_PROVIDER_USER_ID_KEY     = "d_dpuuid"
         static let USER_ID_KEY                   = "d_uuid"
-        static let EXPERIENCE_CLOUD_ORG_ID                         = "d_orgid"
+        static let EXPERIENCE_CLOUD_ORG_ID                        = "d_orgid"
         static let VISITOR_ID_MID_KEY                             = "d_mid"
         static let VISITOR_ID_BLOB_KEY                            = "d_blob"
         static let VISITOR_ID_LOCATION_HINT_KEY                   = "dcs_region"
         static let VISITOR_ID_PARAMETER_KEY_CUSTOMER              = "d_cid_ic"
-        static let VISITOR_ID_CID_DELIMITER                       = "%01"
+        static let VISITOR_ID_CID_DELIMITER                       = Character(Unicode.Scalar.init(01))
     }
 
     enum URLKeys {
@@ -60,7 +60,7 @@ enum AudienceConstants {
     }
 
     enum Default {
-        static let TIMEOUT = TimeInterval(2000)
+        static let TIMEOUT = TimeInterval(2)
     }
 
     enum ResponseKeys {
@@ -142,6 +142,7 @@ enum AudienceConstants {
         static let LIFECYCLE_CONTEXT_DATA  = "lifecyclecontextdata"
         static let LIFECYCLE_PAUSE         = "pause"
         static let LIFECYCLE_START         = "start"
+        static let LIFECYCLE_START_EVENT_NAME = "LifecycleStart"
         static let LOCALE                  = "locale"
         static let MAX_SESSION_LENGTH      = "maxsessionlength"
         static let MONTHLY_ENGAGED_EVENT   = "monthlyenguserevent"

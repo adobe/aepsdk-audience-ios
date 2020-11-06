@@ -19,16 +19,16 @@ extension URL {
 
     /// Creates a new Audience Manager hit URL
     /// - Parameters:
-    ///   - audienceState: the current `AudienceState` containing the Audience Manager extension variables
-    ///   - configurationSharedState: the current `Configuration` shared state
-    ///   - identitySharedState: the current `Identity` shared state
-    ///   - customerEventData: the customer event data present in the triggering event
-    // todo: this is just a placeholder and the passed in arguments may change
-    static func buildAudienceHitURL(audienceState: AudienceState?, configurationSharedState: [String: Any]?, identitySharedState: [String: Any]?, customerEventData: [String: String]) -> URL? {
-        guard let aamServer = configurationSharedState?[AudienceConstants.Configuration.AAM_SERVER] as? String else {
+    ///   - state: the Audience State containing Audience-related variables.
+    static func buildAudienceHitURL(state: AudienceState?) -> URL? {
+        let aamServer = state?.getAamServer() ?? ""
+
+        // bail if the aam server is empty
+        if aamServer.isEmpty {
             Log.error(label: LOG_TAG, "Building Audience hit URL failed - (Audience Server not found in configuration shared state), returning nil.")
             return nil
         }
+
         var components = URLComponents()
         components.scheme = "https"
         components.host = aamServer
@@ -36,7 +36,8 @@ extension URL {
 
         var queryItems: [URLQueryItem] = []
 
-        // Attach the customer data sent by SignalWithData API
+        // Attach the customer data sent by the SignalWithData API
+        let customerEventData = state?.getCustomerEventData() ?? [:]
         for (key, value) in customerEventData {
             if key.isEmpty || value.isEmpty {
                 continue
@@ -46,20 +47,20 @@ extension URL {
         }
 
         // Attach mid, blob, locationHint, visitorIdList from Identity shared state
-        if let marketingCloudId = identitySharedState?[AudienceConstants.Identity.VISITOR_ID_MID] as? String {
+        if let marketingCloudId = state?.getEcid() as String?, !marketingCloudId.isEmpty {
             queryItems += [URLQueryItem(name: AudienceConstants.DestinationKeys.VISITOR_ID_MID_KEY, value: marketingCloudId)]
         }
 
-        if let blob = identitySharedState?[AudienceConstants.Identity.VISITOR_ID_BLOB] as? String {
+        if let blob = state?.getBlob() as String?, !blob.isEmpty {
             queryItems += [URLQueryItem(name: AudienceConstants.DestinationKeys.VISITOR_ID_BLOB_KEY, value: blob)]
         }
 
-        if let locationHint = identitySharedState?[AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT] as? String {
+        if let locationHint = state?.getLocationHint() as String?, !locationHint.isEmpty {
             queryItems += [URLQueryItem(name: AudienceConstants.DestinationKeys.VISITOR_ID_LOCATION_HINT_KEY, value: locationHint)]
         }
 
         // Attach custom visitorId list synced on Identity extension
-        if let customerVisitorIdList = identitySharedState?[AudienceConstants.Identity.VISITOR_IDS_LIST] as? [CustomIdentity] {
+        if let customerVisitorIdList = state?.getVisitorIds() as [CustomIdentity]?, !customerVisitorIdList.isEmpty {
             for id in customerVisitorIdList {
                 let idType = id.type!
                 let idValue = id.identifier ?? ""
@@ -81,20 +82,16 @@ extension URL {
         }
 
         // Attach experience cloud org id from configruration shared state
-        if let experienceCloudOrgId = configurationSharedState?[AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID] as? String {
+        if let experienceCloudOrgId = state?.getOrgId() as String?, !experienceCloudOrgId.isEmpty {
             queryItems += [URLQueryItem(name: AudienceConstants.DestinationKeys.EXPERIENCE_CLOUD_ORG_ID, value: experienceCloudOrgId)]
         }
 
-        // Attach uuid from Audience state
-        let uuid = audienceState?.getUuid() ?? ""
-
-        if !uuid.isEmpty {
+        // Attach uuid
+        if let uuid = state?.getUuid() as String?, !uuid.isEmpty  {
             queryItems += [URLQueryItem(name: AudienceConstants.DestinationKeys.USER_ID_KEY, value: uuid)]
         }
 
         // Attach platform suffix
-        //let systemInfoService = ServiceProvider.shared.systemInfoService
-        //if(systemInfoService.get)
         queryItems += [URLQueryItem(name: AudienceConstants.URLKeys.PLATFORM_KEY, value: "ios")]
 
         // Attach URL suffix        

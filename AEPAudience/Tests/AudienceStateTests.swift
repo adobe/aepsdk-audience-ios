@@ -13,11 +13,14 @@
 import XCTest
 @testable import AEPAudience
 @testable import AEPCore
+@testable import AEPIdentity
 @testable import AEPServices
 
 class AudienceStateTests: XCTestCase {
     let dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
     var audienceState: AudienceState!
+    var mockHitQueue: MockHitQueue!
+    var responseCallbackArgs = [(DataEntity, Data?)]()
     // test strings
     static let emptyString = ""
     static let emptyProfile = [String:String]()
@@ -27,15 +30,28 @@ class AudienceStateTests: XCTestCase {
     static let persistedUuid = "persistedUuid"
     static let inMemoryVisitorProfile = ["inMemoryTrait":"inMemoryValue"]
     static let persistedVisitorProfile = ["persistedTrait":"persistedValue"]
+    static let expectedVisitorProfile = ["cookie1":"cookieValue1","cookie2":"cookieValue2"]
+    static let validConfigSharedState = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn, AudienceConstants.Configuration.AAM_SERVER: "www.testServer.com", AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING: false, AudienceConstants.Configuration.AAM_TIMEOUT: TimeInterval(10)] as [String: Any]
+    static let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer.com", AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrg@AdobeOrg", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue]
+    static let configEvent = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: nil)
     
     override func setUp() {
         MobileCore.setLogLevel(.error) // reset log level to error before each test
         for key in UserDefaults.standard.dictionaryRepresentation().keys {
             UserDefaults.standard.removeObject(forKey: key)
         }
-        audienceState = AudienceState()
+        mockHitQueue = MockHitQueue(processor: AudienceHitProcessor(responseHandler: { [weak self] entity, data in
+            self?.responseCallbackArgs.append((entity, data))
+        }))
+        audienceState = AudienceState(hitQueue: mockHitQueue)
+    }
+    
+    override func tearDown() {
+        // clear audience state by setting privacy to opt out
+        audienceState.setMobilePrivacy(status: PrivacyStatus.optedOut)
     }
 
+    // MARK: AudienceState unit tests
     func testGetDpid_WhenDpidEmptyInMemory() {
         // setup
         audienceState.setDpid(dpid: AudienceStateTests.emptyString)
@@ -437,5 +453,105 @@ class AudienceStateTests: XCTestCase {
         XCTAssertEqual(AudienceStateTests.emptyString, data[AudienceConstants.EventDataKeys.UUID] as? String ?? "")
         XCTAssertEqual(AudienceStateTests.emptyProfile, data[AudienceConstants.EventDataKeys.VISITOR_PROFILE] as? [String:String] ?? AudienceStateTests.emptyProfile)
     }
+    
+    // ==========================================================================
+    // handleHitResponse
+    // ==========================================================================
+    func testHandleHitResponseHappy() {
+        // setup
+        let semaphore = DispatchSemaphore(value: 0)
+        let semaphore2 = DispatchSemaphore(value: 0)
+        var profileInDispatchResponse:[String: String] = [:]
+        var eventInDispatchResponse:Event?
+        var eventInCreateSharedState:Event?
+        var audienceSharedState:[String: Any] = [:]
+        let hit = AudienceHit.fakeHit()
+        let hitResponse = AudienceHitResponse.fakeHitResponse()
+        // setup configuration settings in audience state
+        audienceState?.handleConfigurationSharedStateUpdate(event: AudienceStateTests.configEvent, configSharedState: AudienceStateTests.configSharedState, createSharedState: { data, event in
+        })
+        
+        // test
+        audienceState.handleHitResponse(hit: hit, responseData: try! JSONEncoder().encode(hitResponse), dispatchResponse: { visitorProfile, event in
+            profileInDispatchResponse = visitorProfile
+            eventInDispatchResponse = event
+            semaphore.signal()
+        }, createSharedState: { createdState, event in
+            audienceSharedState = createdState
+            eventInCreateSharedState = event
+            semaphore2.signal()
+        })
+        semaphore.wait()
+        semaphore2.wait()
 
+        // verify
+        XCTAssertEqual(AudienceStateTests.expectedVisitorProfile, profileInDispatchResponse) // the stuff array in the hit response should be in the dispatched response event
+        XCTAssertNotNil(eventInDispatchResponse)
+        XCTAssertEqual(eventInDispatchResponse?.type, EventType.audienceManager)
+        XCTAssertEqual(eventInDispatchResponse?.source, EventSource.requestIdentity)
+        XCTAssertEqual(AudienceStateTests.expectedVisitorProfile, audienceSharedState[AudienceConstants.EventDataKeys.VISITOR_PROFILE] as? [String : String] ?? [:]) // the stuff array in the hit response should be updated in the audience shared state
+        XCTAssertEqual("fakeUuid", audienceSharedState[AudienceConstants.EventDataKeys.UUID] as? String ?? "") // the uuid in the response should be updated in the audience shared state
+        XCTAssertNotNil(eventInCreateSharedState)
+        XCTAssertEqual(eventInCreateSharedState?.type, EventType.audienceManager)
+        XCTAssertEqual(eventInCreateSharedState?.source, EventSource.requestIdentity)
+    }
+    
+    func testHandleHitResponseWithEmptyConfigurationSettingsInAudienceState() {
+        // setup
+        let semaphore = DispatchSemaphore(value: 0)
+        let semaphore2 = DispatchSemaphore(value: 0)
+        var profileInDispatchResponse:[String: String] = [:]
+        var eventInDispatchResponse:Event?
+        var eventInCreateSharedState:Event?
+        var audienceSharedState:[String: Any] = [:]
+        let hit = AudienceHit.fakeHit()
+        let hitResponse = AudienceHitResponse.fakeHitResponse()
+        // setup empty configuration settings in audience state
+        audienceState?.handleConfigurationSharedStateUpdate(event: AudienceStateTests.configEvent, configSharedState: [:], createSharedState: { data, event in
+        })
+        
+        // test
+        audienceState.handleHitResponse(hit: hit, responseData: try! JSONEncoder().encode(hitResponse), dispatchResponse: { visitorProfile, event in
+            profileInDispatchResponse = visitorProfile
+            eventInDispatchResponse = event
+            semaphore.signal()
+        }, createSharedState: { createdState, event in
+            audienceSharedState = createdState
+            eventInCreateSharedState = event
+            semaphore2.signal()
+        })
+        semaphore.wait()
+        semaphore2.wait()
+
+        // verify
+        XCTAssertEqual([:], profileInDispatchResponse) // an empty profile should be dispatched
+        XCTAssertEqual(eventInDispatchResponse?.type, EventType.audienceManager)
+        XCTAssertEqual(eventInDispatchResponse?.source, EventSource.requestIdentity)
+        XCTAssertEqual([:], audienceSharedState[AudienceConstants.EventDataKeys.VISITOR_PROFILE] as? [String : String] ?? [:]) // no visitor profile should be updated in the audience shared state
+        XCTAssertEqual("", audienceSharedState[AudienceConstants.EventDataKeys.UUID] as? String ?? "") // no uuid should be updated in the audience shared state
+        XCTAssertNotNil(eventInCreateSharedState)
+        XCTAssertEqual(eventInCreateSharedState?.type, EventType.audienceManager)
+        XCTAssertEqual(eventInCreateSharedState?.source, EventSource.requestIdentity)
+    }
+
+}
+
+// MARK: fake hit and fake response for testing
+private extension AudienceHit {
+    static func fakeHit() -> AudienceHit {
+        let event = Event(name: "Hit Event", type: EventType.audienceManager, source: EventSource.requestIdentity, data: nil)
+        let hit = AudienceHit(url: URL(string: "adobe.com")!, timeout: AudienceConstants.Default.TIMEOUT, event: event)
+
+        return hit
+    }
+}
+
+private extension AudienceHitResponse {
+    static func fakeHitResponse() -> AudienceHitResponse {
+        var audienceStuffArray = [AudienceStuffObject].init()
+        audienceStuffArray.append(AudienceStuffObject(cookieKey: "cookie1", cookieValue: "cookieValue1", ttl: 30, domain: "testServer.com"))
+        audienceStuffArray.append(AudienceStuffObject(cookieKey: "cookie2", cookieValue: "cookieValue2", ttl: 30, domain: "testServer.com"))
+        let destsArray = [["c":"www.adobe.com"],["c":"www.google.com"]]
+        return AudienceHitResponse(uuid: "fakeUuid", stuff: audienceStuffArray, dests: destsArray, region: 9, tid: "fakeTid")
+    }
 }
