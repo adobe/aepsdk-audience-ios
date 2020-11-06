@@ -111,7 +111,7 @@ public class AudienceState {
         if aamServer.isEmpty { return }
 
         // only send the opt-out hit if the audience manager server and uuid are not empty
-        if !getUuid().isEmpty && !aamServer.isEmpty {
+        if !getUuid().isEmpty {
             ServiceProvider.shared.networkService.sendOptOutRequest(aamServer: aamServer, uuid: uuid)
         }
     }
@@ -558,6 +558,7 @@ public class AudienceState {
             self.locationHint = ""
             self.syncedVisitorIds = []
             self.customerEventData = [:]
+            self.aamForwardingStatus = false
         }
     }
 
