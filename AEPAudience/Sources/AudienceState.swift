@@ -111,7 +111,7 @@ public class AudienceState {
         if aamServer.isEmpty { return }
 
         // only send the opt-out hit if the audience manager server and uuid are not empty
-        if !getUuid().isEmpty {
+        if !getUuid().isEmpty && !aamServer.isEmpty {
             ServiceProvider.shared.networkService.sendOptOutRequest(aamServer: aamServer, uuid: uuid)
         }
     }
@@ -305,7 +305,7 @@ public class AudienceState {
     func setMobilePrivacy(status: PrivacyStatus) {
         self.privacyStatus = status
         if privacyStatus == .optedOut {
-            clearIdentifiers()
+            reset()
         }
         // update hit queue with privacy status
         hitQueue.handlePrivacyChange(status: privacyStatus)
@@ -537,7 +537,7 @@ public class AudienceState {
 
     // MARK: helpers
 
-    /// Clear the identifiers and cached shared states for this AudienceState.
+    /// Clears the audience manager identifiers for this AudienceState.
     /// The cleared Audience Manager identifiers are: `uuid`, `dpid`, `dpuuid`, and `visitorProfile`
     func clearIdentifiers() {
         // clear the persisted data
@@ -548,18 +548,19 @@ public class AudienceState {
         self.dpuuid = ""
         self.dpid = ""
         self.visitorProfile = [:]
-        // clear configuration and identity variables if privacy is opted out
-        if privacyStatus == .optedOut {
-            self.aamServer = ""
-            self.aamTimeout = AudienceConstants.Default.TIMEOUT
-            self.orgId = ""
-            self.ecid = ""
-            self.blob = ""
-            self.locationHint = ""
-            self.syncedVisitorIds = []
-            self.customerEventData = [:]
-            self.aamForwardingStatus = false
-        }
+    }
+
+    /// Clears all the audience manager identifiers, configuration settings, and identity identifiers for this AudienceState.
+    private func reset() {
+        clearIdentifiers()
+        self.aamServer = ""
+        self.aamTimeout = AudienceConstants.Default.TIMEOUT
+        self.orgId = ""
+        self.ecid = ""
+        self.blob = ""
+        self.locationHint = ""
+        self.syncedVisitorIds = []
+        self.customerEventData = [:]
     }
 
     /// Helper to return a log tag
