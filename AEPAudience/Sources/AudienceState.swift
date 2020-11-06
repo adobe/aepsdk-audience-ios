@@ -110,8 +110,8 @@ public class AudienceState {
     func sendOptOutHit() {
         if aamServer.isEmpty { return }
 
-        // only send the opt-out hit if the audience manager server and uuid are not empty
-        if !getUuid().isEmpty && !aamServer.isEmpty {
+        // only send the opt-out hit if the uuid is not empty
+        if !getUuid().isEmpty {
             ServiceProvider.shared.networkService.sendOptOutRequest(aamServer: aamServer, uuid: uuid)
         }
     }
