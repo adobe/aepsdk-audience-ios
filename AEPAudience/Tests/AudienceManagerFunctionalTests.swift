@@ -261,6 +261,27 @@ class AudienceManagerFunctionalTests: XCTestCase {
         XCTAssertTrue(requestUrl2.contains("https://identityTestServer.com/id?"))
     }
     
+    func testSignalWithData_PrivacyUnknownThenPrivacyOptOut() {
+        // setup
+        initExtensionsAndWait()
+        setupConfiguration(privacyStatus: "unknown", aamForwardingStatus: false)
+        let mockNetworkService = TestableNetworkService()
+        ServiceProvider.shared.networkService = mockNetworkService
+        
+        // test
+        let traits = ["trait": "b"] as [String: String]
+        Audience.signalWithData(data: traits) { (_, _) in
+        }
+        sleep(2)
+        
+        // verify
+        XCTAssertEqual(0, mockNetworkService.requests.count)
+        // part 2 of test: the queued signalWithData hit should be dropped after privacy is opted out
+        MobileCore.updateConfigurationWith(configDict: [AudienceManagerFunctionalTests.GLOBAL_CONFIG_PRIVACY: "optout"])
+        sleep(2)
+        XCTAssertEqual(0, mockNetworkService.requests.count)
+    }
+    
     func testSignalWithData_UnicodeData() {
         // setup
         let semaphore = DispatchSemaphore(value: 0)
@@ -344,27 +365,6 @@ class AudienceManagerFunctionalTests: XCTestCase {
         XCTAssertEqual("https://www.google.com", destUrl1)
         let destUrl2 = mockNetworkService.getRequest(at: 2)?.url.absoluteString ?? ""
         XCTAssertEqual("https://www.adobe.com", destUrl2)
-    }
-    
-    func testSignalWithData_PrivacyUnknownThenPrivacyOptOut() {
-        // setup
-        initExtensionsAndWait()
-        setupConfiguration(privacyStatus: "unknown", aamForwardingStatus: false)
-        let mockNetworkService = TestableNetworkService()
-        ServiceProvider.shared.networkService = mockNetworkService
-        
-        // test
-        let traits = ["trait": "b"] as [String: String]
-        Audience.signalWithData(data: traits) { (_, _) in
-        }
-        sleep(2)
-        
-        // verify
-        XCTAssertEqual(0, mockNetworkService.requests.count)
-        // part 2 of test: the queued signalWithData hit should be dropped after privacy is opted out
-        MobileCore.updateConfigurationWith(configDict: [AudienceManagerFunctionalTests.GLOBAL_CONFIG_PRIVACY: "optout"])
-        sleep(2)
-        XCTAssertEqual(0, mockNetworkService.requests.count)
     }
     
     func testSignalWithData_CheckDataEncodedCorrectly() {

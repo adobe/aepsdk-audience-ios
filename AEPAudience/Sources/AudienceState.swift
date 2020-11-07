@@ -83,6 +83,7 @@ public class AudienceState {
 
         // if the event is a lifecycle event, convert the lifecycle keys to audience manager keys
         if event.type == EventType.lifecycle {
+            Log.debug(label: getLogTagWith(functionName: #function), "Lifecycle event found, processing context data")
             customerEventData = convertLifecycleKeys(event: event)
         } else {
             if let signalData = event.data, !signalData.isEmpty {
@@ -103,6 +104,7 @@ public class AudienceState {
             return
         }
 
+        Log.debug(label: getLogTagWith(functionName: #function), "Queueing hit for url: \(url)")
         hitQueue.queue(entity: DataEntity(uniqueIdentifier: UUID().uuidString, timestamp: Date(), data: hitData))
     }
 
@@ -130,7 +132,7 @@ public class AudienceState {
 
         // if we have no response from the audience server log it and bail early
         if responseData == nil {
-            Log.debug(label: getLogTagWith(functionName: #function), "No response from the server.")
+            Log.debug(label: getLogTagWith(functionName: #function), "The received response was empty.")
             createSharedState(getStateData(), hit.event)
             dispatchResponse(getVisitorProfile(), hit.event)
             return

@@ -146,6 +146,7 @@ extension String {
     func urlEncodeAamTrait(trait: String) -> String {
         // the character set contains the reserved query parameters except "=" which is used for trait key value pairs
         let reservedCharacters = CharacterSet(charactersIn: ":/?#[]&'+*()!@$,;")
+        // percent encoding is removed first because the traits are being processed post URL creation
         let processedTraitString = trait.removingPercentEncoding?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed.subtracting(reservedCharacters)) ?? ""
         return processedTraitString
     }
