@@ -33,12 +33,6 @@ extension FileManager {
         if let _ = self.urls(for: .cachesDirectory, in: .userDomainMask).first {
 
             do {
-                try self.removeItem(at: URL(fileURLWithPath: "Library/Caches/com.adobe.module.signal"))
-            } catch {
-                print("ERROR DESCRIPTION: \(error)")
-            }
-
-            do {
                 try self.removeItem(at: URL(fileURLWithPath: "Library/Caches/com.adobe.module.identity"))
             } catch {
                 print("ERROR DESCRIPTION: \(error)")
@@ -46,12 +40,6 @@ extension FileManager {
 
             do {
                 try self.removeItem(at: URL(fileURLWithPath: "Library/Caches/com.adobe.module.audience"))
-            } catch {
-                print("ERROR DESCRIPTION: \(error)")
-            }
-
-            do {
-                try self.removeItem(at: URL(fileURLWithPath: "Library/Caches/com.adobe.mobile.diskcache", isDirectory: true))
             } catch {
                 print("ERROR DESCRIPTION: \(error)")
             }
