@@ -107,6 +107,17 @@ class AudienceManagerFunctionalTests: XCTestCase {
         }
     }
     
+    func getEcid() -> String {
+        let semaphore = DispatchSemaphore(value: 0)
+        var ecid = String()
+        Identity.getExperienceCloudId { (retrievedEcid) in
+            ecid = retrievedEcid ?? ""
+            semaphore.signal()
+        }
+        semaphore.wait()
+        return ecid
+    }
+    
     // MARK: signalWithData(...) tests
     func testSignalWithData_Smoke() {
         // setup
@@ -126,10 +137,11 @@ class AudienceManagerFunctionalTests: XCTestCase {
         
         // verify
         semaphore.wait()
+        let ecid = getEcid()
         XCTAssertEqual(1, mockNetworkService.requests.count)
         let requestUrl = mockNetworkService.getRequest(at: 0)?.url.absoluteString ?? ""
         XCTAssertTrue(requestUrl.contains("https://testServer.com/event?"))
-        XCTAssertTrue(requestUrl.contains("d_mid="))
+        XCTAssertTrue(requestUrl.contains("d_mid=\(ecid)"))
         XCTAssertTrue(requestUrl.contains("c_trait=b"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
     }
@@ -152,10 +164,11 @@ class AudienceManagerFunctionalTests: XCTestCase {
         
         // verify
         semaphore.wait()
+        let ecid = getEcid()
         XCTAssertEqual(1, mockNetworkService.requests.count)
         let requestUrl = mockNetworkService.getRequest(at: 0)?.url.absoluteString ?? ""
         XCTAssertTrue(requestUrl.contains("https://testServer.com/event?"))
-        XCTAssertTrue(requestUrl.contains("d_mid="))
+        XCTAssertTrue(requestUrl.contains("d_mid=\(ecid)"))
         XCTAssertFalse(requestUrl.contains("c_"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
     }
@@ -199,11 +212,14 @@ class AudienceManagerFunctionalTests: XCTestCase {
         
         // verify
         semaphore.wait()
+        let ecid = getEcid()
         XCTAssertEqual(1, mockNetworkService.requests.count)
         let requestUrl = mockNetworkService.getRequest(at: 0)?.url.absoluteString ?? ""
         XCTAssertTrue(requestUrl.contains("https://testServer.com/event?"))
-        XCTAssertTrue(requestUrl.contains("d_mid="))
+        XCTAssertTrue(requestUrl.contains("d_mid=\(ecid)"))
         XCTAssertTrue(requestUrl.contains("c_trait=b"))
+        XCTAssertTrue(requestUrl.contains("c_trait2=traitValue2"))
+        XCTAssertTrue(requestUrl.contains("c_trait3=c"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
     }
     
@@ -226,10 +242,11 @@ class AudienceManagerFunctionalTests: XCTestCase {
         
         // verify
         semaphore.wait()
+        let ecid = getEcid()
         XCTAssertEqual(1, mockNetworkService.requests.count)
         let requestUrl = mockNetworkService.getRequest(at: 0)?.url.absoluteString ?? ""
         XCTAssertTrue(requestUrl.contains("https://testServer.com/event?"))
-        XCTAssertTrue(requestUrl.contains("d_mid="))
+        XCTAssertTrue(requestUrl.contains("d_mid=\(ecid)"))
         XCTAssertTrue(requestUrl.contains("c_trait=b"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
     }
@@ -251,10 +268,11 @@ class AudienceManagerFunctionalTests: XCTestCase {
         // part 2 of test: the queued signalWithData hit should be sent after privacy is opted in
         MobileCore.updateConfigurationWith(configDict: [AudienceManagerFunctionalTests.GLOBAL_CONFIG_PRIVACY: "optedin"])
         sleep(2)
+        let ecid = getEcid()
         XCTAssertEqual(2, mockNetworkService.requests.count)
         let requestUrl = mockNetworkService.getRequest(at: 0)?.url.absoluteString ?? ""
         XCTAssertTrue(requestUrl.contains("https://testServer.com/event?"))
-        XCTAssertTrue(requestUrl.contains("d_mid="))
+        XCTAssertTrue(requestUrl.contains("d_mid=\(ecid)"))
         XCTAssertTrue(requestUrl.contains("c_trait=b"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
         let requestUrl2 = mockNetworkService.getRequest(at: 1)?.url.absoluteString ?? ""
@@ -300,10 +318,11 @@ class AudienceManagerFunctionalTests: XCTestCase {
         
         // verify
         semaphore.wait()
+        let ecid = getEcid()
         XCTAssertEqual(1, mockNetworkService.requests.count)
         let requestUrl = mockNetworkService.getRequest(at: 0)?.url.absoluteString ?? ""
         XCTAssertTrue(requestUrl.contains("https://testServer.com/event?"))
-        XCTAssertTrue(requestUrl.contains("d_mid="))
+        XCTAssertTrue(requestUrl.contains("d_mid=\(ecid)"))
         XCTAssertTrue(requestUrl.contains("c_%E0%AE%AE%E0%AF%8A%E0%AE%B4%E0%AE%BF=%E0%AE%A4%E0%AE%AE%E0%AE%BF%E0%AE%B4%E0%AF%8D"))
         XCTAssertTrue(requestUrl.contains("c_traitb=%E7%BD%91%E9%A1%B5"))
         XCTAssertTrue(requestUrl.contains("c_traitc=c"))
@@ -328,10 +347,11 @@ class AudienceManagerFunctionalTests: XCTestCase {
         
         // verify
         semaphore.wait()
+        let ecid = getEcid()
         XCTAssertEqual(1, mockNetworkService.requests.count)
         let requestUrl = mockNetworkService.getRequest(at: 0)?.url.absoluteString ?? ""
         XCTAssertTrue(requestUrl.contains("https://testServer.com/event?"))
-        XCTAssertTrue(requestUrl.contains("d_mid="))
+        XCTAssertTrue(requestUrl.contains("d_mid=\(ecid)"))
         XCTAssertFalse(requestUrl.contains("c_"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
     }
@@ -355,10 +375,11 @@ class AudienceManagerFunctionalTests: XCTestCase {
         
         // verify
         semaphore.wait()
+        let ecid = getEcid()
         XCTAssertEqual(3, mockNetworkService.requests.count)
         let requestUrl = mockNetworkService.getRequest(at: 0)?.url.absoluteString ?? ""
         XCTAssertTrue(requestUrl.contains("https://testServer.com/event?"))
-        XCTAssertTrue(requestUrl.contains("d_mid="))
+        XCTAssertTrue(requestUrl.contains("d_mid=\(ecid)"))
         XCTAssertTrue(requestUrl.contains("c_trait=b"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
         let destUrl1 = mockNetworkService.getRequest(at: 1)?.url.absoluteString ?? ""
@@ -380,9 +401,10 @@ class AudienceManagerFunctionalTests: XCTestCase {
         Audience.signalWithData(data: traits) { (_, _) in
             semaphore.signal()
         }
-        semaphore.wait()
         
         // verify
+        semaphore.wait()
+        let ecid = getEcid()
         XCTAssertEqual(1, mockNetworkService.requests.count)
         let requestUrl = mockNetworkService.getRequest(at: 0)?.url.absoluteString ?? ""
         XCTAssertTrue(requestUrl.contains("testServer.com/event?"))
@@ -390,7 +412,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         XCTAssertTrue(requestUrl.contains("c_traitb=%E7%BD%91%E9%A1%B5"))
         XCTAssertTrue(requestUrl.contains("c_traitc=c"))
         XCTAssertTrue(requestUrl.contains("c_%21%40%23%24%25%5E%26%2A%28%29_%2B=%21%40%23%24%25%5E%26%2A%28%29_%2B"))
-        XCTAssertTrue(requestUrl.contains("d_mid="))
+        XCTAssertTrue(requestUrl.contains("d_mid=\(ecid)"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
     }
     
@@ -414,10 +436,11 @@ class AudienceManagerFunctionalTests: XCTestCase {
         
         // verify
         semaphore.wait()
+        let ecid = getEcid()
         XCTAssertEqual(2, mockNetworkService.requests.count)
         let requestUrl = mockNetworkService.getRequest(at: 0)?.url.absoluteString ?? ""
         XCTAssertTrue(requestUrl.contains("https://testServer.com/event?"))
-        XCTAssertTrue(requestUrl.contains("d_mid="))
+        XCTAssertTrue(requestUrl.contains("d_mid=\(ecid)"))
         XCTAssertTrue(requestUrl.contains("c_trait=b"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
         let destUrl = mockNetworkService.getRequest(at: 1)?.url.absoluteString ?? ""
@@ -458,10 +481,11 @@ class AudienceManagerFunctionalTests: XCTestCase {
         
         // verify
         semaphore.wait()
+        let ecid = getEcid()
         XCTAssertEqual(2, mockNetworkService.requests.count)
         let requestUrl = mockNetworkService.getRequest(at: 0)?.url.absoluteString ?? ""
         XCTAssertTrue(requestUrl.contains("https://testServer.com/event?"))
-        XCTAssertTrue(requestUrl.contains("d_mid="))
+        XCTAssertTrue(requestUrl.contains("d_mid=\(ecid)"))
         XCTAssertTrue(requestUrl.contains("c_trait=b"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
         let destUrl = mockNetworkService.getRequest(at: 1)?.url.absoluteString ?? ""
@@ -505,10 +529,11 @@ class AudienceManagerFunctionalTests: XCTestCase {
         
         // verify
         semaphore.wait()
+        let ecid = getEcid()
         XCTAssertEqual(2, mockNetworkService.requests.count)
         let requestUrl = mockNetworkService.getRequest(at: 0)?.url.absoluteString ?? ""
         XCTAssertTrue(requestUrl.contains("https://testServer.com/event?"))
-        XCTAssertTrue(requestUrl.contains("d_mid="))
+        XCTAssertTrue(requestUrl.contains("d_mid=\(ecid)"))
         XCTAssertTrue(requestUrl.contains("c_trait=b"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
         let destUrl = mockNetworkService.getRequest(at: 1)?.url.absoluteString ?? ""
