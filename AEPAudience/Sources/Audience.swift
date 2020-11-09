@@ -147,14 +147,16 @@ public class Audience: NSObject, Extension {
     ///   - event: The analytics response event
     private func handleAnalyticsResponse(event: Event) {
         // quick out if aam forwarding status is false
-        if let aamForwardingStatus = state?.getAamForwardingStatus(), aamForwardingStatus == false { return }
-        Log.debug(label: getLogTagWith(functionName: #function), "Received an Analytics Response event.")
+        if let aamForwardingStatus = state?.getAamForwardingStatus(), aamForwardingStatus == false {
+            Log.trace(label: getLogTagWith(functionName: #function), "Not Processing Analytics Response event as AAMForwarding is disabled.");
+            return
+        }
         guard let response = event.data?[AudienceConstants.Analytics.SERVER_RESPONSE] as? String else { return }
         if !response.isEmpty {
             guard let responseAsData: Data = response.data(using: .utf8) else {
                 return
             }
-            Log.debug(label: getLogTagWith(functionName: #function), "The Analytics response was valid, processing the response.")
+            Log.trace(label: getLogTagWith(functionName: #function), "The Analytics response was valid, processing the response.")
             // process the analytics network response
             state?.processResponseData(event: event, response: responseAsData)
 
