@@ -83,13 +83,14 @@ public class Audience: NSObject, Extension {
     private func handleConfigurationResponse(event: Event) {
         // bail if the config data is not valid
         guard let configSharedState = getSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event)?.value else { return }
+        Log.debug(label: getLogTagWith(functionName: #function), "Received Configuration Response event, attempting to retrieve configuration settings.")
         state?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: createSharedState(data:event:))
     }
 
     /// Handles the signalWithData API by attempting to send the Audience Manager hit containing the passed-in event data. If a response is received for the processed `AudienceHit`, a response content event with visitor profile data is dispatched.
     /// - Parameter event: The event coming from the signalWithData API invocation
     private func handleAudienceContentRequest(event: Event) {
-        Log.debug(label: getLogTagWith(functionName: #function), "Received an Audience Manager signalWithData event, attempting to queue the hit.")
+        Log.debug(label: getLogTagWith(functionName: #function), "Received an Audience Manager signalWithData event, attempting to queue the signalWithData hit.")
         // store the identity variables in the AudienceState
         let identitySharedState = getSharedState(extensionName: AudienceConstants.SharedStateKeys.IDENTITY, event: event)?.value ?? ["": ""]
         state?.handleIdentitySharedStateUpdate(identitySharedState: identitySharedState)
@@ -101,7 +102,7 @@ public class Audience: NSObject, Extension {
     /// Handles the getVisitorProfile API by dispatching a response content event containing the visitor profile stored in the `AudienceState`.
     /// - Parameter event: The event coming from the getVisitorProfile API invocation
     private func handleAudienceIdentityRequest(event: Event) {
-        Log.debug(label: getLogTagWith(functionName: #function), "Received an Audience Manager getVisitorProfile event, retrieving and dispatching the stored visitor profile.")
+        Log.debug(label: getLogTagWith(functionName: #function), "Received an Audience Manager getVisitorProfile event, retrieving the stored visitor profile.")
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_PROFILE] = state?.getVisitorProfile()
         let responseEvent = event.createResponseEvent(name: "Audience Response Identity", type: EventType.audienceManager, source: EventSource.responseIdentity, data: eventData)
@@ -113,7 +114,7 @@ public class Audience: NSObject, Extension {
     /// Handles the reset API by clearing all the identifiers and visitorProfile in the `AudienceState`.
     /// - Parameter event: The event coming from the reset API invocation
     private func handleAudienceResetRequest(event: Event) {
-        Log.debug(label: getLogTagWith(functionName: #function), "Received a reset event, clearing all stored Audience Manager identities and visitor profile.")
+        Log.debug(label: getLogTagWith(functionName: #function), "Received an Audience Manager reset event, clearing all stored Audience Manager identities and visitor profile.")
         state?.clearIdentifiers()
         createSharedState(data: state?.getStateData() ?? [:], event: event)
     }
@@ -146,14 +147,16 @@ public class Audience: NSObject, Extension {
     ///   - event: The analytics response event
     private func handleAnalyticsResponse(event: Event) {
         // quick out if aam forwarding status is false
-        if let aamForwardingStatus = state?.getAamForwardingStatus(), aamForwardingStatus == false { return }
-        Log.debug(label: getLogTagWith(functionName: #function), "Received an Analtyics Response event.")
+        if let aamForwardingStatus = state?.getAamForwardingStatus(), aamForwardingStatus == false {
+            Log.trace(label: getLogTagWith(functionName: #function), "Not Processing Analytics Response event as AAMForwarding is disabled.");
+            return
+        }
         guard let response = event.data?[AudienceConstants.Analytics.SERVER_RESPONSE] as? String else { return }
         if !response.isEmpty {
             guard let responseAsData: Data = response.data(using: .utf8) else {
                 return
             }
-            Log.debug(label: getLogTagWith(functionName: #function), "The Analytics response was valid, processing the response.")
+            Log.trace(label: getLogTagWith(functionName: #function), "The Analytics response was valid, processing the response.")
             // process the analytics network response
             state?.processResponseData(event: event, response: responseAsData)
 
@@ -173,6 +176,7 @@ public class Audience: NSObject, Extension {
             Log.debug(label: getLogTagWith(functionName: #function), "Failed to decode the Audience Hit, aborting network response processing.")
             return
         }
+        Log.debug(label: getLogTagWith(functionName: #function), "Received a network response from the Audience Manager server, attempting to process the response.")
         state?.handleHitResponse(hit: hit, responseData: responseData, dispatchResponse: dispatchResponse(visitorProfile:event:), createSharedState: createSharedState(data:event:))
     }
 

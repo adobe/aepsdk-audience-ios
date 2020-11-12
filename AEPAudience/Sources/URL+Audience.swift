@@ -43,7 +43,7 @@ extension URL {
                 continue
             }
             let keyWithPrefix = AudienceConstants.URLKeys.CUSTOMER_DATA_PREFIX + key
-            queryItems +=  [URLQueryItem(name: keyWithPrefix, value: value)]
+            queryItems += [URLQueryItem(name: keyWithPrefix, value: value)]
         }
 
         // Attach mid, blob, locationHint, visitorIdList from Identity shared state
@@ -104,7 +104,26 @@ extension URL {
             Log.error(label: LOG_TAG, "Building Audience hit URL failed, returning nil.")
             return nil
         }
-        return url
+
+        // Url encode any reserved characters present in the trait key or value
+        var encodedUrlArray = url.absoluteString.components(separatedBy: CharacterSet(charactersIn: "?&")).map { String($0) }
+        for (index, queryItem) in encodedUrlArray.enumerated() {
+            if queryItem.starts(with: AudienceConstants.URLKeys.CUSTOMER_DATA_PREFIX) {
+                encodedUrlArray[index] = queryItem.urlEncodeForAamTrait()
+            }
+            // append query parameter delimiters
+            if index == 0 {
+                encodedUrlArray[index].append("?")
+            } else if index+1 < encodedUrlArray.count {
+                encodedUrlArray[index].append("&")
+            } else { // last query parameter does not need a delimiter
+                continue
+            }
+        }
+
+        let processedUrl = URL(string: encodedUrlArray.joined())
+
+        return processedUrl
     }
 
     /// Builds the `URL` responsible for sending an opt-out hit
@@ -126,5 +145,15 @@ extension URL {
             return nil
         }
         return url
+    }
+}
+
+/// String extension which url encodes reserved query parameters present in a trait key or trait value
+extension String {
+    func urlEncodeForAamTrait() -> String {
+        // the character set contains the reserved query parameters except "=" and "_" which are used in audience trait key value pairs
+        let reservedCharacters = CharacterSet(charactersIn: ":/?#[]&'+*()!@$,;").inverted
+        let processedTraitString = self.addingPercentEncoding(withAllowedCharacters: reservedCharacters) ?? ""
+        return processedTraitString
     }
 }

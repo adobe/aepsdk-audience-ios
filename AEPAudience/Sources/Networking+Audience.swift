@@ -19,6 +19,7 @@ extension Networking {
     ///   - uuid: the audience manager unique user id
     func sendOptOutRequest(aamServer: String, uuid: String) {
         guard let url = URL.buildOptOutURL(aamServer: aamServer, uuid: uuid) else { return }
+        Log.debug(label: "Networking+Audience:\(#function)", "Sending opt-out hit to \(url)")
         ServiceProvider.shared.networkService.connectAsync(networkRequest: NetworkRequest(url: url), completionHandler: nil) // fire and forget
     }
 }
