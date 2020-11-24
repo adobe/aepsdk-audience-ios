@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "AEPAudience"
-  s.version          = "0.0.1"
+  s.version          = "3.0.0-beta.1"
   s.summary          = "AEPAudience"
   s.description      = <<-DESC
 AEPCore
