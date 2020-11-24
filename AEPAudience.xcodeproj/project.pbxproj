@@ -3,36 +3,37 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0ACCA78A6DECA39162860D7C /* Pods_AEPAudience.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3223746128C78C3B4051686D /* Pods_AEPAudience.framework */; };
-		2E45B6AE2534FB98003D3534 /* AudienceHit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E45B6AD2534FB98003D3534 /* AudienceHit.swift */; };
-		2E45B6B225350D9E003D3534 /* AudienceHitProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E45B6B125350D9E003D3534 /* AudienceHitProcessor.swift */; };
-		2E45B6B625379FA7003D3534 /* AudienceHitProcessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E45B6B525379FA7003D3534 /* AudienceHitProcessorTests.swift */; };
-		2E45B6BA2537A071003D3534 /* MockNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E45B6B92537A071003D3534 /* MockNetworking.swift */; };
 		2EBEE77A2525A35400880E72 /* AEPAudience.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EBEE7702525A35400880E72 /* AEPAudience.framework */; };
-		2EBEE7962525A47800880E72 /* AEPAudience.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EBEE7922525A47800880E72 /* AEPAudience.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2EBEE7A22526763200880E72 /* Audience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7A12526763200880E72 /* Audience.swift */; };
-		2EBEE7BB2527C89E00880E72 /* AudienceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7BA2527C89E00880E72 /* AudienceConstants.swift */; };
-		2EBEE7BF252806B700880E72 /* Audience+PublicAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7BE252806B700880E72 /* Audience+PublicAPI.swift */; };
-		2EBEE7C325282CD300880E72 /* AudienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7C225282CD300880E72 /* AudienceTests.swift */; };
-		2EBEE7C825282EC000880E72 /* TestableExtensionRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7C725282EC000880E72 /* TestableExtensionRuntime.swift */; };
-		318A232B740E8D5E33F3EEEE /* Pods_AEPAudience_AEPAudienceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5315CFF443DE47651DC95741 /* Pods_AEPAudience_AEPAudienceTests.framework */; };
-		D65C46DF25437B4500998A2B /* MockHitQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733ECF253F3C8600AE65A9 /* MockHitQueue.swift */; };
-		D6733D80252B9B8500AE65A9 /* AudienceState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733D7F252B9B8500AE65A9 /* AudienceState.swift */; };
-		D6733D87252BCCC500AE65A9 /* AudienceStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733D83252BCCB900AE65A9 /* AudienceStateTests.swift */; };
-		D6733E1F253777EC00AE65A9 /* Networking+Audience.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733E1E253777EC00AE65A9 /* Networking+Audience.swift */; };
-		D6733E862538AD1000AE65A9 /* URL+Audience.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733E282537843200AE65A9 /* URL+Audience.swift */; };
-		D6733E99253A1C8200AE65A9 /* AudienceHitResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733E98253A1C8200AE65A9 /* AudienceHitResponse.swift */; };
-		D6733ECC253E3A2700AE65A9 /* AudienceStuffObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733ECB253E3A2600AE65A9 /* AudienceStuffObject.swift */; };
-		D6DAC37A2549CEB200BD81EB /* AudiencePublicAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC3742549CDD400BD81EB /* AudiencePublicAPITests.swift */; };
-		D6DAC3802549D1CC00BD81EB /* MockExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC37F2549D1CC00BD81EB /* MockExtension.swift */; };
-		D6DAC3882549FC5B00BD81EB /* URL+AudienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC3872549FC5B00BD81EB /* URL+AudienceTests.swift */; };
-		D6DAC3DD2551CFB200BD81EB /* AudienceManagerFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC3DC2551CFB200BD81EB /* AudienceManagerFunctionalTests.swift */; };
-		D6DAC3E72553103C00BD81EB /* TestableNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC3E62553103B00BD81EB /* TestableNetworkService.swift */; };
-		D6DAC44525538FA000BD81EB /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DAC43F25538F3800BD81EB /* TestHelpers.swift */; };
+		D669866A256CD53D002DC65E /* AudiencePublicAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6698658256CD4FB002DC65E /* AudiencePublicAPITests.swift */; };
+		D669866D256CD53F002DC65E /* AudienceStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6698659256CD4FB002DC65E /* AudienceStateTests.swift */; };
+		D6698670256CD541002DC65E /* AudienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D669865A256CD4FB002DC65E /* AudienceTests.swift */; };
+		D6698671256CD543002DC65E /* AudienceHitProcessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D669865B256CD4FB002DC65E /* AudienceHitProcessorTests.swift */; };
+		D6698674256CD545002DC65E /* URL+AudienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D669865C256CD4FB002DC65E /* URL+AudienceTests.swift */; };
+		D6698677256CD549002DC65E /* TestableExtensionRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = D669865E256CD4FB002DC65E /* TestableExtensionRuntime.swift */; };
+		D669867A256CD54D002DC65E /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6698663256CD4FB002DC65E /* TestHelpers.swift */; };
+		D669867B256CD54D002DC65E /* MockNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = D669865F256CD4FB002DC65E /* MockNetworking.swift */; };
+		D669867C256CD54D002DC65E /* TestableNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6698660256CD4FB002DC65E /* TestableNetworkService.swift */; };
+		D669867D256CD54D002DC65E /* MockHitQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6698661256CD4FB002DC65E /* MockHitQueue.swift */; };
+		D669867E256CD54D002DC65E /* MockExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6698662256CD4FB002DC65E /* MockExtension.swift */; };
+		D6698681256CD54F002DC65E /* AudienceManagerFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6698664256CD4FB002DC65E /* AudienceManagerFunctionalTests.swift */; };
+		D6698684256CD554002DC65E /* AudienceHitProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D669864E256CD4FB002DC65E /* AudienceHitProcessor.swift */; };
+		D6698685256CD554002DC65E /* AudienceHitResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = D669864D256CD4FB002DC65E /* AudienceHitResponse.swift */; };
+		D6698686256CD554002DC65E /* AudienceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6698651256CD4FB002DC65E /* AudienceConstants.swift */; };
+		D6698687256CD554002DC65E /* AudienceHit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6698652256CD4FB002DC65E /* AudienceHit.swift */; };
+		D6698688256CD554002DC65E /* AudienceStuffObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D669864F256CD4FB002DC65E /* AudienceStuffObject.swift */; };
+		D6698689256CD554002DC65E /* AEPAudience.h in Headers */ = {isa = PBXBuildFile; fileRef = D669864B256CD4FB002DC65E /* AEPAudience.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D669868A256CD554002DC65E /* URL+Audience.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6698650256CD4FB002DC65E /* URL+Audience.swift */; };
+		D669868B256CD554002DC65E /* AudienceState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6698653256CD4FB002DC65E /* AudienceState.swift */; };
+		D669868C256CD554002DC65E /* Networking+Audience.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6698654256CD4FB002DC65E /* Networking+Audience.swift */; };
+		D669868D256CD554002DC65E /* Audience.swift in Sources */ = {isa = PBXBuildFile; fileRef = D669864C256CD4FB002DC65E /* Audience.swift */; };
+		D669868E256CD554002DC65E /* Audience+PublicAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D669864A256CD4FB002DC65E /* Audience+PublicAPI.swift */; };
+		D669869C256CD641002DC65E /* AEPCore in Frameworks */ = {isa = PBXBuildFile; productRef = D669869B256CD641002DC65E /* AEPCore */; };
+		D669869E256CD641002DC65E /* AEPIdentity in Frameworks */ = {isa = PBXBuildFile; productRef = D669869D256CD641002DC65E /* AEPIdentity */; };
+		D66986A0256CD641002DC65E /* AEPServices in Frameworks */ = {isa = PBXBuildFile; productRef = D669869F256CD641002DC65E /* AEPServices */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,41 +47,35 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2E0B4C04252BA10800ABBE57 /* AEPCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AEPCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2E45B6AD2534FB98003D3534 /* AudienceHit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceHit.swift; sourceTree = "<group>"; };
-		2E45B6B125350D9E003D3534 /* AudienceHitProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceHitProcessor.swift; sourceTree = "<group>"; };
-		2E45B6B525379FA7003D3534 /* AudienceHitProcessorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceHitProcessorTests.swift; sourceTree = "<group>"; };
-		2E45B6B92537A071003D3534 /* MockNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworking.swift; sourceTree = "<group>"; };
 		2EBEE7702525A35400880E72 /* AEPAudience.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AEPAudience.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EBEE7792525A35400880E72 /* AEPAudienceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AEPAudienceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		2EBEE7902525A47800880E72 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2EBEE7922525A47800880E72 /* AEPAudience.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AEPAudience.h; sourceTree = "<group>"; };
-		2EBEE7932525A47800880E72 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2EBEE79D2526761700880E72 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2EBEE7A12526763200880E72 /* Audience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Audience.swift; sourceTree = "<group>"; };
-		2EBEE7BA2527C89E00880E72 /* AudienceConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceConstants.swift; sourceTree = "<group>"; };
-		2EBEE7BE252806B700880E72 /* Audience+PublicAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Audience+PublicAPI.swift"; sourceTree = "<group>"; };
-		2EBEE7C225282CD300880E72 /* AudienceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceTests.swift; sourceTree = "<group>"; };
-		2EBEE7C725282EC000880E72 /* TestableExtensionRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableExtensionRuntime.swift; sourceTree = "<group>"; };
-		3223746128C78C3B4051686D /* Pods_AEPAudience.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPAudience.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5315CFF443DE47651DC95741 /* Pods_AEPAudience_AEPAudienceTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPAudience_AEPAudienceTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		589D3DEEBB97CB7CBDF13CAA /* Pods-AEPAudience.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience.debug.xcconfig"; path = "Target Support Files/Pods-AEPAudience/Pods-AEPAudience.debug.xcconfig"; sourceTree = "<group>"; };
-		841B3809AD1F295B80DB1F0B /* Pods-AEPAudience-AEPAudienceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience-AEPAudienceTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests.debug.xcconfig"; sourceTree = "<group>"; };
-		C411E2310311E2A18288A505 /* Pods-AEPAudience-AEPAudienceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience-AEPAudienceTests.release.xcconfig"; path = "Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests.release.xcconfig"; sourceTree = "<group>"; };
-		C41818540F37C8D4F018570D /* Pods-AEPAudience.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience.release.xcconfig"; path = "Target Support Files/Pods-AEPAudience/Pods-AEPAudience.release.xcconfig"; sourceTree = "<group>"; };
-		D6733D7F252B9B8500AE65A9 /* AudienceState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceState.swift; sourceTree = "<group>"; };
-		D6733D83252BCCB900AE65A9 /* AudienceStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceStateTests.swift; sourceTree = "<group>"; };
-		D6733E1E253777EC00AE65A9 /* Networking+Audience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Networking+Audience.swift"; sourceTree = "<group>"; };
-		D6733E282537843200AE65A9 /* URL+Audience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Audience.swift"; sourceTree = "<group>"; };
-		D6733E98253A1C8200AE65A9 /* AudienceHitResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceHitResponse.swift; sourceTree = "<group>"; };
-		D6733ECB253E3A2600AE65A9 /* AudienceStuffObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceStuffObject.swift; sourceTree = "<group>"; };
-		D6733ECF253F3C8600AE65A9 /* MockHitQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHitQueue.swift; sourceTree = "<group>"; };
-		D6DAC3742549CDD400BD81EB /* AudiencePublicAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudiencePublicAPITests.swift; sourceTree = "<group>"; };
-		D6DAC37F2549D1CC00BD81EB /* MockExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExtension.swift; sourceTree = "<group>"; };
-		D6DAC3872549FC5B00BD81EB /* URL+AudienceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+AudienceTests.swift"; sourceTree = "<group>"; };
-		D6DAC3DC2551CFB200BD81EB /* AudienceManagerFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceManagerFunctionalTests.swift; sourceTree = "<group>"; };
-		D6DAC3E62553103B00BD81EB /* TestableNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableNetworkService.swift; sourceTree = "<group>"; };
-		D6DAC43F25538F3800BD81EB /* TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
+		D6637F99256CC2D6002FCD83 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		D6640EC4256CBD4B0062490C /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		D669864A256CD4FB002DC65E /* Audience+PublicAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Audience+PublicAPI.swift"; sourceTree = "<group>"; };
+		D669864B256CD4FB002DC65E /* AEPAudience.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AEPAudience.h; sourceTree = "<group>"; };
+		D669864C256CD4FB002DC65E /* Audience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Audience.swift; sourceTree = "<group>"; };
+		D669864D256CD4FB002DC65E /* AudienceHitResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceHitResponse.swift; sourceTree = "<group>"; };
+		D669864E256CD4FB002DC65E /* AudienceHitProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceHitProcessor.swift; sourceTree = "<group>"; };
+		D669864F256CD4FB002DC65E /* AudienceStuffObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceStuffObject.swift; sourceTree = "<group>"; };
+		D6698650256CD4FB002DC65E /* URL+Audience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Audience.swift"; sourceTree = "<group>"; };
+		D6698651256CD4FB002DC65E /* AudienceConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceConstants.swift; sourceTree = "<group>"; };
+		D6698652256CD4FB002DC65E /* AudienceHit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceHit.swift; sourceTree = "<group>"; };
+		D6698653256CD4FB002DC65E /* AudienceState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceState.swift; sourceTree = "<group>"; };
+		D6698654256CD4FB002DC65E /* Networking+Audience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Networking+Audience.swift"; sourceTree = "<group>"; };
+		D6698655256CD4FB002DC65E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D6698658256CD4FB002DC65E /* AudiencePublicAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudiencePublicAPITests.swift; sourceTree = "<group>"; };
+		D6698659256CD4FB002DC65E /* AudienceStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceStateTests.swift; sourceTree = "<group>"; };
+		D669865A256CD4FB002DC65E /* AudienceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceTests.swift; sourceTree = "<group>"; };
+		D669865B256CD4FB002DC65E /* AudienceHitProcessorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceHitProcessorTests.swift; sourceTree = "<group>"; };
+		D669865C256CD4FB002DC65E /* URL+AudienceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+AudienceTests.swift"; sourceTree = "<group>"; };
+		D669865E256CD4FB002DC65E /* TestableExtensionRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableExtensionRuntime.swift; sourceTree = "<group>"; };
+		D669865F256CD4FB002DC65E /* MockNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworking.swift; sourceTree = "<group>"; };
+		D6698660256CD4FB002DC65E /* TestableNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableNetworkService.swift; sourceTree = "<group>"; };
+		D6698661256CD4FB002DC65E /* MockHitQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHitQueue.swift; sourceTree = "<group>"; };
+		D6698662256CD4FB002DC65E /* MockExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExtension.swift; sourceTree = "<group>"; };
+		D6698663256CD4FB002DC65E /* TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
+		D6698664256CD4FB002DC65E /* AudienceManagerFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceManagerFunctionalTests.swift; sourceTree = "<group>"; };
+		D6698665256CD4FB002DC65E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,7 +83,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0ACCA78A6DECA39162860D7C /* Pods_AEPAudience.framework in Frameworks */,
+				D66986A0256CD641002DC65E /* AEPServices in Frameworks */,
+				D669869C256CD641002DC65E /* AEPCore in Frameworks */,
+				D669869E256CD641002DC65E /* AEPIdentity in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,7 +94,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2EBEE77A2525A35400880E72 /* AEPAudience.framework in Frameworks */,
-				318A232B740E8D5E33F3EEEE /* Pods_AEPAudience_AEPAudienceTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,9 +103,11 @@
 		2EBEE7662525A35300880E72 = {
 			isa = PBXGroup;
 			children = (
-				2EBEE7722525A35400880E72 /* AEPAudience */,
+				D6698648256CD4FB002DC65E /* Sources */,
+				D6698656256CD4FB002DC65E /* Tests */,
+				D6637F99256CC2D6002FCD83 /* README.md */,
+				D6640EC4256CBD4B0062490C /* Package.swift */,
 				2EBEE7712525A35400880E72 /* Products */,
-				CBC3893DB8AB73D3C12C6603 /* Pods */,
 				CEBDCEF550A14091A479F5C5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -123,90 +121,74 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		2EBEE7722525A35400880E72 /* AEPAudience */ = {
+		CEBDCEF550A14091A479F5C5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2EBEE79C2525A48500880E72 /* Mocks */,
-				2EBEE7912525A47800880E72 /* Sources */,
-				2EBEE78E2525A47800880E72 /* Tests */,
 			);
-			path = AEPAudience;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		2EBEE78E2525A47800880E72 /* Tests */ = {
+		D6698648256CD4FB002DC65E /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				2EBEE7C625282EA400880E72 /* TestHelper */,
-				2EBEE7C225282CD300880E72 /* AudienceTests.swift */,
-				2EBEE7902525A47800880E72 /* Info.plist */,
-				2E45B6B525379FA7003D3534 /* AudienceHitProcessorTests.swift */,
-				D6733D83252BCCB900AE65A9 /* AudienceStateTests.swift */,
-				D6DAC3742549CDD400BD81EB /* AudiencePublicAPITests.swift */,
-				D6DAC3872549FC5B00BD81EB /* URL+AudienceTests.swift */,
-				D6DAC3DC2551CFB200BD81EB /* AudienceManagerFunctionalTests.swift */,
-			);
-			path = Tests;
-			sourceTree = "<group>";
-		};
-		2EBEE7912525A47800880E72 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				2EBEE7922525A47800880E72 /* AEPAudience.h */,
-				2EBEE7932525A47800880E72 /* Info.plist */,
-				2EBEE7A12526763200880E72 /* Audience.swift */,
-				2EBEE7BA2527C89E00880E72 /* AudienceConstants.swift */,
-				2EBEE7BE252806B700880E72 /* Audience+PublicAPI.swift */,
-				2E45B6AD2534FB98003D3534 /* AudienceHit.swift */,
-				2E45B6B125350D9E003D3534 /* AudienceHitProcessor.swift */,
-				D6733D7F252B9B8500AE65A9 /* AudienceState.swift */,
-				D6733E1E253777EC00AE65A9 /* Networking+Audience.swift */,
-				D6733E282537843200AE65A9 /* URL+Audience.swift */,
-				D6733E98253A1C8200AE65A9 /* AudienceHitResponse.swift */,
-				D6733ECB253E3A2600AE65A9 /* AudienceStuffObject.swift */,
+				D6698649256CD4FB002DC65E /* AEPAudience */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
 		};
-		2EBEE79C2525A48500880E72 /* Mocks */ = {
+		D6698649256CD4FB002DC65E /* AEPAudience */ = {
 			isa = PBXGroup;
 			children = (
-				2EBEE79D2526761700880E72 /* Info.plist */,
+				D669864A256CD4FB002DC65E /* Audience+PublicAPI.swift */,
+				D669864B256CD4FB002DC65E /* AEPAudience.h */,
+				D669864C256CD4FB002DC65E /* Audience.swift */,
+				D669864D256CD4FB002DC65E /* AudienceHitResponse.swift */,
+				D669864E256CD4FB002DC65E /* AudienceHitProcessor.swift */,
+				D669864F256CD4FB002DC65E /* AudienceStuffObject.swift */,
+				D6698650256CD4FB002DC65E /* URL+Audience.swift */,
+				D6698651256CD4FB002DC65E /* AudienceConstants.swift */,
+				D6698652256CD4FB002DC65E /* AudienceHit.swift */,
+				D6698653256CD4FB002DC65E /* AudienceState.swift */,
+				D6698654256CD4FB002DC65E /* Networking+Audience.swift */,
+				D6698655256CD4FB002DC65E /* Info.plist */,
 			);
-			path = Mocks;
+			path = AEPAudience;
 			sourceTree = "<group>";
 		};
-		2EBEE7C625282EA400880E72 /* TestHelper */ = {
+		D6698656256CD4FB002DC65E /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				2EBEE7C725282EC000880E72 /* TestableExtensionRuntime.swift */,
-				2E45B6B92537A071003D3534 /* MockNetworking.swift */,
-				D6733ECF253F3C8600AE65A9 /* MockHitQueue.swift */,
-				D6DAC37F2549D1CC00BD81EB /* MockExtension.swift */,
-				D6DAC3E62553103B00BD81EB /* TestableNetworkService.swift */,
-				D6DAC43F25538F3800BD81EB /* TestHelpers.swift */,
+				D6698657256CD4FB002DC65E /* AEPAudienceTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		D6698657256CD4FB002DC65E /* AEPAudienceTests */ = {
+			isa = PBXGroup;
+			children = (
+				D6698658256CD4FB002DC65E /* AudiencePublicAPITests.swift */,
+				D6698659256CD4FB002DC65E /* AudienceStateTests.swift */,
+				D669865A256CD4FB002DC65E /* AudienceTests.swift */,
+				D669865B256CD4FB002DC65E /* AudienceHitProcessorTests.swift */,
+				D669865C256CD4FB002DC65E /* URL+AudienceTests.swift */,
+				D669865D256CD4FB002DC65E /* TestHelper */,
+				D6698664256CD4FB002DC65E /* AudienceManagerFunctionalTests.swift */,
+				D6698665256CD4FB002DC65E /* Info.plist */,
+			);
+			path = AEPAudienceTests;
+			sourceTree = "<group>";
+		};
+		D669865D256CD4FB002DC65E /* TestHelper */ = {
+			isa = PBXGroup;
+			children = (
+				D669865E256CD4FB002DC65E /* TestableExtensionRuntime.swift */,
+				D669865F256CD4FB002DC65E /* MockNetworking.swift */,
+				D6698660256CD4FB002DC65E /* TestableNetworkService.swift */,
+				D6698661256CD4FB002DC65E /* MockHitQueue.swift */,
+				D6698662256CD4FB002DC65E /* MockExtension.swift */,
+				D6698663256CD4FB002DC65E /* TestHelpers.swift */,
 			);
 			path = TestHelper;
-			sourceTree = "<group>";
-		};
-		CBC3893DB8AB73D3C12C6603 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				589D3DEEBB97CB7CBDF13CAA /* Pods-AEPAudience.debug.xcconfig */,
-				C41818540F37C8D4F018570D /* Pods-AEPAudience.release.xcconfig */,
-				841B3809AD1F295B80DB1F0B /* Pods-AEPAudience-AEPAudienceTests.debug.xcconfig */,
-				C411E2310311E2A18288A505 /* Pods-AEPAudience-AEPAudienceTests.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		CEBDCEF550A14091A479F5C5 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				2E0B4C04252BA10800ABBE57 /* AEPCore.framework */,
-				3223746128C78C3B4051686D /* Pods_AEPAudience.framework */,
-				5315CFF443DE47651DC95741 /* Pods_AEPAudience_AEPAudienceTests.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -216,7 +198,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EBEE7962525A47800880E72 /* AEPAudience.h in Headers */,
+				D6698689256CD554002DC65E /* AEPAudience.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,7 +209,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2EBEE7842525A35400880E72 /* Build configuration list for PBXNativeTarget "AEPAudience" */;
 			buildPhases = (
-				7A2E297F54F7E2F4029902D9 /* [CP] Check Pods Manifest.lock */,
 				2EBEE76B2525A35300880E72 /* Headers */,
 				2EBEE76C2525A35300880E72 /* Sources */,
 				2EBEE76D2525A35300880E72 /* Frameworks */,
@@ -238,6 +219,11 @@
 			dependencies = (
 			);
 			name = AEPAudience;
+			packageProductDependencies = (
+				D669869B256CD641002DC65E /* AEPCore */,
+				D669869D256CD641002DC65E /* AEPIdentity */,
+				D669869F256CD641002DC65E /* AEPServices */,
+			);
 			productName = AEPAudience;
 			productReference = 2EBEE7702525A35400880E72 /* AEPAudience.framework */;
 			productType = "com.apple.product-type.framework";
@@ -246,11 +232,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2EBEE7872525A35400880E72 /* Build configuration list for PBXNativeTarget "AEPAudienceTests" */;
 			buildPhases = (
-				48E03CB4FD93C44C79C6C77C /* [CP] Check Pods Manifest.lock */,
 				2EBEE7752525A35400880E72 /* Sources */,
 				2EBEE7762525A35400880E72 /* Frameworks */,
 				2EBEE7772525A35400880E72 /* Resources */,
-				24BEBB43A70E421B0C47CEF5 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -258,6 +242,8 @@
 				2EBEE77C2525A35400880E72 /* PBXTargetDependency */,
 			);
 			name = AEPAudienceTests;
+			packageProductDependencies = (
+			);
 			productName = AEPAudienceTests;
 			productReference = 2EBEE7792525A35400880E72 /* AEPAudienceTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -290,6 +276,9 @@
 				Base,
 			);
 			mainGroup = 2EBEE7662525A35300880E72;
+			packageReferences = (
+				D6640E97256CBB4E0062490C /* XCRemoteSwiftPackageReference "aepsdk-core-ios" */,
+			);
 			productRefGroup = 2EBEE7712525A35400880E72 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -317,85 +306,21 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		24BEBB43A70E421B0C47CEF5 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		48E03CB4FD93C44C79C6C77C /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AEPAudience-AEPAudienceTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7A2E297F54F7E2F4029902D9 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AEPAudience-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		2EBEE76C2525A35300880E72 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D6733E99253A1C8200AE65A9 /* AudienceHitResponse.swift in Sources */,
-				2EBEE7A22526763200880E72 /* Audience.swift in Sources */,
-				D6733E862538AD1000AE65A9 /* URL+Audience.swift in Sources */,
-				D6733D80252B9B8500AE65A9 /* AudienceState.swift in Sources */,
-				2EBEE7BF252806B700880E72 /* Audience+PublicAPI.swift in Sources */,
-				2E45B6B225350D9E003D3534 /* AudienceHitProcessor.swift in Sources */,
-				2EBEE7BB2527C89E00880E72 /* AudienceConstants.swift in Sources */,
-				D6733E1F253777EC00AE65A9 /* Networking+Audience.swift in Sources */,
-				2E45B6AE2534FB98003D3534 /* AudienceHit.swift in Sources */,
-				D6733ECC253E3A2700AE65A9 /* AudienceStuffObject.swift in Sources */,
+				D6698685256CD554002DC65E /* AudienceHitResponse.swift in Sources */,
+				D669868D256CD554002DC65E /* Audience.swift in Sources */,
+				D669868A256CD554002DC65E /* URL+Audience.swift in Sources */,
+				D669868E256CD554002DC65E /* Audience+PublicAPI.swift in Sources */,
+				D669868B256CD554002DC65E /* AudienceState.swift in Sources */,
+				D6698684256CD554002DC65E /* AudienceHitProcessor.swift in Sources */,
+				D6698686256CD554002DC65E /* AudienceConstants.swift in Sources */,
+				D669868C256CD554002DC65E /* Networking+Audience.swift in Sources */,
+				D6698687256CD554002DC65E /* AudienceHit.swift in Sources */,
+				D6698688256CD554002DC65E /* AudienceStuffObject.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -403,18 +328,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D6DAC44525538FA000BD81EB /* TestHelpers.swift in Sources */,
-				2EBEE7C825282EC000880E72 /* TestableExtensionRuntime.swift in Sources */,
-				2E45B6BA2537A071003D3534 /* MockNetworking.swift in Sources */,
-				D6DAC3E72553103C00BD81EB /* TestableNetworkService.swift in Sources */,
-				2E45B6B625379FA7003D3534 /* AudienceHitProcessorTests.swift in Sources */,
-				D65C46DF25437B4500998A2B /* MockHitQueue.swift in Sources */,
-				D6DAC3DD2551CFB200BD81EB /* AudienceManagerFunctionalTests.swift in Sources */,
-				2EBEE7C325282CD300880E72 /* AudienceTests.swift in Sources */,
-				D6DAC3802549D1CC00BD81EB /* MockExtension.swift in Sources */,
-				D6DAC3882549FC5B00BD81EB /* URL+AudienceTests.swift in Sources */,
-				D6733D87252BCCC500AE65A9 /* AudienceStateTests.swift in Sources */,
-				D6DAC37A2549CEB200BD81EB /* AudiencePublicAPITests.swift in Sources */,
+				D6698677256CD549002DC65E /* TestableExtensionRuntime.swift in Sources */,
+				D669867D256CD54D002DC65E /* MockHitQueue.swift in Sources */,
+				D669867C256CD54D002DC65E /* TestableNetworkService.swift in Sources */,
+				D669867B256CD54D002DC65E /* MockNetworking.swift in Sources */,
+				D6698671256CD543002DC65E /* AudienceHitProcessorTests.swift in Sources */,
+				D669867A256CD54D002DC65E /* TestHelpers.swift in Sources */,
+				D6698681256CD54F002DC65E /* AudienceManagerFunctionalTests.swift in Sources */,
+				D6698670256CD541002DC65E /* AudienceTests.swift in Sources */,
+				D6698674256CD545002DC65E /* URL+AudienceTests.swift in Sources */,
+				D669866A256CD53D002DC65E /* AudiencePublicAPITests.swift in Sources */,
+				D669866D256CD53F002DC65E /* AudienceStateTests.swift in Sources */,
+				D669867E256CD54D002DC65E /* MockExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -555,7 +480,6 @@
 		};
 		2EBEE7852525A35400880E72 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 589D3DEEBB97CB7CBDF13CAA /* Pods-AEPAudience.debug.xcconfig */;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -563,7 +487,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "$(SRCROOT)/AEPAudience/Sources/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/AEPAudience/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -571,10 +495,12 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MODULEMAP_FILE = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.mobile.AEPAudience;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -582,7 +508,6 @@
 		};
 		2EBEE7862525A35400880E72 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C41818540F37C8D4F018570D /* Pods-AEPAudience.release.xcconfig */;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -590,7 +515,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "$(SRCROOT)/AEPAudience/Sources/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/AEPAudience/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -598,10 +523,12 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MODULEMAP_FILE = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.mobile.AEPAudience;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -609,13 +536,13 @@
 		};
 		2EBEE7882525A35400880E72 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 841B3809AD1F295B80DB1F0B /* Pods-AEPAudience-AEPAudienceTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FKGEE875K4;
-				INFOPLIST_FILE = AEPAudience/Tests/Info.plist;
+				FRAMEWORK_SEARCH_PATHS = "";
+				INFOPLIST_FILE = "$(SRCROOT)/Tests/AEPAudienceTests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -625,6 +552,7 @@
 				MACH_O_TYPE = mh_bundle;
 				PRODUCT_BUNDLE_IDENTIFIER = Adobe.AEPAudienceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -634,13 +562,13 @@
 		};
 		2EBEE7892525A35400880E72 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C411E2310311E2A18288A505 /* Pods-AEPAudience-AEPAudienceTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FKGEE875K4;
-				INFOPLIST_FILE = AEPAudience/Tests/Info.plist;
+				FRAMEWORK_SEARCH_PATHS = "";
+				INFOPLIST_FILE = "$(SRCROOT)/Tests/AEPAudienceTests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -650,6 +578,7 @@
 				MACH_O_TYPE = mh_bundle;
 				PRODUCT_BUNDLE_IDENTIFIER = Adobe.AEPAudienceTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TVOS_DEPLOYMENT_TARGET = 10.0;
@@ -687,6 +616,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D6640E97256CBB4E0062490C /* XCRemoteSwiftPackageReference "aepsdk-core-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/adobe/aepsdk-core-ios.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D669869B256CD641002DC65E /* AEPCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D6640E97256CBB4E0062490C /* XCRemoteSwiftPackageReference "aepsdk-core-ios" */;
+			productName = AEPCore;
+		};
+		D669869D256CD641002DC65E /* AEPIdentity */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D6640E97256CBB4E0062490C /* XCRemoteSwiftPackageReference "aepsdk-core-ios" */;
+			productName = AEPIdentity;
+		};
+		D669869F256CD641002DC65E /* AEPServices */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D6640E97256CBB4E0062490C /* XCRemoteSwiftPackageReference "aepsdk-core-ios" */;
+			productName = AEPServices;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2EBEE7672525A35300880E72 /* Project object */;
 }
