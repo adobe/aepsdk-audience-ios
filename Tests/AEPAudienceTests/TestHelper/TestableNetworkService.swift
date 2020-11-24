@@ -38,7 +38,7 @@ public class TestableNetworkService: Networking {
         resolvers += [resolver]
     }
 
-    public func getRequest(at index:Int) -> NetworkRequest? {
+    public func getRequest(at index: Int) -> NetworkRequest? {
         if index + 1 <= requests.count {
             return requests[index]
         }

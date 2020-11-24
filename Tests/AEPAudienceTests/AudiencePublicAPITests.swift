@@ -25,7 +25,7 @@ class AudiencePublicAPITests: XCTestCase {
 
     private func registerMockExtension<T: Extension> (_ type: T.Type) {
         let semaphore = DispatchSemaphore(value: 0)
-        EventHub.shared.registerExtension(type) { (error) in
+        EventHub.shared.registerExtension(type) { (_) in
             semaphore.signal()
         }
 
@@ -38,12 +38,12 @@ class AudiencePublicAPITests: XCTestCase {
         let expectation = XCTestExpectation(description: "getVisitorProfile should dispatch an event")
         expectation.assertForOverFulfill = true
 
-        EventHub.shared.getExtensionContainer(MockExtension.self)?.registerListener(type: EventType.audienceManager, source: EventSource.requestIdentity) { (event) in
+        EventHub.shared.getExtensionContainer(MockExtension.self)?.registerListener(type: EventType.audienceManager, source: EventSource.requestIdentity) { (_) in
             expectation.fulfill()
         }
 
         // test
-        Audience.getVisitorProfile { (visitorProfile, error) in }
+        Audience.getVisitorProfile { (_, _) in }
 
         // verify
         wait(for: [expectation], timeout: 1)
@@ -54,7 +54,7 @@ class AudiencePublicAPITests: XCTestCase {
         // setup
         let expectation = XCTestExpectation(description: "signalWithData should dispatch an event")
         expectation.assertForOverFulfill = true
-        let traits = ["key":"trait","key2":"trait2"]
+        let traits = ["key": "trait", "key2": "trait2"]
 
         EventHub.shared.getExtensionContainer(MockExtension.self)?.registerListener(type: EventType.audienceManager, source: EventSource.requestContent) { (event) in
             XCTAssertEqual(traits, event.data?[AudienceConstants.EventDataKeys.VISITOR_TRAITS] as? [String: String])
@@ -62,7 +62,7 @@ class AudiencePublicAPITests: XCTestCase {
         }
 
         // test
-        Audience.signalWithData(data: traits, completion: { (segments, error) in })
+        Audience.signalWithData(data: traits, completion: { (_, _) in })
 
         // verify
         wait(for: [expectation], timeout: 1)
@@ -74,7 +74,7 @@ class AudiencePublicAPITests: XCTestCase {
         let expectation = XCTestExpectation(description: "reset should dispatch an event")
         expectation.assertForOverFulfill = true
 
-        EventHub.shared.getExtensionContainer(MockExtension.self)?.registerListener(type: EventType.audienceManager, source: EventSource.requestReset) { (event) in
+        EventHub.shared.getExtensionContainer(MockExtension.self)?.registerListener(type: EventType.audienceManager, source: EventSource.requestReset) { (_) in
             expectation.fulfill()
         }
 

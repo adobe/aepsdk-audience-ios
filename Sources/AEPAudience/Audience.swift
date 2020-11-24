@@ -148,7 +148,7 @@ public class Audience: NSObject, Extension {
     private func handleAnalyticsResponse(event: Event) {
         // quick out if aam forwarding status is false
         if let aamForwardingStatus = state?.getAamForwardingStatus(), aamForwardingStatus == false {
-            Log.trace(label: getLogTagWith(functionName: #function), "Not Processing Analytics Response event as AAMForwarding is disabled.");
+            Log.trace(label: getLogTagWith(functionName: #function), "Not Processing Analytics Response event as AAMForwarding is disabled.")
             return
         }
         guard let response = event.data?[AudienceConstants.Analytics.SERVER_RESPONSE] as? String else { return }

@@ -22,7 +22,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
     static let AAM_SERVER = "audience.server"
     static let AAM_TIMEOUT = "audience.timeout"
     static let ANALYTICS_AAM_FORWARDING = "analytics.aamForwardingEnabled"
-    
+
     // json for testing
     static let basicResponse = """
     {
@@ -81,7 +81,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         MobileCore.unregisterExtension(Identity.self) {
             unregisterExpectation.fulfill()
         }
-        
+
         wait(for: [unregisterExpectation], timeout: 2)
     }
 
@@ -93,20 +93,20 @@ class AudienceManagerFunctionalTests: XCTestCase {
         }
         wait(for: [initExpectation], timeout: 1)
     }
-    
+
     func setupConfiguration(privacyStatus: String, aamForwardingStatus: Bool) {
         MobileCore.updateConfigurationWith(configDict: [AudienceManagerFunctionalTests.GLOBAL_CONFIG_PRIVACY: privacyStatus, AudienceManagerFunctionalTests.AAM_SERVER: "testServer.com", AudienceManagerFunctionalTests.AAM_TIMEOUT: 10, AudienceManagerFunctionalTests.ANALYTICS_AAM_FORWARDING: aamForwardingStatus, AudienceManagerFunctionalTests.EXPERIENCE_CLOUD_ORGID: "testOrg@AdobeOrg", "experienceCloud.server": "identityTestServer.com"])
         sleep(1)
     }
-    
+
     func setDefaultResponse(responseData: Data?, expectedUrlFragment: String, statusCode: Int, mockNetworkService: TestableNetworkService) {
         let response = HTTPURLResponse(url: URL(string: "https://adobe.com")!, statusCode: statusCode, httpVersion: nil, headerFields: [:])
 
-        mockNetworkService.mock { request in
+        mockNetworkService.mock { _ in
             return (data: responseData, response: response, error: nil)
         }
     }
-    
+
     func getEcid() -> String {
         let semaphore = DispatchSemaphore(value: 0)
         var ecid = String()
@@ -117,7 +117,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         semaphore.wait()
         return ecid
     }
-    
+
     // MARK: signalWithData(...) tests
     func testSignalWithData_Smoke() {
         // setup
@@ -126,7 +126,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         setupConfiguration(privacyStatus: "optedin", aamForwardingStatus: false)
         let mockNetworkService = TestableNetworkService()
         ServiceProvider.shared.networkService = mockNetworkService
-        
+
         // test
         let traits = ["trait": "b"] as [String: String]
         Audience.signalWithData(data: traits) { (visitorProfile, error) in
@@ -134,7 +134,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
             XCTAssertEqual(AEPError.none, error)
             semaphore.signal()
         }
-        
+
         // verify
         semaphore.wait()
         let ecid = getEcid()
@@ -145,7 +145,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         XCTAssertTrue(requestUrl.contains("c_trait=b"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
     }
-    
+
     func testSignalWithData_EmptyDictionary() {
         // setup
         let semaphore = DispatchSemaphore(value: 0)
@@ -153,7 +153,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         setupConfiguration(privacyStatus: "optedin", aamForwardingStatus: false)
         let mockNetworkService = TestableNetworkService()
         ServiceProvider.shared.networkService = mockNetworkService
-        
+
         // test
         let traits = [:] as [String: String]
         Audience.signalWithData(data: traits) { (visitorProfile, error) in
@@ -161,7 +161,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
             XCTAssertEqual(AEPError.none, error)
             semaphore.signal()
         }
-        
+
         // verify
         semaphore.wait()
         let ecid = getEcid()
@@ -172,7 +172,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         XCTAssertFalse(requestUrl.contains("c_"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
     }
-    
+
     func testSignalWithData_PrivacyOptedOut() {
         // setup
         let semaphore = DispatchSemaphore(value: 0)
@@ -180,7 +180,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         setupConfiguration(privacyStatus: "optout", aamForwardingStatus: false)
         let mockNetworkService = TestableNetworkService()
         ServiceProvider.shared.networkService = mockNetworkService
-        
+
         // test
         let traits = [:] as [String: String]
         Audience.signalWithData(data: traits) { (visitorProfile, error) in
@@ -188,12 +188,12 @@ class AudienceManagerFunctionalTests: XCTestCase {
             XCTAssertEqual(AEPError.none, error)
             semaphore.signal()
         }
-        
+
         // verify
         semaphore.wait()
         XCTAssertEqual(0, mockNetworkService.requests.count)
     }
-    
+
     func testSignalWithData_MultipleTraits() {
         // setup
         let semaphore = DispatchSemaphore(value: 0)
@@ -201,7 +201,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         setupConfiguration(privacyStatus: "optedin", aamForwardingStatus: false)
         let mockNetworkService = TestableNetworkService()
         ServiceProvider.shared.networkService = mockNetworkService
-        
+
         // test
         let traits = ["trait": "b", "trait2": "traitValue2", "trait3": "c"] as [String: String]
         Audience.signalWithData(data: traits) { (visitorProfile, error) in
@@ -209,7 +209,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
             XCTAssertEqual(AEPError.none, error)
             semaphore.signal()
         }
-        
+
         // verify
         semaphore.wait()
         let ecid = getEcid()
@@ -222,7 +222,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         XCTAssertTrue(requestUrl.contains("c_trait3=c"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
     }
-    
+
     func testSignalWithData_SignalAfterReset() {
         // setup
         let semaphore = DispatchSemaphore(value: 0)
@@ -230,7 +230,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         setupConfiguration(privacyStatus: "optedin", aamForwardingStatus: false)
         let mockNetworkService = TestableNetworkService()
         ServiceProvider.shared.networkService = mockNetworkService
-        
+
         // test
         Audience.reset()
         let traits = ["trait": "b"] as [String: String]
@@ -239,7 +239,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
             XCTAssertEqual(AEPError.none, error)
             semaphore.signal()
         }
-        
+
         // verify
         semaphore.wait()
         let ecid = getEcid()
@@ -250,19 +250,19 @@ class AudienceManagerFunctionalTests: XCTestCase {
         XCTAssertTrue(requestUrl.contains("c_trait=b"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
     }
-    
+
     func testSignalWithData_PrivacyUnknownThenPrivacyOptedIn() {
         // setup
         initExtensionsAndWait()
         setupConfiguration(privacyStatus: "unknown", aamForwardingStatus: false)
         let mockNetworkService = TestableNetworkService()
         ServiceProvider.shared.networkService = mockNetworkService
-        
+
         // test
         let traits = ["trait": "b"] as [String: String]
         Audience.signalWithData(data: traits) { (_, _) in
         }
-        
+
         // verify
         XCTAssertEqual(0, mockNetworkService.requests.count)
         // part 2 of test: the queued signalWithData hit should be sent after privacy is opted in
@@ -278,20 +278,20 @@ class AudienceManagerFunctionalTests: XCTestCase {
         let requestUrl2 = mockNetworkService.getRequest(at: 1)?.url.absoluteString ?? ""
         XCTAssertTrue(requestUrl2.contains("https://identityTestServer.com/id?"))
     }
-    
+
     func testSignalWithData_PrivacyUnknownThenPrivacyOptOut() {
         // setup
         initExtensionsAndWait()
         setupConfiguration(privacyStatus: "unknown", aamForwardingStatus: false)
         let mockNetworkService = TestableNetworkService()
         ServiceProvider.shared.networkService = mockNetworkService
-        
+
         // test
         let traits = ["trait": "b"] as [String: String]
         Audience.signalWithData(data: traits) { (_, _) in
         }
         sleep(2)
-        
+
         // verify
         XCTAssertEqual(0, mockNetworkService.requests.count)
         // part 2 of test: the queued signalWithData hit should be dropped after privacy is opted out
@@ -299,7 +299,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         sleep(2)
         XCTAssertEqual(0, mockNetworkService.requests.count)
     }
-    
+
     func testSignalWithData_UnicodeData() {
         // setup
         let semaphore = DispatchSemaphore(value: 0)
@@ -307,15 +307,15 @@ class AudienceManagerFunctionalTests: XCTestCase {
         setupConfiguration(privacyStatus: "optedin", aamForwardingStatus: false)
         let mockNetworkService = TestableNetworkService()
         ServiceProvider.shared.networkService = mockNetworkService
-        
+
         // test
-        let traits = ["மொழி": "தமிழ்", "traitb":"网页","traitc":"c"] as [String: String]
+        let traits = ["மொழி": "தமிழ்", "traitb": "网页", "traitc": "c"] as [String: String]
         Audience.signalWithData(data: traits) { (visitorProfile, error) in
             XCTAssertEqual([:], visitorProfile)
             XCTAssertEqual(AEPError.none, error)
             semaphore.signal()
         }
-        
+
         // verify
         semaphore.wait()
         let ecid = getEcid()
@@ -328,7 +328,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         XCTAssertTrue(requestUrl.contains("c_traitc=c"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
     }
-    
+
     func testSignalWithData_EmptyData() {
         // setup
         let semaphore = DispatchSemaphore(value: 0)
@@ -336,15 +336,15 @@ class AudienceManagerFunctionalTests: XCTestCase {
         setupConfiguration(privacyStatus: "optedin", aamForwardingStatus: false)
         let mockNetworkService = TestableNetworkService()
         ServiceProvider.shared.networkService = mockNetworkService
-        
+
         // test
-        let traits = ["":""] as [String: String]
+        let traits = ["": ""] as [String: String]
         Audience.signalWithData(data: traits) { (visitorProfile, error) in
             XCTAssertEqual([:], visitorProfile)
             XCTAssertEqual(AEPError.none, error)
             semaphore.signal()
         }
-        
+
         // verify
         semaphore.wait()
         let ecid = getEcid()
@@ -355,7 +355,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         XCTAssertFalse(requestUrl.contains("c_"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
     }
-    
+
     func testSignalWithData_MultipleStuffAndDestinationInResponse() {
         // setup
         let semaphore = DispatchSemaphore(value: 0)
@@ -372,7 +372,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
             XCTAssertEqual(AEPError.none, error)
             semaphore.signal()
         }
-        
+
         // verify
         semaphore.wait()
         let ecid = getEcid()
@@ -387,7 +387,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         let destUrl2 = mockNetworkService.getRequest(at: 2)?.url.absoluteString ?? ""
         XCTAssertEqual("https://www.adobe.com", destUrl2)
     }
-    
+
     func testSignalWithData_CheckDataEncodedCorrectly() {
         // setup
         let semaphore = DispatchSemaphore(value: 0)
@@ -395,13 +395,13 @@ class AudienceManagerFunctionalTests: XCTestCase {
         setupConfiguration(privacyStatus: "optedin", aamForwardingStatus: false)
         let mockNetworkService = TestableNetworkService()
         ServiceProvider.shared.networkService = mockNetworkService
-        
+
         // test
-        let traits = ["மொழி": "தமிழ்", "traitb":"网页","traitc":"c","!@#$%^&*()_+":"!@#$%^&*()_+"] as [String: String]
+        let traits = ["மொழி": "தமிழ்", "traitb": "网页", "traitc": "c", "!@#$%^&*()_+": "!@#$%^&*()_+"] as [String: String]
         Audience.signalWithData(data: traits) { (_, _) in
             semaphore.signal()
         }
-        
+
         // verify
         semaphore.wait()
         let ecid = getEcid()
@@ -415,7 +415,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         XCTAssertTrue(requestUrl.contains("d_mid=\(ecid)"))
         XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
     }
-    
+
     // MARK: getVisitorProfile(...) tests
     func testGetVisitorProfile_Smoke() {
         // setup
@@ -433,7 +433,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
             XCTAssertEqual(AEPError.none, error)
             semaphore.signal()
         }
-        
+
         // verify
         semaphore.wait()
         let ecid = getEcid()
@@ -456,12 +456,12 @@ class AudienceManagerFunctionalTests: XCTestCase {
             semaphore2.signal()
         }
         semaphore2.wait()
-        
+
         // verify
         XCTAssertEqual(["cn_testGetVisitorProfile": "cv_testGetVisitorProfile"], visitorProfile)
         XCTAssertEqual(AEPError.none, returnedError)
     }
-    
+
     func testGetVisitorProfile_AfterReset() {
         // setup
         let semaphore = DispatchSemaphore(value: 0)
@@ -478,7 +478,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
             XCTAssertEqual(AEPError.none, error)
             semaphore.signal()
         }
-        
+
         // verify
         semaphore.wait()
         let ecid = getEcid()
@@ -502,12 +502,12 @@ class AudienceManagerFunctionalTests: XCTestCase {
             semaphore2.signal()
         }
         semaphore2.wait()
-        
+
         // verify
         XCTAssertEqual([:], visitorProfile)
         XCTAssertEqual(AEPError.none, returnedError)
     }
-    
+
     // MARK: signalWithData and getSdkIdentities tests...
     // todo: getSdkIdentities is not retrieving the audience manager uuid
     func skip_testSignalWithData_VerifyReturnedUuidIsPresentWhenCallingGetSdkIdentities() {
@@ -526,7 +526,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
             XCTAssertEqual(AEPError.none, error)
             semaphore.signal()
         }
-        
+
         // verify
         semaphore.wait()
         let ecid = getEcid()

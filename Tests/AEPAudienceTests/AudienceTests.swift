@@ -45,20 +45,20 @@ class AudienceTests: XCTestCase {
     }
 
     // MARK: helpers
-    private func dispatchConfigurationEventForTesting(aamServer: String?, aamForwardingStatus: Bool, privacyStatus: PrivacyStatus, aamTimeout: TimeInterval?) -> [String:Any]{
+    private func dispatchConfigurationEventForTesting(aamServer: String?, aamForwardingStatus: Bool, privacyStatus: PrivacyStatus, aamTimeout: TimeInterval?) -> [String: Any] {
         // setup configuration data
         let configData = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: privacyStatus.rawValue, AudienceConstants.Configuration.AAM_SERVER: aamServer as Any, AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING: aamForwardingStatus, AudienceConstants.Configuration.AAM_TIMEOUT: aamTimeout as Any] as [String: Any]
         // create a configuration event with the created event data
         let configEvent = Event(name: "configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: configData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: configEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(configEvent)
+        _ = audience.readyForEvent(configEvent)
         // dispatch the event
         mockRuntime.simulateComingEvent(event: configEvent)
         // return config data for use as shared state
         return configData
     }
 
-    //MARK: Audience Unit Tests
+    // MARK: Audience Unit Tests
 
     // ==========================================================================
     // handleConfigurationResponse
@@ -74,7 +74,7 @@ class AudienceTests: XCTestCase {
         // create the configuration response content event with the data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: data)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (data, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -88,7 +88,7 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual(["profilekey": "profileValue"], audience?.state?.getVisitorProfile())
         // uuid and visitor profile should be persisted in the datastore
         XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, fallback: ""))
-        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, fallback: [:]) as! [String : String])
+        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, fallback: [:]) as! [String: String])
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedUnknown() {
@@ -102,7 +102,7 @@ class AudienceTests: XCTestCase {
         // create the configuration response content event with the data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: data)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (data, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -116,7 +116,7 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual(["profilekey": "profileValue"], audience?.state?.getVisitorProfile())
         // uuid and visitor profile should be persisted in the datastore
         XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, fallback: ""))
-        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, fallback: [:]) as! [String : String])
+        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, fallback: [:]) as! [String: String])
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedOut_When_AamServerAndUuidPresent() {
@@ -130,7 +130,7 @@ class AudienceTests: XCTestCase {
         // create the configuration response content event with the data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: data)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (data, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -158,7 +158,7 @@ class AudienceTests: XCTestCase {
         // create the configuration response content event with the data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: data)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (data, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -186,7 +186,7 @@ class AudienceTests: XCTestCase {
         // create the configuration response content event with the data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: data)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (data, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -214,7 +214,7 @@ class AudienceTests: XCTestCase {
         // create the configuration response content event with the data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: data)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (data, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -240,7 +240,7 @@ class AudienceTests: XCTestCase {
         // create the configuration response content event with empty data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: nil)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (nil, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -261,11 +261,11 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
         // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
+        let lifecycleContextData: [String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME: "testCarrier"]
         // create the lifecycle event and simulate having the configuration data in shared state
         let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -279,11 +279,11 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: nil, aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
         // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
+        let lifecycleContextData: [String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME: "testCarrier"]
         // create the lifecycle event and simulate having the configuration data in shared state
         let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -297,11 +297,11 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, empty aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
         // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
+        let lifecycleContextData: [String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME: "testCarrier"]
         // create the lifecycle event and simulate having the configuration data in shared state
         let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -315,11 +315,11 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
         // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
+        let lifecycleContextData: [String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME: "testCarrier"]
         // create the lifecycle event and simulate having the configuration data in shared state
         let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -333,11 +333,11 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted out, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedOut, aamTimeout: 10)
         // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
+        let lifecycleContextData: [String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME: "testCarrier"]
         // create the lifecycle event and simulate having the configuration data in shared state
         let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -351,11 +351,11 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status unknown, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .unknown, aamTimeout: 10)
         // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
+        let lifecycleContextData: [String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME: "testCarrier"]
         // create the lifecycle event and simulate having the configuration data in shared state
         let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -371,7 +371,7 @@ class AudienceTests: XCTestCase {
         // create the lifecycle event with empty data and simulate having the configuration data in shared state
         let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -385,11 +385,11 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
         // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [String: Any]()
+        let lifecycleContextData: [String: Any] = [String: Any]()
         // create the lifecycle event and simulate having the configuration data in shared state
         let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -401,11 +401,11 @@ class AudienceTests: XCTestCase {
     func testHandleLifecycleResponse_ConfigurationSharedStateIsPending() {
         // setup
         // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
+        let lifecycleContextData: [String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME: "testCarrier"]
         // create the lifecycle event and simulate having no configuration data in shared state
         let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (nil, .set))
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -423,11 +423,11 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -451,11 +451,11 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing no aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: nil)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -479,11 +479,11 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[]}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[]}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -503,11 +503,11 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\"}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\"}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -527,11 +527,11 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: " "]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: " "]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -550,11 +550,11 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -577,11 +577,11 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -604,11 +604,11 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -631,11 +631,11 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -658,11 +658,11 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"\"},{\"c\":\"www.google.com\"}]}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: analyticsEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -683,10 +683,10 @@ class AudienceTests: XCTestCase {
     func testHandleAudienceIdentityRequest_VisitorProfileDataPresentInAudienceState() {
         // setup
         // add visitor profile data to audience state
-        audience?.state?.setVisitorProfile(visitorProfile: ["key1":"value1","key2":"value2","key3":"value3"])
+        audience?.state?.setVisitorProfile(visitorProfile: ["key1": "value1", "key2": "value2", "key3": "value3"])
         // create audience identity request event
         let audienceIdentityRequestEvent = Event(name: "Test Audience Identity Request", type: EventType.audienceManager, source: EventSource.requestIdentity, data: [String: Any]())
-        let _ = audience.readyForEvent(audienceIdentityRequestEvent)
+        _ = audience.readyForEvent(audienceIdentityRequestEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: audienceIdentityRequestEvent)
@@ -703,7 +703,7 @@ class AudienceTests: XCTestCase {
         audience?.state?.setVisitorProfile(visitorProfile: [:])
         // create audience identity request event
         let audienceIdentityRequestEvent = Event(name: "Test Audience Identity Request", type: EventType.audienceManager, source: EventSource.requestIdentity, data: [String: Any]())
-        let _ = audience.readyForEvent(audienceIdentityRequestEvent)
+        _ = audience.readyForEvent(audienceIdentityRequestEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: audienceIdentityRequestEvent)
@@ -722,12 +722,12 @@ class AudienceTests: XCTestCase {
         audience?.state?.setDpid(dpid: "testDpid")
         audience?.state?.setDpuuid(dpuuid: "testDpuuid")
         audience?.state?.setUuid(uuid: "testUuid")
-        audience?.state?.setVisitorProfile(visitorProfile: ["key1":"value1","key2":"value2","key3":"value3"])
+        audience?.state?.setVisitorProfile(visitorProfile: ["key1": "value1", "key2": "value2", "key3": "value3"])
         // add config and identity data to the Audience State
         let customIds = [CustomIdentity(origin: "d_cid_ic", type: "DSID_20915", identifier: "test_ad_id", authenticationState: .authenticated)]
         let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer", AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING: false, AudienceConstants.Configuration.AAM_TIMEOUT: 10.0, AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrgId", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue] as [String: Any]
         let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "1234567", AudienceConstants.Identity.VISITOR_ID_BLOB: "testBlob", AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT: "9", AudienceConstants.Identity.VISITOR_IDS_LIST: customIds] as [String: Any]
-        audience?.state?.handleConfigurationSharedStateUpdate(event: AudienceTests.configEvent, configSharedState: configSharedState, createSharedState: { data, event in
+        audience?.state?.handleConfigurationSharedStateUpdate(event: AudienceTests.configEvent, configSharedState: configSharedState, createSharedState: { _, _ in
         })
         audience?.state?.handleIdentitySharedStateUpdate(identitySharedState: identitySharedState)
 
@@ -736,7 +736,7 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("testDpid", audience?.state?.getDpid())
         XCTAssertEqual("testDpuuid", audience?.state?.getDpuuid())
         XCTAssertEqual("testUuid", audience?.state?.getUuid())
-        XCTAssertEqual(["key1":"value1","key2":"value2","key3":"value3"], audience?.state?.getVisitorProfile())
+        XCTAssertEqual(["key1": "value1", "key2": "value2", "key3": "value3"], audience?.state?.getVisitorProfile())
         XCTAssertEqual(false, audience?.state?.getAamForwardingStatus())
         XCTAssertEqual("testServer", audience?.state?.getAamServer())
         XCTAssertEqual(10.0, audience?.state?.getAamTimeout())
@@ -748,7 +748,7 @@ class AudienceTests: XCTestCase {
 
         // create audience identity reset event
         let audienceIdentityResetRequestEvent = Event(name: "Test Audience Reset Request", type: EventType.audienceManager, source: EventSource.requestReset, data: [String: Any]())
-        let _ = audience.readyForEvent(audienceIdentityResetRequestEvent)
+        _ = audience.readyForEvent(audienceIdentityResetRequestEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: audienceIdentityResetRequestEvent)
@@ -780,12 +780,12 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
         // create the audience content request event with signal data
-        let traits = ["trait":"traitValue"]
+        let traits = ["trait": "traitValue"]
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -793,7 +793,7 @@ class AudienceTests: XCTestCase {
         // verify
         XCTAssertEqual(1, audience.state?.hitQueue.count())
         // verify signaled trait is stored in audience state
-        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
+        XCTAssertEqual(["trait": "traitValue"], audience?.state?.getCustomerEventData())
     }
 
     func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_AamServerEmptyAndUuidPresent() {
@@ -803,12 +803,12 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, empty aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
         // create the audience content request event with signal data
-        let traits = ["trait":"traitValue"]
+        let traits = ["trait": "traitValue"]
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -816,7 +816,7 @@ class AudienceTests: XCTestCase {
         // verify
         XCTAssertEqual(0, audience.state?.hitQueue.count())
         // verify signaled trait is stored in audience state
-        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
+        XCTAssertEqual(["trait": "traitValue"], audience?.state?.getCustomerEventData())
     }
 
     func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_AamServerNilAndUuidPresent() {
@@ -826,12 +826,12 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, no aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: nil, aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
         // create the audience content request event with signal data
-        let traits = ["trait":"traitValue"]
+        let traits = ["trait": "traitValue"]
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -839,7 +839,7 @@ class AudienceTests: XCTestCase {
         // verify
         XCTAssertEqual(0, audience.state?.hitQueue.count())
         // verify signaled trait is stored in audience state
-        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
+        XCTAssertEqual(["trait": "traitValue"], audience?.state?.getCustomerEventData())
     }
 
     func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_AamServerPresentAndUuidEmpty() {
@@ -849,12 +849,12 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
         // create the audience content request event with signal data
-        let traits = ["trait":"traitValue"]
+        let traits = ["trait": "traitValue"]
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -862,7 +862,7 @@ class AudienceTests: XCTestCase {
         // verify
         XCTAssertEqual(1, audience.state?.hitQueue.count())
         // verify signaled trait is stored in audience state
-        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
+        XCTAssertEqual(["trait": "traitValue"], audience?.state?.getCustomerEventData())
     }
 
     func testHandleAudienceContentRequest_PrivacyStatusUnknown_When_AamServerAndUuidPresent() {
@@ -872,12 +872,12 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status unknown, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .unknown, aamTimeout: 10)
         // create the audience content request event with signal data
-        let traits = ["trait":"traitValue"]
+        let traits = ["trait": "traitValue"]
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -885,7 +885,7 @@ class AudienceTests: XCTestCase {
         // verify
         XCTAssertEqual(1, audience.state?.hitQueue.count())
         // verify signaled trait is stored in audience state
-        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
+        XCTAssertEqual(["trait": "traitValue"], audience?.state?.getCustomerEventData())
     }
 
     func testHandleAudienceContentRequest_PrivacyStatusOptedOut_When_AamServerAndUuidPresent() {
@@ -895,12 +895,12 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status optedout, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedOut, aamTimeout: 10)
         // create the audience content request event with signal data
-        let traits = ["trait":"traitValue"]
+        let traits = ["trait": "traitValue"]
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -918,12 +918,12 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing privacy status opted in, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: nil)
         // create the audience content request event with signal data
-        let traits = ["trait":"traitValue"]
+        let traits = ["trait": "traitValue"]
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -931,7 +931,7 @@ class AudienceTests: XCTestCase {
         // verify
         XCTAssertEqual(1, audience.state?.hitQueue.count())
         // verify signaled trait is stored in audience state
-        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
+        XCTAssertEqual(["trait": "traitValue"], audience?.state?.getCustomerEventData())
     }
 
     func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_ProvidedTraitsAreEmpty() {
@@ -941,12 +941,12 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
         // create the audience content request event with nil traits
-        let traits:[String: String] = [:]
+        let traits: [String: String] = [:]
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (configData, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)

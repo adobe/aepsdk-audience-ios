@@ -36,7 +36,7 @@ class URL_AudienceTests: XCTestCase {
         let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer.com", AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrg@AdobeOrg", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue]
         let event = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: nil)
         // process the created shared state and event in the audience state
-        audienceState?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: { data, event in
+        audienceState?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: { _, _ in
         })
         // set a uuid for testing
         audienceState?.setUuid(uuid: "testUuid")
@@ -57,9 +57,9 @@ class URL_AudienceTests: XCTestCase {
         // create a fake synced id for use in the created identity shared state
         let customIds = [CustomIdentity(origin: "d_cid_ic", type: "DSID_20915", identifier: "test_ad_id", authenticationState: .authenticated)]
         // create identity shared state
-        let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "12345567", AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT: "9", AudienceConstants.Identity.VISITOR_ID_BLOB: "blobValue", AudienceConstants.Identity.VISITOR_IDS_LIST: customIds] as [String : Any]
+        let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "12345567", AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT: "9", AudienceConstants.Identity.VISITOR_ID_BLOB: "blobValue", AudienceConstants.Identity.VISITOR_IDS_LIST: customIds] as [String: Any]
         // process the created shared states in the audience state
-        audienceState?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: { data, event in
+        audienceState?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: { _, _ in
         })
         audienceState?.handleIdentitySharedStateUpdate(identitySharedState: identitySharedState)
         // set a uuid for testing

@@ -67,7 +67,7 @@ public class AudienceState {
     /// - Parameters:
     ///   - event: the event to version the shared state at
     ///   - dispatchResponse: a function which when invoked dispatches a response `Event` with the visitor profile to the `EventHub`
-    func queueHit(event: Event, dispatchResponse: ([String:String], Event) -> Void) {
+    func queueHit(event: Event, dispatchResponse: ([String: String], Event) -> Void) {
         if privacyStatus == PrivacyStatus.optedOut {
             Log.debug(label: getLogTagWith(functionName: #function), "Unable to process AAM event as privacy status is opted-out:  \(event.description)")
             // dispatch with an empty visitor profile in response if privacy is opt-out.
@@ -87,7 +87,7 @@ public class AudienceState {
             customerEventData = convertLifecycleKeys(event: event)
         } else {
             if let signalData = event.data, !signalData.isEmpty {
-                let signaledTraits = signalData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] as? [String : String] ?? [:]
+                let signaledTraits = signalData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] as? [String: String] ?? [:]
                 for trait in signaledTraits {
                     customerEventData[trait.key] = trait.value
                 }
@@ -124,7 +124,7 @@ public class AudienceState {
     ///   - responseData: the response data if any
     ///   - dispatchResponse: a function which when invoked dispatches a response `Event` with the visitor profile to the `EventHub`
     ///   - createSharedState: a function which when invoked creates a shared state for the Audience Manager extension
-    func handleHitResponse(hit: AudienceHit, responseData: Data?, dispatchResponse: ([String:String], Event) -> Void, createSharedState: (([String: Any], Event) -> Void)) {
+    func handleHitResponse(hit: AudienceHit, responseData: Data?, dispatchResponse: ([String: String], Event) -> Void, createSharedState: (([String: Any], Event) -> Void)) {
         if privacyStatus == .optedOut {
             Log.debug(label: getLogTagWith(functionName: #function), "Unable to process network response as privacy status is OPT_OUT.")
             return
@@ -240,7 +240,7 @@ public class AudienceState {
         }
     }
 
-    // Mark: setters
+    // MARK: setters
 
     /// Sets the value of the dpid property in the AudienceState instance.
     /// Setting the identifier is ignored if the global privacy is set to `PrivacyStatus.optedOut`.
@@ -577,7 +577,7 @@ public class AudienceState {
     ///   - event: the `Lifecycle` response content event
     private func convertLifecycleKeys(event: Event) -> [String: String] {
         var convertedKeys = [String: String]()
-        let lifecycleEventData = event.data as? [String:String]
+        let lifecycleEventData = event.data as? [String: String]
 
         // convert the found event data keys into context data keys
         // each pairedKey object has an event data key as a key and a context data key as a value
@@ -598,7 +598,7 @@ public class AudienceState {
     ///   - timeout: the Audience Manager network request timeout
     private func processDestsArray(response: AudienceHitResponse, timeout: TimeInterval) {
         // bail if the dests array is not present in the response
-        guard let destinations: [[String:String]] = response.dests else {
+        guard let destinations: [[String: String]] = response.dests else {
             Log.debug(label: getLogTagWith(functionName: #function), "No destinations found in response.")
             return
         }
