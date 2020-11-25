@@ -32,9 +32,9 @@ let package = Package(
     targets: [
         .target(name: "AEPAudience",
                 dependencies: ["AEPCore", .product(name: "AEPServices", package: "AEPCore"), .product(name: "AEPIdentity", package: "AEPCore")],
-                path: "Sources/AEPAudience"),
+                path: "Sources"),
         .target(name: "AEPAudienceTests",
                 dependencies: ["AEPAudience", "AEPCore", .product(name: "AEPServices", package: "AEPCore"), .product(name: "AEPIdentity", package: "AEPCore")],
-                path: "Tests/AEPAudienceTests"),
+                path: "Tests"),
     ]
 )
