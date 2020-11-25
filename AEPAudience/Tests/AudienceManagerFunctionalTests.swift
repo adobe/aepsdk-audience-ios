@@ -269,14 +269,15 @@ class AudienceManagerFunctionalTests: XCTestCase {
         MobileCore.updateConfigurationWith(configDict: [AudienceManagerFunctionalTests.GLOBAL_CONFIG_PRIVACY: "optedin"])
         sleep(2)
         let ecid = getEcid()
+        // two requests are sent: id sync and signal with data
         XCTAssertEqual(2, mockNetworkService.requests.count)
         let requestUrl = mockNetworkService.getRequest(at: 0)?.url.absoluteString ?? ""
-        XCTAssertTrue(requestUrl.contains("https://testServer.com/event?"))
-        XCTAssertTrue(requestUrl.contains("d_mid=\(ecid)"))
-        XCTAssertTrue(requestUrl.contains("c_trait=b"))
-        XCTAssertTrue(requestUrl.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
+        XCTAssertTrue(requestUrl.contains("https://identityTestServer.com/id?"))
         let requestUrl2 = mockNetworkService.getRequest(at: 1)?.url.absoluteString ?? ""
-        XCTAssertTrue(requestUrl2.contains("https://identityTestServer.com/id?"))
+        XCTAssertTrue(requestUrl2.contains("https://testServer.com/event?"))
+        XCTAssertTrue(requestUrl2.contains("d_mid=\(ecid)"))
+        XCTAssertTrue(requestUrl2.contains("c_trait=b"))
+        XCTAssertTrue(requestUrl2.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
     }
     
     func testSignalWithData_PrivacyUnknownThenPrivacyOptOut() {
