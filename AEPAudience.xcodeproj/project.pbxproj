@@ -21,6 +21,7 @@
 		2EBEE7C825282EC000880E72 /* TestableExtensionRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7C725282EC000880E72 /* TestableExtensionRuntime.swift */; };
 		318A232B740E8D5E33F3EEEE /* Pods_AEPAudience_AEPAudienceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5315CFF443DE47651DC95741 /* Pods_AEPAudience_AEPAudienceTests.framework */; };
 		D65C46DF25437B4500998A2B /* MockHitQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733ECF253F3C8600AE65A9 /* MockHitQueue.swift */; };
+		D669875B256ED423002DC65E /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D669875A256ED422002DC65E /* README.md */; };
 		D6733D80252B9B8500AE65A9 /* AudienceState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733D7F252B9B8500AE65A9 /* AudienceState.swift */; };
 		D6733D87252BCCC500AE65A9 /* AudienceStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733D83252BCCB900AE65A9 /* AudienceStateTests.swift */; };
 		D6733E1F253777EC00AE65A9 /* Networking+Audience.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733E1E253777EC00AE65A9 /* Networking+Audience.swift */; };
@@ -68,6 +69,8 @@
 		841B3809AD1F295B80DB1F0B /* Pods-AEPAudience-AEPAudienceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience-AEPAudienceTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C411E2310311E2A18288A505 /* Pods-AEPAudience-AEPAudienceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience-AEPAudienceTests.release.xcconfig"; path = "Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests.release.xcconfig"; sourceTree = "<group>"; };
 		C41818540F37C8D4F018570D /* Pods-AEPAudience.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience.release.xcconfig"; path = "Target Support Files/Pods-AEPAudience/Pods-AEPAudience.release.xcconfig"; sourceTree = "<group>"; };
+		D669875A256ED422002DC65E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		D669875E256ED43E002DC65E /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		D6733D7F252B9B8500AE65A9 /* AudienceState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceState.swift; sourceTree = "<group>"; };
 		D6733D83252BCCB900AE65A9 /* AudienceStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceStateTests.swift; sourceTree = "<group>"; };
 		D6733E1E253777EC00AE65A9 /* Networking+Audience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Networking+Audience.swift"; sourceTree = "<group>"; };
@@ -107,6 +110,8 @@
 		2EBEE7662525A35300880E72 = {
 			isa = PBXGroup;
 			children = (
+				D669875E256ED43E002DC65E /* Package.swift */,
+				D669875A256ED422002DC65E /* README.md */,
 				2EBEE7722525A35400880E72 /* AEPAudience */,
 				2EBEE7712525A35400880E72 /* Products */,
 				CBC3893DB8AB73D3C12C6603 /* Pods */,
@@ -305,6 +310,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D669875B256ED423002DC65E /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -571,10 +577,11 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "3.0.0-beta.1";
 				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.mobile.AEPAudience;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -598,10 +605,11 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "3.0.0-beta.1";
 				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.mobile.AEPAudience;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
