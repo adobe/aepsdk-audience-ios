@@ -29,16 +29,16 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   AEPCore:
-    :commit: 51a6bd926c8c0beb526604ac0c2bc01b86158cc8
+    :commit: 07423d952bef7bacaaac98ea1abc0e76e783107a
     :git: https://github.com/adobe/aepsdk-core-ios.git
   AEPIdentity:
-    :commit: 51a6bd926c8c0beb526604ac0c2bc01b86158cc8
+    :commit: 07423d952bef7bacaaac98ea1abc0e76e783107a
     :git: https://github.com/adobe/aepsdk-core-ios.git
   AEPRulesEngine:
     :commit: b2e0247bf57975209997dd9a26fd576b7c420394
     :git: https://github.com/adobe/aepsdk-rulesengine-ios.git
   AEPServices:
-    :commit: 51a6bd926c8c0beb526604ac0c2bc01b86158cc8
+    :commit: 07423d952bef7bacaaac98ea1abc0e76e783107a
     :git: https://github.com/adobe/aepsdk-core-ios.git
 
 SPEC CHECKSUMS:

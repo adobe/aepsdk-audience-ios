@@ -542,7 +542,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         MobileCore.getSdkIdentities { (identities, error) in
             let identities = identities ?? ""
             XCTAssertTrue(identities.contains("19994521975870785742420741570375407533"))
-            XCTAssertEqual(AEPError.none, error)
+            XCTAssertEqual(AEPError.none, error as! AEPError)
             semaphore.signal()
         }
     }

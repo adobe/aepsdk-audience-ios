@@ -18,6 +18,8 @@ class TestableExtensionRuntime: ExtensionRuntime {
     var dispatchedEvents: [Event] = []
     var createdSharedStates: [[String: Any]?] = []
     var otherSharedStates: [String: SharedStateResult] = [:]
+    // unused
+    var createdXdmSharedStates: [[String: Any]?] = []
 
     func getListener(type: String, source: String) -> EventListener? {
         return listeners["\(type)-\(source)"]
@@ -70,5 +72,21 @@ class TestableExtensionRuntime: ExtensionRuntime {
 
     func getLatestAudienceSharedState() -> [String: Any]? {
         return createdSharedStates.last ?? [:]
+    }
+    
+    public func createXDMSharedState(data: [String : Any], event: Event?) {
+        // no-op
+    }
+
+    public func createPendingXDMSharedState(event: Event?) -> SharedStateResolver {
+        // no-op
+        return { data in
+            self.createdXdmSharedStates += [data]
+        }
+    }
+
+    public func getXDMSharedState(extensionName: String, event: Event?) -> SharedStateResult? {
+        // no-op
+        return nil
     }
 }
