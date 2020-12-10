@@ -17,6 +17,7 @@ AEPCore
   s.pod_target_xcconfig = { 'BUILD_LIBRARY_FOR_DISTRIBUTION' => 'YES' }
 
   s.dependency 'AEPCore'
+  s.dependency 'AEPIdentity'
   s.dependency 'AEPServices'
 
   s.source_files          = 'AEPAudience/Sources/*.swift'
