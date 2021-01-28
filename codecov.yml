@@ -8,9 +8,14 @@ coverage:
   range: "70...90"
 
   status:
-    project: yes
-    patch: yes
-    changes: no
+    project:
+      default:
+        target: 85%
+        threshold: 5%
+    patch:
+      default:
+        target: 85%
+        threshold: 5%
 
   ignore:
     - "./AEPAudience/Mocks/.*"
@@ -18,6 +23,7 @@ coverage:
     - "./AEPAudience/Tests/**/*"
     - "./AEPAudience/Tests/.*"
     - "./AudienceSampleApp"
+    - "./build"
 
 parsers:
   gcov:

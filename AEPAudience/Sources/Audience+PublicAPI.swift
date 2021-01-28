@@ -21,12 +21,12 @@ import Foundation
     /// - Parameters:
     ///   - completion: closure  invoked with the visitor's profile as a parameter
     @objc(getVisitorProfile:)
-    static func getVisitorProfile(completion: @escaping ([String: String]?, AEPError) -> Void) {
+    static func getVisitorProfile(completion: @escaping ([String: String]?, Error?) -> Void) {
         let event = Event(name: "AudienceRequestIdentity", type: EventType.audienceManager, source: EventSource.requestIdentity, data: nil)
 
         MobileCore.dispatch(event: event) { responseEvent in
             guard let responseEvent = responseEvent else {
-                completion(nil, .callbackTimeout)
+                completion(nil, AEPError.callbackTimeout)
                 return
             }
 
@@ -40,14 +40,14 @@ import Foundation
     ///   - data: Traits data for the current visitor
     ///   - completion: closure  invoked with the visitor's profile as a parameter
     @objc(signalWithData:completion:)
-    static func signalWithData(data: [String: String], completion: @escaping ([String: String]?, AEPError) -> Void) {
+    static func signalWithData(data: [String: String], completion: @escaping ([String: String]?, Error?) -> Void) {
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = data
         let event = Event(name: "AudienceRequestContent", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
 
         MobileCore.dispatch(event: event) { responseEvent in
             guard let responseEvent = responseEvent else {
-                completion(nil, .callbackTimeout)
+                completion(nil, AEPError.callbackTimeout)
                 return
             }
 
