@@ -22,7 +22,6 @@ extension URL {
     ///   - state: the Audience State containing Audience-related variables.
     static func buildAudienceHitURL(state: AudienceState?) -> URL? {
         let aamServer = state?.getAamServer() ?? ""
-
         // bail if the aam server is empty
         if aamServer.isEmpty {
             Log.error(label: LOG_TAG, "Building Audience hit URL failed - (Audience Server not found in configuration shared state), returning nil.")

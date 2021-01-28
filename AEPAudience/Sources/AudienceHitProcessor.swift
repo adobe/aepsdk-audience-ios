@@ -29,6 +29,10 @@ class AudienceHitProcessor: HitProcessing {
 
     // MARK: HitProcessing
 
+    func retryInterval(for entity: DataEntity) -> TimeInterval {
+        return retryInterval
+    }
+
     func processHit(entity: DataEntity, completion: @escaping (Bool) -> Void) {
         guard let data = entity.data, let audienceHit = try? JSONDecoder().decode(AudienceHit.self, from: data) else {
             // failed to convert data to hit, unrecoverable error, move to next hit

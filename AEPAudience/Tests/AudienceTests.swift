@@ -441,8 +441,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[1]?.connectTimeout)
-        // shared state will be created on valid analytics server response
-        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
+        // shared state created on boot and on valid analytics server response
+        XCTAssertEqual(2, mockRuntime.createdSharedStates.count)
     }
 
     func testHandleAnalyticsResponse_WithStuffAndDestsInResponse_And_NoAudienceTimeout() {
@@ -469,8 +469,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
         XCTAssertEqual(2, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
         XCTAssertEqual(2, mockNetworkService.calledNetworkRequests[1]?.connectTimeout)
-        // shared state will be created on valid analytics server response
-        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
+        // shared state created on boot and on valid analytics server response
+        XCTAssertEqual(2, mockRuntime.createdSharedStates.count)
     }
 
     func testHandleAnalyticsResponse_WithStuffAndEmptyDestsInResponse() {
@@ -493,8 +493,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("segments=1606170,2461982", visitorProfile?["testCookieName"])
         XCTAssertEqual("segments=1234567,7890123", visitorProfile?["anotherCookieName"])
         XCTAssertEqual(0, mockNetworkService.calledNetworkRequests.count)
-        // shared state will be created on valid analytics server response
-        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
+        // shared state created on boot and on valid analytics server response
+        XCTAssertEqual(2, mockRuntime.createdSharedStates.count)
     }
 
     func testHandleAnalyticsResponse_WithStuffAndNoDestsInResponse() {
@@ -517,8 +517,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("segments=1606170,2461982", visitorProfile?["testCookieName"])
         XCTAssertEqual("segments=1234567,7890123", visitorProfile?["anotherCookieName"])
         XCTAssertEqual(0, mockNetworkService.calledNetworkRequests.count)
-        // shared state will be created on valid analytics server response
-        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
+        // shared state created on boot and on valid analytics server response
+        XCTAssertEqual(2, mockRuntime.createdSharedStates.count)
     }
 
     func testHandleAnalyticsResponse_WithEmptyStringResponse() {
@@ -540,8 +540,8 @@ class AudienceTests: XCTestCase {
         let visitorProfile = audience?.state?.getVisitorProfile()
         XCTAssertEqual([:], visitorProfile)
         XCTAssertEqual(0, mockNetworkService.calledNetworkRequests.count)
-        // no shared state should be created if the analytics response event is empty
-        XCTAssertEqual(0, mockRuntime.createdSharedStates.count)
+        // shared state created on boot only
+        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
     }
 
     func testHandleAnalyticsResponse_WithEmptyStuffAndValidDestsInResponse() {
@@ -567,8 +567,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[1]?.connectTimeout)
-        // shared state will be created on valid analytics server response
-        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
+        // shared state created on boot and on valid analytics server response
+        XCTAssertEqual(2, mockRuntime.createdSharedStates.count)
     }
 
     func testHandleAnalyticsResponse_WithInvalidStuffKeyAndValidDestsInResponse() {
@@ -594,8 +594,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[1]?.connectTimeout)
-        // shared state will be created on valid analytics server response
-        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
+        // shared state created on boot and on valid analytics server response
+        XCTAssertEqual(2, mockRuntime.createdSharedStates.count)
     }
 
     func testHandleAnalyticsResponse_WithInvalidStuffValueAndValidDestsInResponse() {
@@ -621,8 +621,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[1]?.connectTimeout)
-        // shared state will be created on valid analytics server response
-        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
+        // shared state created on boot and on valid analytics server response
+        XCTAssertEqual(2, mockRuntime.createdSharedStates.count)
     }
 
     func testHandleAnalyticsResponse_WithNoStuffArrayAndValidDestsInResponse() {
@@ -648,8 +648,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[1]?.url.absoluteString)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[1]?.connectTimeout)
-        // shared state will be created on valid analytics server response
-        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
+        // shared state created on boot and on valid analytics server response
+        XCTAssertEqual(2, mockRuntime.createdSharedStates.count)
     }
 
     func testHandleAnalyticsResponse_WithOneInvalidDestinationInResponse() {
@@ -673,8 +673,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual(1, mockNetworkService.calledNetworkRequests.count)
         XCTAssertEqual("www.google.com", mockNetworkService.calledNetworkRequests[0]?.url.absoluteString)
         XCTAssertEqual(10, mockNetworkService.calledNetworkRequests[0]?.connectTimeout)
-        // shared state will be created on valid analytics server response
-        XCTAssertEqual(1, mockRuntime.createdSharedStates.count)
+        // shared state created on boot and on valid analytics server response
+        XCTAssertEqual(2, mockRuntime.createdSharedStates.count)
     }
 
     // ==========================================================================
