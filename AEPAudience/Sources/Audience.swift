@@ -25,6 +25,9 @@ public class Audience: NSObject, Extension {
     public let metadata: [String: String]? = nil
     private(set) var state: AudienceState?
 
+    // Maintains the boot up state of sdk.
+    private var sdkBootUpCompleted = false
+
     // MARK: Extension
 
     public required init(runtime: ExtensionRuntime) {
@@ -85,6 +88,14 @@ public class Audience: NSObject, Extension {
         guard let configSharedState = getSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event)?.value else { return }
         Log.debug(label: getLogTagWith(functionName: #function), "Received Configuration Response event, attempting to retrieve configuration settings.")
         state?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: createSharedState(data:event:))
+        // create audience shared state on boot / valid audience configuration
+        if !sdkBootUpCompleted {
+            if let status = state?.isAudienceConfigured(), status == true {
+                sdkBootUpCompleted.toggle()
+                Log.trace(label: getLogTagWith(functionName: #function), "Creating shared state on boot event.")
+                createSharedState(data: state?.getStateData() ?? [:], event: event)
+            }
+        }
     }
 
     /// Handles the signalWithData API by attempting to send the Audience Manager hit containing the passed-in event data. If a response is received for the processed `AudienceHit`, a response content event with visitor profile data is dispatched.
@@ -125,10 +136,6 @@ public class Audience: NSObject, Extension {
     ///   - event: The lifecycle response event
     private func handleLifecycleResponse(event: Event) {
         Log.debug(label: getLogTagWith(functionName: #function), "Received a Lifecycle Response event.")
-        // update Audience Manager shared state on lifecycle start events
-        if event.name == AudienceConstants.Lifecycle.LIFECYCLE_START_EVENT_NAME {
-            createSharedState(data: state?.getStateData() ?? [:], event: nil)
-        }
         guard let response = event.data else {
             Log.debug(label: getLogTagWith(functionName: #function), "The Lifecycle Response event data was not present, ignoring the event.")
             return

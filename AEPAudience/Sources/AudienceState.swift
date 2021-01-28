@@ -537,6 +537,12 @@ public class AudienceState {
         return data
     }
 
+    /// Check if the `aamServer` is configured for the audience module.
+    /// - Returns: true if the aam server is not empty.
+    func isAudienceConfigured() -> Bool {
+        return !(aamServer.isEmpty)
+    }
+
     // MARK: helpers
 
     /// Clears the audience manager identifiers for this AudienceState.

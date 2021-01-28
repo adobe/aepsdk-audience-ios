@@ -21,14 +21,13 @@ extension URL {
     /// - Parameters:
     ///   - state: the Audience State containing Audience-related variables.
     static func buildAudienceHitURL(state: AudienceState?) -> URL? {
-        let aamServer = state?.getAamServer() ?? ""
-
         // bail if the aam server is empty
-        if aamServer.isEmpty {
+        if let status = state?.isAudienceConfigured(), status == false {
             Log.error(label: LOG_TAG, "Building Audience hit URL failed - (Audience Server not found in configuration shared state), returning nil.")
             return nil
         }
 
+        let aamServer = state?.getAamServer()
         var components = URLComponents()
         components.scheme = "https"
         components.host = aamServer

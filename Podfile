@@ -1,4 +1,4 @@
-# Uncomment the next line to define a global platform for your project
+source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '10.0'
 use_frameworks!
 
@@ -6,15 +6,21 @@ workspace 'AEPAudience'
 project 'AEPAudience.xcodeproj'
 
 target 'AEPAudience' do
-  pod 'AEPCore', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
-  pod 'AEPServices', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
-  pod 'AEPIdentity', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
-  pod 'AEPRulesEngine', :git => 'https://github.com/adobe/aepsdk-rulesengine-ios.git', :branch => 'main'
-
-target 'AEPAudienceTests' do
-  pod 'AEPCore', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
-  pod 'AEPServices', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
-  pod 'AEPRulesEngine', :git => 'https://github.com/adobe/aepsdk-rulesengine-ios.git', :branch => 'main'
+  pod 'AEPCore'
+  pod 'AEPServices'
+  pod 'AEPIdentity'
+  pod 'AEPRulesEngine'
 end
 
+target 'AEPAudienceTests' do
+  pod 'AEPCore'
+  pod 'AEPServices'
+  pod 'AEPRulesEngine'
+end
+  
+target 'AudienceSampleApp' do
+  pod 'AEPCore'
+  pod 'AEPIdentity'
+  pod 'AEPLifecycle'
+  pod 'AEPServices'
 end

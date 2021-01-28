@@ -110,7 +110,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
     func getEcid() -> String {
         let semaphore = DispatchSemaphore(value: 0)
         var ecid = String()
-        Identity.getExperienceCloudId { (retrievedEcid) in
+        Identity.getExperienceCloudId { (retrievedEcid, error) in
             ecid = retrievedEcid ?? ""
             semaphore.signal()
         }
