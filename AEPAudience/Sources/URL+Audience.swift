@@ -25,7 +25,7 @@ extension URL {
         // bail if the aam server is empty
         if aamServer.isEmpty {
             Log.error(label: LOG_TAG, "Building Audience hit URL failed - (Audience Server not found in configuration shared state), returning nil.")
-                    return nil
+            return nil
         }
 
         var components = URLComponents()
