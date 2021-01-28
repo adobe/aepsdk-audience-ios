@@ -1,4 +1,4 @@
-[![codecov](https://codecov.io/gh/adobe/aepsdk-audience-ios/branch/master/graph/badge.svg?token=X6F5FIJR2T)](https://codecov.io/gh/adobe/aepsdk-audience-ios)
+[![codecov](https://codecov.io/gh/adobe/aepsdk-audience-ios/branch/main/graph/badge.svg?token=X6F5FIJR2T)](https://codecov.io/gh/adobe/aepsdk-audience-ios)
 
 # AEPAudience
 ## BETA ACKNOWLEDGEMENT
