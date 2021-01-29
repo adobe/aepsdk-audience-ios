@@ -155,15 +155,15 @@ enum AudienceConstants {
         static let SESSION_START_TIMESTAMP = "starttimestampseconds"
         static let UPGRADE_EVENT           = "upgradeevent"
     }
-    
+
     enum V4Migration {
-        static let USER_ID  = "AAMUserId";
-        static let PROFILE = "AAMUserProfile";
+        static let USER_ID  = "AAMUserId"
+        static let PROFILE = "AAMUserProfile"
     }
-    
-    enum V5Migration {        
-        static let USER_ID  = "Adobe.AAMDataStore.AAMUserId";
-        static let PROFILE = "Adobe.AAMDataStore.AAMUserProfile";
+
+    enum V5Migration {
+        static let USER_ID  = "Adobe.AAMDataStore.AAMUserId"
+        static let PROFILE = "Adobe.AAMDataStore.AAMUserProfile"
     }
 
     static let MapToContextDataKeys = [

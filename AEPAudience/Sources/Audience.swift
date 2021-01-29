@@ -23,7 +23,7 @@ public class Audience: NSObject, Extension {
     public let friendlyName = AudienceConstants.FRIENDLY_NAME
     public static let extensionVersion = AudienceConstants.EXTENSION_VERSION
     public let metadata: [String: String]? = nil
-    
+
     private(set) var state: AudienceState?
     private let dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
 
@@ -37,7 +37,7 @@ public class Audience: NSObject, Extension {
         super.init()
 
         AudienceMigrator.migrateLocalStorage(dataStore: dataStore)
-        
+
         guard let dataQueue = ServiceProvider.shared.dataQueueService.getDataQueue(label: name) else {
             Log.error(label: getLogTagWith(functionName: #function), "Failed to create Data Queue, Audience could not be initialized")
             return
@@ -159,7 +159,7 @@ public class Audience: NSObject, Extension {
     private func handleAnalyticsResponse(event: Event) {
         // quick out if aam forwarding status is false
         if let aamForwardingStatus = state?.getAamForwardingStatus(), aamForwardingStatus == false {
-            Log.trace(label: getLogTagWith(functionName: #function), "Not Processing Analytics Response event as AAMForwarding is disabled.");
+            Log.trace(label: getLogTagWith(functionName: #function), "Not Processing Analytics Response event as AAMForwarding is disabled.")
             return
         }
         guard let response = event.data?[AudienceConstants.Analytics.SERVER_RESPONSE] as? String else { return }

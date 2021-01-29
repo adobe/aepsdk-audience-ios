@@ -28,13 +28,13 @@ class AudienceTests: XCTestCase {
     override func setUp() {
         ServiceProvider.shared.networkService = MockNetworking()
         ServiceProvider.shared.namedKeyValueService = MockDataStore()
-        
+
         MobileCore.setLogLevel(.error) // reset log level to error before each test
         mockRuntime = TestableExtensionRuntime()
         mockHitQueue = MockHitQueue(processor: AudienceHitProcessor(responseHandler: { [weak self] entity, data in
             self?.responseCallbackArgs.append((entity, data))
         }))
-                
+
         dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
         audienceState = AudienceState(hitQueue: mockHitQueue, dataStore: dataStore)
         audience = Audience(runtime: mockRuntime, state: audienceState)

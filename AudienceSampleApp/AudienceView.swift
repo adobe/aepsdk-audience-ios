@@ -22,13 +22,13 @@ struct AudienceView: View {
             VStack {
                 Text("Audience Manager API").bold()
                 Button(action: {
-                    Audience.signalWithData(data: ["trait":"trait value"]) { (traits, error) in
+                    Audience.signalWithData(data: ["trait": "trait value"]) { (traits, error) in
                         print("\(LOG_TAG)::#signalWithData - returned traits: \(String(describing: traits))")
-                        if(error != nil) {
+                        if error != nil {
                             print("\(LOG_TAG)::#signalWithData - error: \(String(describing: error?.localizedDescription))")
                         }
                     }
-                }){
+                }) {
                     Text("Signal With Data")
                         .frame(minWidth: 0, maxWidth: .infinity)
                         .padding()
@@ -39,11 +39,11 @@ struct AudienceView: View {
                 Button(action: {
                     Audience.getVisitorProfile { (retrievedProfile, error) in
                         print("\(LOG_TAG)::#getVisitorProfile - retrieved profile: \(String(describing: retrievedProfile))")
-                        if(error != nil) {
+                        if error != nil {
                             print("\(LOG_TAG)::#getVisitorProfile - Audience getVisitorProfile error: \(String(describing: error?.localizedDescription))")
                         }
                     }
-                }){
+                }) {
                     Text("Get Visitor Profile")
                         .frame(minWidth: 0, maxWidth: .infinity)
                         .padding()
@@ -53,7 +53,7 @@ struct AudienceView: View {
                 }.cornerRadius(5)
                 Button(action: {
                     Audience.reset()
-                }){
+                }) {
                     Text("Reset")
                         .frame(minWidth: 0, maxWidth: .infinity)
                         .padding()
@@ -61,12 +61,12 @@ struct AudienceView: View {
                         .foregroundColor(.white)
                         .font(.caption)
                 }.cornerRadius(5)
-                
+
                 Button(action: {
-                        var config: [String:Any] = [:]
-                        config["global.privacy"] = "optedout";
-                        MobileCore.updateConfigurationWith(configDict: config)
-                }){
+                    var config: [String: Any] = [:]
+                    config["global.privacy"] = "optedout"
+                    MobileCore.updateConfigurationWith(configDict: config)
+                }) {
                     Text("OptOut")
                         .frame(minWidth: 0, maxWidth: .infinity)
                         .padding()
@@ -74,12 +74,12 @@ struct AudienceView: View {
                         .foregroundColor(.white)
                         .font(.caption)
                 }.cornerRadius(5)
-                
+
                 Button(action: {
-                        var config: [String:Any] = [:]
-                        config["global.privacy"] = "optedin";
-                        MobileCore.updateConfigurationWith(configDict: config)
-                }){
+                    var config: [String: Any] = [:]
+                    config["global.privacy"] = "optedin"
+                    MobileCore.updateConfigurationWith(configDict: config)
+                }) {
                     Text("OptIn")
                         .frame(minWidth: 0, maxWidth: .infinity)
                         .padding()
