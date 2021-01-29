@@ -21,12 +21,16 @@ class URL_AudienceTests: XCTestCase {
     var responseCallbackArgs = [(DataEntity, Data?)]()
 
     override func setUp() {
+        ServiceProvider.shared.namedKeyValueService = MockDataStore()
+        
         MobileCore.setLogLevel(.error) // reset log level to error before each test
         UserDefaults.clear()
         mockHitQueue = MockHitQueue(processor: AudienceHitProcessor(responseHandler: { [weak self] entity, data in
             self?.responseCallbackArgs.append((entity, data))
         }))
-        audienceState = AudienceState(hitQueue: mockHitQueue)
+        
+        let dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
+        audienceState = AudienceState(hitQueue: mockHitQueue, dataStore: dataStore)
     }
 
     func testAudienceHitWithNoCustomerEventDataAndNoIdentityDataInSharedState() {

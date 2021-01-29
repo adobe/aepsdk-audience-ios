@@ -21,6 +21,9 @@
 		2EBEE7C825282EC000880E72 /* TestableExtensionRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7C725282EC000880E72 /* TestableExtensionRuntime.swift */; };
 		6B414B2D8049789594CE7EA9 /* Pods_AEPAudienceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B81E902C9371043528CBC77 /* Pods_AEPAudienceTests.framework */; };
 		6EC7BAFB38519F7DB73C0D91 /* Pods_AudienceSampleApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7209F82E6B77CD678B185A43 /* Pods_AudienceSampleApp.framework */; };
+		ACED0E3025C378E400374DDF /* MockDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACED0E2F25C378E400374DDF /* MockDataStore.swift */; };
+		ACED0E3725C37E4200374DDF /* AudienceMigrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACED0E1025C3505E00374DDF /* AudienceMigrator.swift */; };
+		ACED0E4325C383F300374DDF /* AudienceMigratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACED0E3B25C383E400374DDF /* AudienceMigratorTests.swift */; };
 		D65C46DF25437B4500998A2B /* MockHitQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6733ECF253F3C8600AE65A9 /* MockHitQueue.swift */; };
 		D669875B256ED423002DC65E /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D669875A256ED422002DC65E /* README.md */; };
 		D66FD48A25C241130029CD02 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66FD48925C241130029CD02 /* AppDelegate.swift */; };
@@ -86,6 +89,9 @@
 		589D3DEEBB97CB7CBDF13CAA /* Pods-AEPAudience.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience.debug.xcconfig"; path = "Target Support Files/Pods-AEPAudience/Pods-AEPAudience.debug.xcconfig"; sourceTree = "<group>"; };
 		7209F82E6B77CD678B185A43 /* Pods_AudienceSampleApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AudienceSampleApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		841B3809AD1F295B80DB1F0B /* Pods-AEPAudience-AEPAudienceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience-AEPAudienceTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests.debug.xcconfig"; sourceTree = "<group>"; };
+		ACED0E1025C3505E00374DDF /* AudienceMigrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudienceMigrator.swift; sourceTree = "<group>"; };
+		ACED0E2F25C378E400374DDF /* MockDataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockDataStore.swift; sourceTree = "<group>"; };
+		ACED0E3B25C383E400374DDF /* AudienceMigratorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudienceMigratorTests.swift; sourceTree = "<group>"; };
 		AE9D488A2B63D1BE20141EF6 /* Pods_test.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_test.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C411E2310311E2A18288A505 /* Pods-AEPAudience-AEPAudienceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience-AEPAudienceTests.release.xcconfig"; path = "Target Support Files/Pods-AEPAudience-AEPAudienceTests/Pods-AEPAudience-AEPAudienceTests.release.xcconfig"; sourceTree = "<group>"; };
 		C41818540F37C8D4F018570D /* Pods-AEPAudience.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPAudience.release.xcconfig"; path = "Target Support Files/Pods-AEPAudience/Pods-AEPAudience.release.xcconfig"; sourceTree = "<group>"; };
@@ -188,6 +194,7 @@
 				D6733D83252BCCB900AE65A9 /* AudienceStateTests.swift */,
 				D6DAC3742549CDD400BD81EB /* AudiencePublicAPITests.swift */,
 				D6DAC3872549FC5B00BD81EB /* URL+AudienceTests.swift */,
+				ACED0E3B25C383E400374DDF /* AudienceMigratorTests.swift */,
 				D6DAC3DC2551CFB200BD81EB /* AudienceManagerFunctionalTests.swift */,
 			);
 			path = Tests;
@@ -208,6 +215,7 @@
 				D6733E282537843200AE65A9 /* URL+Audience.swift */,
 				D6733E98253A1C8200AE65A9 /* AudienceHitResponse.swift */,
 				D6733ECB253E3A2600AE65A9 /* AudienceStuffObject.swift */,
+				ACED0E1025C3505E00374DDF /* AudienceMigrator.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -223,6 +231,7 @@
 		2EBEE7C625282EA400880E72 /* TestHelper */ = {
 			isa = PBXGroup;
 			children = (
+				ACED0E2F25C378E400374DDF /* MockDataStore.swift */,
 				2EBEE7C725282EC000880E72 /* TestableExtensionRuntime.swift */,
 				2E45B6B92537A071003D3534 /* MockNetworking.swift */,
 				D6733ECF253F3C8600AE65A9 /* MockHitQueue.swift */,
@@ -544,6 +553,7 @@
 				2EBEE7BB2527C89E00880E72 /* AudienceConstants.swift in Sources */,
 				D6733E1F253777EC00AE65A9 /* Networking+Audience.swift in Sources */,
 				2E45B6AE2534FB98003D3534 /* AudienceHit.swift in Sources */,
+				ACED0E3725C37E4200374DDF /* AudienceMigrator.swift in Sources */,
 				D6733ECC253E3A2700AE65A9 /* AudienceStuffObject.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -552,12 +562,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ACED0E4325C383F300374DDF /* AudienceMigratorTests.swift in Sources */,
 				D6DAC44525538FA000BD81EB /* TestHelpers.swift in Sources */,
 				2EBEE7C825282EC000880E72 /* TestableExtensionRuntime.swift in Sources */,
 				2E45B6BA2537A071003D3534 /* MockNetworking.swift in Sources */,
 				D6DAC3E72553103C00BD81EB /* TestableNetworkService.swift in Sources */,
 				2E45B6B625379FA7003D3534 /* AudienceHitProcessorTests.swift in Sources */,
 				D65C46DF25437B4500998A2B /* MockHitQueue.swift in Sources */,
+				ACED0E3025C378E400374DDF /* MockDataStore.swift in Sources */,
 				D6DAC3DD2551CFB200BD81EB /* AudienceManagerFunctionalTests.swift in Sources */,
 				2EBEE7C325282CD300880E72 /* AudienceTests.swift in Sources */,
 				D6DAC3802549D1CC00BD81EB /* MockExtension.swift in Sources */,
