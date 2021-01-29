@@ -52,7 +52,29 @@ class AudienceStateTests: XCTestCase {
     
     override func tearDown() {
         // clear audience state by setting privacy to opt out
-        audienceState.setMobilePrivacy(status: PrivacyStatus.optedOut)
+        optOut()
+    }
+    
+    func optOut() {
+        updatePrivacy(status: .optedOut, shouldUpdateSharedState: true)
+    }
+    
+    func optIn() {
+        updatePrivacy(status: .optedIn)
+    }
+    
+    func optUknown() {
+        updatePrivacy(status: .unknown)
+    }
+    
+    func updatePrivacy(status: PrivacyStatus, shouldUpdateSharedState: Bool = false) {
+        let configData = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: status.rawValue]
+        let configEvent = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: configData)
+        audienceState.handlePrivacyStatusChange(event: configEvent, createSharedState: { (data, event) in
+            if !shouldUpdateSharedState {
+                XCTFail("Shared state should not be updated")
+            }
+        })
     }
 
     // MARK: AudienceState unit tests
@@ -222,7 +244,7 @@ class AudienceStateTests: XCTestCase {
     
     func testSetDpid_WithPrivacyStatusOptedOut() {
         // setup
-        audienceState.setMobilePrivacy(status: PrivacyStatus.optedOut)
+        optOut()
         
         // test
         audienceState.setDpid(dpid: AudienceStateTests.inMemoryDpid)
@@ -233,7 +255,7 @@ class AudienceStateTests: XCTestCase {
     
     func testSetDpid_WithPrivacyStatusUnknown() {
         // setup
-        audienceState.setMobilePrivacy(status: PrivacyStatus.unknown)
+        optUknown()
         
         // test
         audienceState.setDpid(dpid: AudienceStateTests.inMemoryDpid)
@@ -266,7 +288,7 @@ class AudienceStateTests: XCTestCase {
     
     func testSetDpuuid_WithPrivacyStatusOptedOut() {
         // setup
-        audienceState.setMobilePrivacy(status: PrivacyStatus.optedOut)
+        optOut()
         
         // test
         audienceState.setDpuuid(dpuuid: AudienceStateTests.inMemoryDpuuid)
@@ -277,7 +299,7 @@ class AudienceStateTests: XCTestCase {
     
     func testSetDpuuid_WithPrivacyStatusUnknown() {
         // setup
-        audienceState.setMobilePrivacy(status: PrivacyStatus.unknown)
+        optUknown()
         
         // test
         audienceState.setDpuuid(dpuuid: AudienceStateTests.inMemoryDpuuid)
@@ -312,7 +334,7 @@ class AudienceStateTests: XCTestCase {
     
     func testSetUuid_WithPrivacyStatusOptedOut() {
         // setup
-        audienceState.setMobilePrivacy(status: PrivacyStatus.optedOut)
+        optOut()
         
         // test
         audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)
@@ -324,7 +346,7 @@ class AudienceStateTests: XCTestCase {
     
     func testSetUuid_WithPrivacyStatusUnknown() {
         // setup
-        audienceState.setMobilePrivacy(status: PrivacyStatus.unknown)
+        optUknown()
         
         // test
         audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)
@@ -360,7 +382,7 @@ class AudienceStateTests: XCTestCase {
     
     func testSetVisitorProfile_WithPrivacyStatusOptedOut() {
         // setup
-        audienceState.setMobilePrivacy(status: PrivacyStatus.optedOut)
+        optOut()
         
         // test
         audienceState.setVisitorProfile(visitorProfile: AudienceStateTests.inMemoryVisitorProfile)
@@ -372,7 +394,7 @@ class AudienceStateTests: XCTestCase {
     
     func testSetVisitorProfile_WithPrivacyStatusUnknown() {
         // setup
-        audienceState.setMobilePrivacy(status: PrivacyStatus.unknown)
+        optUknown()
         
         // test
         audienceState.setVisitorProfile(visitorProfile: AudienceStateTests.inMemoryVisitorProfile)
@@ -384,7 +406,7 @@ class AudienceStateTests: XCTestCase {
     
     func testClearIdentifiers_Happy() {
         // setup
-        audienceState.setMobilePrivacy(status: PrivacyStatus.optedIn)
+        optIn()
         audienceState.setDpid(dpid: AudienceStateTests.inMemoryDpid)
         audienceState.setDpuuid(dpuuid: AudienceStateTests.inMemoryDpuuid)
         audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)
@@ -404,14 +426,14 @@ class AudienceStateTests: XCTestCase {
     
     func testClearIdentifiers_CalledOnOptOut() {
         // setup
-        audienceState.setMobilePrivacy(status: PrivacyStatus.optedIn)
+        optIn()
         audienceState.setDpid(dpid: AudienceStateTests.inMemoryDpid)
         audienceState.setDpuuid(dpuuid: AudienceStateTests.inMemoryDpuuid)
         audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)
         audienceState.setVisitorProfile(visitorProfile: AudienceStateTests.inMemoryVisitorProfile)
         
         // test
-        audienceState.setMobilePrivacy(status: PrivacyStatus.optedOut)
+        optOut()
         
         // verify
         XCTAssertTrue(audienceState.getDpid().isEmpty)
@@ -424,7 +446,7 @@ class AudienceStateTests: XCTestCase {
     
     func testGetStateData_Happy() {
         // setup
-        audienceState.setMobilePrivacy(status: PrivacyStatus.optedIn)
+        optIn()
         audienceState.setDpid(dpid: AudienceStateTests.inMemoryDpid)
         audienceState.setDpuuid(dpuuid: AudienceStateTests.inMemoryDpuuid)
         audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)
@@ -442,7 +464,7 @@ class AudienceStateTests: XCTestCase {
     
     func testGetStateData_EmptyDataOnOptedOut() {
         // setup
-        audienceState.setMobilePrivacy(status: PrivacyStatus.optedOut)
+        optOut()
         audienceState.setDpid(dpid: AudienceStateTests.inMemoryDpid)
         audienceState.setDpuuid(dpuuid: AudienceStateTests.inMemoryDpuuid)
         audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)
