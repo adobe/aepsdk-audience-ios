@@ -22,7 +22,7 @@ struct AudienceView: View {
                 Button(action: {
                     Audience.signalWithData(data: ["trait":"trait value"]) { (traits, error) in
                         print("returned traits: \(String(describing: traits))")
-                        if(error?.localizedDescription != nil) {
+                        if(error != nil) {
                             print("audience signal with data error: \(error?.localizedDescription)")
                         }
                     }
@@ -37,7 +37,7 @@ struct AudienceView: View {
                 Button(action: {
                     Audience.getVisitorProfile { (retrievedProfile, error) in
                         print("retrieved profile: \(String(describing: retrievedProfile))")
-                        if(error?.localizedDescription != nil) {
+                        if(error != nil) {
                             print("audience get visitor profile error: \(error?.localizedDescription)")
                         }
                     }
