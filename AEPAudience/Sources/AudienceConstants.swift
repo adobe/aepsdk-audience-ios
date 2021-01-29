@@ -30,8 +30,8 @@ enum AudienceConstants {
         static let DPID                 = "dpid"
         static let DPUUID               = "dpuuid"
         static let UUID                 = "uuid"
-        static let AUDIENCE_IDS         = "audience.ids"
-        static let OPTED_OUT_HIT_SENT   = "optedout.hit.sent"
+        static let AUDIENCE_IDS         = "audienceids"
+        static let OPTED_OUT_HIT_SENT   = "optedouthitsent"
     }
 
     enum DataStoreKeys {
