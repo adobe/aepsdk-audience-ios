@@ -129,8 +129,9 @@ class AudienceTests: XCTestCase {
         audience.state?.setDpuuid(dpuuid: "testDpuuid")
         audience.state?.setDpid(dpid: "testDpid")
         audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
+        audience.state?.setAamServer(server: "testserver.com")
         // create config data containing a privacy status and an aam server
-        let data = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue, AudienceConstants.Configuration.AAM_SERVER: "testserver.com"] as [String: Any]
+        let data: [String: Any] = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue]
         // create the configuration response content event with the data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: data)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (data, .set))
@@ -156,9 +157,10 @@ class AudienceTests: XCTestCase {
         audience.state?.setUuid(uuid: "")
         audience.state?.setDpuuid(dpuuid: "testDpuuid")
         audience.state?.setDpid(dpid: "testDpid")
+        audience.state?.setAamServer(server: "testserver.com")
         audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
         // create config data containing a privacy status and an aam server
-        let data = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue, AudienceConstants.Configuration.AAM_SERVER: "testserver.com"] as [String: Any]
+        let data: [String: Any] = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue]
         // create the configuration response content event with the data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: data)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (data, .set))
