@@ -131,7 +131,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         let traits = ["trait": "b"] as [String: String]
         Audience.signalWithData(data: traits) { (visitorProfile, error) in
             XCTAssertEqual([:], visitorProfile)
-            XCTAssertEqual(AEPError.none, error)
+            XCTAssertNil(error)
             semaphore.signal()
         }
         
@@ -158,7 +158,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         let traits = [:] as [String: String]
         Audience.signalWithData(data: traits) { (visitorProfile, error) in
             XCTAssertEqual([:], visitorProfile)
-            XCTAssertEqual(AEPError.none, error)
+            XCTAssertNil(error)
             semaphore.signal()
         }
         
@@ -185,7 +185,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         let traits = [:] as [String: String]
         Audience.signalWithData(data: traits) { (visitorProfile, error) in
             XCTAssertEqual([:], visitorProfile)
-            XCTAssertEqual(AEPError.none, error)
+            XCTAssertNil(error)
             semaphore.signal()
         }
         
@@ -206,7 +206,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         let traits = ["trait": "b", "trait2": "traitValue2", "trait3": "c"] as [String: String]
         Audience.signalWithData(data: traits) { (visitorProfile, error) in
             XCTAssertEqual([:], visitorProfile)
-            XCTAssertEqual(AEPError.none, error)
+            XCTAssertNil(error)
             semaphore.signal()
         }
         
@@ -236,7 +236,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         let traits = ["trait": "b"] as [String: String]
         Audience.signalWithData(data: traits) { (visitorProfile, error) in
             XCTAssertEqual([:], visitorProfile)
-            XCTAssertEqual(AEPError.none, error)
+            XCTAssertNil(error)
             semaphore.signal()
         }
         
@@ -313,7 +313,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         let traits = ["மொழி": "தமிழ்", "traitb":"网页","traitc":"c"] as [String: String]
         Audience.signalWithData(data: traits) { (visitorProfile, error) in
             XCTAssertEqual([:], visitorProfile)
-            XCTAssertEqual(AEPError.none, error)
+            XCTAssertNil(error)
             semaphore.signal()
         }
         
@@ -342,7 +342,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         let traits = ["":""] as [String: String]
         Audience.signalWithData(data: traits) { (visitorProfile, error) in
             XCTAssertEqual([:], visitorProfile)
-            XCTAssertEqual(AEPError.none, error)
+            XCTAssertNil(error)
             semaphore.signal()
         }
         
@@ -370,7 +370,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         let traits = ["trait": "b"] as [String: String]
         Audience.signalWithData(data: traits) { (visitorProfile, error) in
             XCTAssertEqual(["cn_testGetVisitorProfile": "cv_testGetVisitorProfile", "cn_testGetVisitorProfile2": "cv_testGetVisitorProfile2"], visitorProfile)
-            XCTAssertEqual(AEPError.none, error)
+            XCTAssertNil(error)
             semaphore.signal()
         }
         
@@ -431,7 +431,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         let traits = ["trait": "b"] as [String: String]
         Audience.signalWithData(data: traits) { (visitorProfile, error) in
             XCTAssertEqual(["cn_testGetVisitorProfile": "cv_testGetVisitorProfile"], visitorProfile)
-            XCTAssertEqual(AEPError.none, error)
+            XCTAssertNil(error)
             semaphore.signal()
         }
         
@@ -453,14 +453,14 @@ class AudienceManagerFunctionalTests: XCTestCase {
         // test
         Audience.getVisitorProfile { (retrievedProfile, error) in
             visitorProfile = retrievedProfile ?? [:]
-            returnedError = error
+            returnedError = error as? AEPError
             semaphore2.signal()
         }
         semaphore2.wait()
         
         // verify
         XCTAssertEqual(["cn_testGetVisitorProfile": "cv_testGetVisitorProfile"], visitorProfile)
-        XCTAssertEqual(AEPError.none, returnedError)
+        XCTAssertNil(returnedError)
     }
     
     func testGetVisitorProfile_AfterReset() {
@@ -476,7 +476,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         let traits = ["trait": "b"] as [String: String]
         Audience.signalWithData(data: traits) { (visitorProfile, error) in
             XCTAssertEqual(["cn_testGetVisitorProfile": "cv_testGetVisitorProfile"], visitorProfile)
-            XCTAssertEqual(AEPError.none, error)
+            XCTAssertNil(error)
             semaphore.signal()
         }
         
@@ -499,14 +499,14 @@ class AudienceManagerFunctionalTests: XCTestCase {
         // test
         Audience.getVisitorProfile { (retrievedProfile, error) in
             visitorProfile = retrievedProfile ?? [:]
-            returnedError = error
+            returnedError = error as? AEPError
             semaphore2.signal()
         }
         semaphore2.wait()
         
         // verify
         XCTAssertEqual([:], visitorProfile)
-        XCTAssertEqual(AEPError.none, returnedError)
+        XCTAssertNil(returnedError)
     }
     
     // MARK: signalWithData and getSdkIdentities tests...
@@ -524,7 +524,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
         let traits = ["trait": "b"] as [String: String]
         Audience.signalWithData(data: traits) { (visitorProfile, error) in
             XCTAssertEqual(["cn_testGetVisitorProfile": "cv_testGetVisitorProfile"], visitorProfile)
-            XCTAssertEqual(AEPError.none, error)
+            XCTAssertNil(error)
             semaphore.signal()
         }
         
