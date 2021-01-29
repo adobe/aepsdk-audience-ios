@@ -16,10 +16,26 @@ jobs:
 
   build-and-test:
     macos:
-      xcode: 11.1.0 # Specify the Xcode version to use
+      xcode: 11.6.0 # Specify the Xcode version to use
 
     steps:
       - checkout
+
+      # restore pods related caches
+      - restore_cache:
+          keys:
+            - 1-gems-{{ checksum "Gemfile.lock" }}
+
+      # make sure we're on the right version of cocoapods
+      - run:
+          name: Verify Cocoapods Version
+          command: bundle check || bundle install --path vendor/bundle
+
+      # save cocoapods version gem data
+      - save_cache:
+          key: 1-gems-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
 
       # restore pods related caches
       - restore_cache:
@@ -48,6 +64,14 @@ jobs:
       - run:
           name: Lint Source Code
           command: make lint
+
+      - run:
+          name: Install nicklockwood/SwiftFormat
+          command: brew install swiftformat
+          
+      - run:
+          name: Swift Formating
+          command: swiftformat . --lint --swiftversion 5.2
 
       # pre-start the simulator to prevent timeouts
       - run:
@@ -81,7 +105,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "Build Failed :x:",
+                    "text": "AEPAudience [iOS] -> Build Failed :x:",
                     "emoji": true
                   }
                 },
@@ -134,7 +158,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "Build Successful :tada:",
+                    "text": "AEPAudience [iOS] -> Build Successful :tada:",
                     "emoji": true
                   }
                 },
