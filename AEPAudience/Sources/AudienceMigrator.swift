@@ -12,7 +12,6 @@
 import Foundation
 import AEPServices
 
-/// Defines the public interface for the Audience extension
 public class AudienceMigrator {
     private static let LOG_TAG = "AudienceMigrator"
     
@@ -24,6 +23,9 @@ public class AudienceMigrator {
         return UserDefaults.standard
     }
         
+    /// Migrate audience data from v4 local storage
+    /// - Parameters:
+    ///   - dataStore: DataStore to store persisted audience data
     private static func migrateFromV4(dataStore: NamedCollectionDataStore){
         if let uuid = userDefaults.string(forKey: AudienceConstants.V4Migration.USER_ID) {
             Log.trace(label: AudienceMigrator.LOG_TAG, "Migration started for Audience Manager data from V4.")
@@ -35,8 +37,10 @@ public class AudienceMigrator {
         }
     }
     
+    /// Migrate audience data from v5 local storage
+    /// - Parameters:
+    ///   - dataStore: DataStore to store persisted audience data
     private static func migrateFromV5(dataStore: NamedCollectionDataStore){
-        
         if let uuid = userDefaults.string(forKey: AudienceConstants.V5Migration.USER_ID) {
             Log.trace(label: AudienceMigrator.LOG_TAG, "Migration started for Audience Manager data from V5.")
             
@@ -51,6 +55,9 @@ public class AudienceMigrator {
         }
     }
 
+    /// Migrate audience data from v4 & v5 local storage
+    /// - Parameters:
+    ///   - dataStore: DataStore to store persisted audience data
     static func migrateLocalStorage(dataStore: NamedCollectionDataStore) {
         migrateFromV4(dataStore: dataStore)
         migrateFromV5(dataStore: dataStore)
