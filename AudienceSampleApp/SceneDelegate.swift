@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let audienceView = AudienceView()
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = UIHostingController(rootView:audienceView)
+        window?.rootViewController = UIHostingController(rootView: audienceView)
         window?.makeKeyAndVisible()
     }
 

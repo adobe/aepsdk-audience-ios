@@ -22,13 +22,13 @@ class URL_AudienceTests: XCTestCase {
 
     override func setUp() {
         ServiceProvider.shared.namedKeyValueService = MockDataStore()
-        
+
         MobileCore.setLogLevel(.error) // reset log level to error before each test
         UserDefaults.clear()
         mockHitQueue = MockHitQueue(processor: AudienceHitProcessor(responseHandler: { [weak self] entity, data in
             self?.responseCallbackArgs.append((entity, data))
         }))
-        
+
         let dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
         audienceState = AudienceState(hitQueue: mockHitQueue, dataStore: dataStore)
     }
@@ -41,7 +41,7 @@ class URL_AudienceTests: XCTestCase {
         let event = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: nil)
         // process the created shared state and event in the audience state
         audienceState?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: { data, event in
-        })
+        }, dispatchOptOutResult: { (optedOut, event) in})
         // set a uuid for testing
         audienceState?.setUuid(uuid: "testUuid")
 
@@ -64,7 +64,7 @@ class URL_AudienceTests: XCTestCase {
         let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "12345567", AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT: "9", AudienceConstants.Identity.VISITOR_ID_BLOB: "blobValue", AudienceConstants.Identity.VISITOR_IDS_LIST: customIds] as [String : Any]
         // process the created shared states in the audience state
         audienceState?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: { data, event in
-        })
+        }, dispatchOptOutResult: { (optedOut, event) in})
         audienceState?.handleIdentitySharedStateUpdate(identitySharedState: identitySharedState)
         // set a uuid for testing
         audienceState?.setUuid(uuid: "testUuid")

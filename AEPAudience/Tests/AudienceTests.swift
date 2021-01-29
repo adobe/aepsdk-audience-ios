@@ -23,18 +23,17 @@ class AudienceTests: XCTestCase {
     var responseCallbackArgs = [(DataEntity, Data?)]()
     var dataStore : NamedCollectionDataStore!
     var audienceState: AudienceState!
-    static let configEvent = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: nil)
 
     override func setUp() {
         ServiceProvider.shared.networkService = MockNetworking()
         ServiceProvider.shared.namedKeyValueService = MockDataStore()
-        
+
         MobileCore.setLogLevel(.error) // reset log level to error before each test
         mockRuntime = TestableExtensionRuntime()
         mockHitQueue = MockHitQueue(processor: AudienceHitProcessor(responseHandler: { [weak self] entity, data in
             self?.responseCallbackArgs.append((entity, data))
         }))
-                
+
         dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
         audienceState = AudienceState(hitQueue: mockHitQueue, dataStore: dataStore)
         audience = Audience(runtime: mockRuntime, state: audienceState)
@@ -44,11 +43,17 @@ class AudienceTests: XCTestCase {
     override func tearDown() {
         // clean the defaults after each test
         UserDefaults.clear()
-        // clear audience state by setting privacy to opt out
-        audienceState.setMobilePrivacy(status: PrivacyStatus.optedOut)
+        clearAudienceState()
     }
 
     // MARK: helpers
+    func clearAudienceState() {
+        // clear audience state by setting privacy to opt out
+        let configData = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue]
+        let configEvent = Event(name: "configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: configData)
+        mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: configEvent, data: (configData, .set))
+    }
+
     private func dispatchConfigurationEventForTesting(aamServer: String?, aamForwardingStatus: Bool, privacyStatus: PrivacyStatus, aamTimeout: TimeInterval?) -> [String:Any]{
         // setup configuration data
         let configData = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: privacyStatus.rawValue, AudienceConstants.Configuration.AAM_SERVER: aamServer as Any, AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING: aamForwardingStatus, AudienceConstants.Configuration.AAM_TIMEOUT: aamTimeout as Any] as [String: Any]
@@ -129,8 +134,9 @@ class AudienceTests: XCTestCase {
         audience.state?.setDpuuid(dpuuid: "testDpuuid")
         audience.state?.setDpid(dpid: "testDpid")
         audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
+        audience.state?.setAamServer(server: "testserver.com")
         // create config data containing a privacy status and an aam server
-        let data = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue, AudienceConstants.Configuration.AAM_SERVER: "testserver.com"] as [String: Any]
+        let data: [String: Any] = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue]
         // create the configuration response content event with the data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: data)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (data, .set))
@@ -156,9 +162,10 @@ class AudienceTests: XCTestCase {
         audience.state?.setUuid(uuid: "")
         audience.state?.setDpuuid(dpuuid: "testDpuuid")
         audience.state?.setDpid(dpid: "testDpid")
+        audience.state?.setAamServer(server: "testserver.com")
         audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
         // create config data containing a privacy status and an aam server
-        let data = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue, AudienceConstants.Configuration.AAM_SERVER: "testserver.com"] as [String: Any]
+        let data: [String: Any] = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue]
         // create the configuration response content event with the data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: data)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (data, .set))
@@ -731,8 +738,11 @@ class AudienceTests: XCTestCase {
         let customIds = [CustomIdentity(origin: "d_cid_ic", type: "DSID_20915", identifier: "test_ad_id", authenticationState: .authenticated)]
         let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer", AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING: false, AudienceConstants.Configuration.AAM_TIMEOUT: 10.0, AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrgId", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue] as [String: Any]
         let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "1234567", AudienceConstants.Identity.VISITOR_ID_BLOB: "testBlob", AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT: "9", AudienceConstants.Identity.VISITOR_IDS_LIST: customIds] as [String: Any]
-        audience?.state?.handleConfigurationSharedStateUpdate(event: AudienceTests.configEvent, configSharedState: configSharedState, createSharedState: { data, event in
-        })
+
+        let configEvent = Event(name: "configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: configSharedState)
+
+        audience?.state?.handleConfigurationSharedStateUpdate(event: configEvent, configSharedState: configSharedState, createSharedState: { data, event in
+        }, dispatchOptOutResult: { (optedOut, event) in})
         audience?.state?.handleIdentitySharedStateUpdate(identitySharedState: identitySharedState)
 
         // verify data was set

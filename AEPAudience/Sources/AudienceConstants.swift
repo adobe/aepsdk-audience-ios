@@ -25,13 +25,13 @@ enum AudienceConstants {
     }
 
     enum EventDataKeys {
-        static let VISITOR_TRAITS       = "aam.traits"
-        static let VISITOR_PROFILE      = "aam.profile"
+        static let VISITOR_TRAITS       = "aamtraits"
+        static let VISITOR_PROFILE      = "aamprofile"
         static let DPID                 = "dpid"
         static let DPUUID               = "dpuuid"
         static let UUID                 = "uuid"
-        static let AUDIENCE_IDS         = "audience.ids"
-        static let OPTED_OUT_HIT_SENT   = "optedout.hit.sent"
+        static let AUDIENCE_IDS         = "audienceids"
+        static let OPTED_OUT_HIT_SENT   = "optedouthitsent"
     }
 
     enum DataStoreKeys {
@@ -155,15 +155,15 @@ enum AudienceConstants {
         static let SESSION_START_TIMESTAMP = "starttimestampseconds"
         static let UPGRADE_EVENT           = "upgradeevent"
     }
-    
+
     enum V4Migration {
-        static let USER_ID  = "AAMUserId";
-        static let PROFILE = "AAMUserProfile";
+        static let USER_ID  = "AAMUserId"
+        static let PROFILE = "AAMUserProfile"
     }
-    
-    enum V5Migration {        
-        static let USER_ID  = "Adobe.AAMDataStore.AAMUserId";
-        static let PROFILE = "Adobe.AAMDataStore.AAMUserProfile";
+
+    enum V5Migration {
+        static let USER_ID  = "Adobe.AAMDataStore.AAMUserId"
+        static let PROFILE = "Adobe.AAMDataStore.AAMUserProfile"
     }
 
     static let MapToContextDataKeys = [

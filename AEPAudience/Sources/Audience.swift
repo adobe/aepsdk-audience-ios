@@ -23,7 +23,7 @@ public class Audience: NSObject, Extension {
     public let friendlyName = AudienceConstants.FRIENDLY_NAME
     public static let extensionVersion = AudienceConstants.EXTENSION_VERSION
     public let metadata: [String: String]? = nil
-    
+
     private(set) var state: AudienceState?
     private let dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
 
@@ -37,7 +37,7 @@ public class Audience: NSObject, Extension {
         super.init()
 
         AudienceMigrator.migrateLocalStorage(dataStore: dataStore)
-        
+
         guard let dataQueue = ServiceProvider.shared.dataQueueService.getDataQueue(label: name) else {
             Log.error(label: getLogTagWith(functionName: #function), "Failed to create Data Queue, Audience could not be initialized")
             return
@@ -91,7 +91,7 @@ public class Audience: NSObject, Extension {
         // bail if the config data is not valid
         guard let configSharedState = getSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event)?.value else { return }
         Log.debug(label: getLogTagWith(functionName: #function), "Received Configuration Response event, attempting to retrieve configuration settings.")
-        state?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: createSharedState(data:event:))
+        state?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: createSharedState(data:event:), dispatchOptOutResult: dispatchOptOutResult(optedOut:event:))
         // create audience shared state on boot / valid audience configuration
         if !sdkBootUpCompleted {
             if let status = state?.isAudienceConfigured(), status == true {
@@ -120,7 +120,7 @@ public class Audience: NSObject, Extension {
         Log.debug(label: getLogTagWith(functionName: #function), "Received an Audience Manager getVisitorProfile event, retrieving the stored visitor profile.")
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_PROFILE] = state?.getVisitorProfile()
-        let responseEvent = event.createResponseEvent(name: "Audience Response Identity", type: EventType.audienceManager, source: EventSource.responseIdentity, data: eventData)
+        let responseEvent = event.createResponseEvent(name: "Audience Manager Identities", type: EventType.audienceManager, source: EventSource.responseIdentity, data: eventData)
 
         // dispatch identity response event with shared state data
         dispatch(event: responseEvent)
@@ -159,7 +159,7 @@ public class Audience: NSObject, Extension {
     private func handleAnalyticsResponse(event: Event) {
         // quick out if aam forwarding status is false
         if let aamForwardingStatus = state?.getAamForwardingStatus(), aamForwardingStatus == false {
-            Log.trace(label: getLogTagWith(functionName: #function), "Not Processing Analytics Response event as AAMForwarding is disabled.");
+            Log.trace(label: getLogTagWith(functionName: #function), "Not Processing Analytics Response event as AAMForwarding is disabled.")
             return
         }
         guard let response = event.data?[AudienceConstants.Analytics.SERVER_RESPONSE] as? String else { return }
@@ -201,6 +201,17 @@ public class Audience: NSObject, Extension {
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_PROFILE] = visitorProfile
         let responseEvent = event.createResponseEvent(name: "Audience Manager Profile", type: EventType.audienceManager, source: EventSource.responseContent, data: eventData)
+        dispatch(event: responseEvent)
+    }
+
+    /// Dispatches a boolean depending on if optOut Hit  was sent successfully
+    /// - Parameters:
+    ///   - optedOut: the flag which is set to true if optOut Hit  was sent successfully
+    ///   - event: the event which triggered the audience hit
+    private func dispatchOptOutResult(optedOut: Bool, event: Event) {
+        var eventData = [String: Any]()
+        eventData[AudienceConstants.EventDataKeys.OPTED_OUT_HIT_SENT] = optedOut
+        let responseEvent = event.createResponseEvent(name: "Audience Manager Opt Out Event", type: EventType.audienceManager, source: EventSource.responseContent, data: eventData)
         dispatch(event: responseEvent)
     }
 

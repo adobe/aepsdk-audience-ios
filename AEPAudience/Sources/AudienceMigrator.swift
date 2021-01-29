@@ -14,7 +14,7 @@ import AEPServices
 
 public class AudienceMigrator {
     private static let LOG_TAG = "AudienceMigrator"
-    
+
     private static var userDefaults: UserDefaults {
         if let appGroup = ServiceProvider.shared.namedKeyValueService.getAppGroup(), !appGroup.isEmpty {
             return UserDefaults(suiteName: appGroup) ?? UserDefaults.standard
@@ -22,33 +22,33 @@ public class AudienceMigrator {
 
         return UserDefaults.standard
     }
-        
+
     /// Migrate audience data from v4 local storage
     /// - Parameters:
     ///   - dataStore: DataStore to store persisted audience data
-    private static func migrateFromV4(dataStore: NamedCollectionDataStore){
+    private static func migrateFromV4(dataStore: NamedCollectionDataStore) {
         if let uuid = userDefaults.string(forKey: AudienceConstants.V4Migration.USER_ID) {
             Log.trace(label: AudienceMigrator.LOG_TAG, "Migration started for Audience Manager data from V4.")
             dataStore.set(key: AudienceConstants.DataStoreKeys.USER_ID, value: uuid)
-            
+
             userDefaults.removeObject(forKey: AudienceConstants.V4Migration.USER_ID)
             userDefaults.removeObject(forKey: AudienceConstants.V4Migration.PROFILE)
             Log.trace(label: AudienceMigrator.LOG_TAG, "Migration complete for Audience Manager data from V4.")
         }
     }
-    
+
     /// Migrate audience data from v5 local storage
     /// - Parameters:
     ///   - dataStore: DataStore to store persisted audience data
-    private static func migrateFromV5(dataStore: NamedCollectionDataStore){
+    private static func migrateFromV5(dataStore: NamedCollectionDataStore) {
         if let uuid = userDefaults.string(forKey: AudienceConstants.V5Migration.USER_ID) {
             Log.trace(label: AudienceMigrator.LOG_TAG, "Migration started for Audience Manager data from V5.")
-            
+
             dataStore.set(key: AudienceConstants.DataStoreKeys.USER_ID, value: uuid)
             if let profileData = userDefaults.dictionary(forKey: AudienceConstants.V5Migration.PROFILE) {
                 dataStore.set(key: AudienceConstants.DataStoreKeys.PROFILE, value: profileData)
             }
-            
+
             userDefaults.removeObject(forKey: AudienceConstants.V5Migration.USER_ID)
             userDefaults.removeObject(forKey: AudienceConstants.V5Migration.PROFILE)
             Log.trace(label: AudienceMigrator.LOG_TAG, "Migration complete for Audience Manager data from V5.")

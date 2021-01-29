@@ -86,7 +86,7 @@ extension URL {
         }
 
         // Attach uuid
-        if let uuid = state?.getUuid() as String?, !uuid.isEmpty  {
+        if let uuid = state?.getUuid() as String?, !uuid.isEmpty {
             queryItems += [URLQueryItem(name: AudienceConstants.DestinationKeys.USER_ID_KEY, value: uuid)]
         }
 
