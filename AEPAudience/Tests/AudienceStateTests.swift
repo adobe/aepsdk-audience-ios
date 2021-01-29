@@ -16,12 +16,6 @@ import XCTest
 @testable import AEPIdentity
 @testable import AEPServices
 
-extension Bool {
-    static func ^ (left: Bool, right: Bool) -> Bool {
-        return left != right
-    }
-}
-
 class AudienceStateTests: XCTestCase {
     var dataStore : NamedCollectionDataStore!
     var audienceState: AudienceState!
@@ -83,7 +77,7 @@ class AudienceStateTests: XCTestCase {
                 XCTFail("Shared state should not be updated")
             }
         }, dispatchOptOutResult: { (optedOut, event) in
-            if shouldSendOptOutHit ^ optedOut {
+            if shouldSendOptOutHit != optedOut {
                 XCTFail("Error sent optOutHit expected:\(shouldSendOptOutHit) actual:\(optedOut)")
             }
         })
