@@ -742,7 +742,7 @@ class AudienceTests: XCTestCase {
         let configEvent = Event(name: "configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: configSharedState)
 
         audience?.state?.handleConfigurationSharedStateUpdate(event: configEvent, configSharedState: configSharedState, createSharedState: { data, event in
-        })
+        }, dispatchOptOutResult: { (optedOut, event) in})
         audience?.state?.handleIdentitySharedStateUpdate(identitySharedState: identitySharedState)
 
         // verify data was set

@@ -16,12 +16,20 @@ import XCTest
 @testable import AEPIdentity
 @testable import AEPServices
 
+extension Bool {
+    static func ^ (left: Bool, right: Bool) -> Bool {
+        return left != right
+    }
+}
+
 class AudienceStateTests: XCTestCase {
     var dataStore : NamedCollectionDataStore!
     var audienceState: AudienceState!
     var mockHitQueue: MockHitQueue!
     var responseCallbackArgs = [(DataEntity, Data?)]()
     // test strings
+    static let aamServer = "test.com"
+    static let aamTimeout = TimeInterval(2)
     static let emptyString = ""
     static let emptyProfile = [String:String]()
     static let inMemoryDpid = "inMemoryDpid"
@@ -52,11 +60,11 @@ class AudienceStateTests: XCTestCase {
     
     override func tearDown() {
         // clear audience state by setting privacy to opt out
-        optOut()
+        audienceState.clearIdentifiers()
     }
     
-    func optOut() {
-        updatePrivacy(status: .optedOut, shouldUpdateSharedState: true)
+    func optOut(shouldSendOptOutHit: Bool = false) {
+        updatePrivacy(status: .optedOut, shouldUpdateSharedState: true, shouldSendOptOutHit: shouldSendOptOutHit)
     }
     
     func optIn() {
@@ -67,12 +75,16 @@ class AudienceStateTests: XCTestCase {
         updatePrivacy(status: .unknown)
     }
     
-    func updatePrivacy(status: PrivacyStatus, shouldUpdateSharedState: Bool = false) {
+    func updatePrivacy(status: PrivacyStatus, shouldUpdateSharedState: Bool = false, shouldSendOptOutHit: Bool = false) {
         let configData = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: status.rawValue]
         let configEvent = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: configData)
         audienceState.handlePrivacyStatusChange(event: configEvent, createSharedState: { (data, event) in
             if !shouldUpdateSharedState {
                 XCTFail("Shared state should not be updated")
+            }
+        }, dispatchOptOutResult: { (optedOut, event) in
+            if shouldSendOptOutHit ^ optedOut {
+                XCTFail("Error sent optOutHit expected:\(shouldSendOptOutHit) actual:\(optedOut)")
             }
         })
     }
@@ -424,24 +436,66 @@ class AudienceStateTests: XCTestCase {
         XCTAssertFalse(dataStore.contains(key: AudienceConstants.DataStoreKeys.PROFILE))
     }
     
-    func testClearIdentifiers_CalledOnOptOut() {
+    func testReset_And_ClearIdentifiers_CalledOnOptOut() {
         // setup
         optIn()
+        audienceState.setAamServer(server: AudienceStateTests.aamServer)
+        audienceState.setAamTimeout(timeout: AudienceStateTests.aamTimeout)
         audienceState.setDpid(dpid: AudienceStateTests.inMemoryDpid)
         audienceState.setDpuuid(dpuuid: AudienceStateTests.inMemoryDpuuid)
         audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)
         audienceState.setVisitorProfile(visitorProfile: AudienceStateTests.inMemoryVisitorProfile)
         
         // test
-        optOut()
+        optOut(shouldSendOptOutHit: true) // optout hit should be sent
         
         // verify
+        XCTAssertTrue(audienceState.getAamServer().isEmpty)
+        XCTAssertEqual(AudienceConstants.Default.TIMEOUT, audienceState.getAamTimeout())
         XCTAssertTrue(audienceState.getDpid().isEmpty)
         XCTAssertTrue(audienceState.getDpuuid().isEmpty)
         XCTAssertTrue(audienceState.getUuid().isEmpty)
         XCTAssertFalse(dataStore.contains(key: AudienceConstants.DataStoreKeys.USER_ID))
         XCTAssertTrue(audienceState.getVisitorProfile().isEmpty)
         XCTAssertFalse(dataStore.contains(key: AudienceConstants.DataStoreKeys.PROFILE))
+    }
+    
+    func testSendOptOutHit_NotCalledOnOptOut_MissingAAMServer() {
+        // setup
+        optIn()
+        audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)
+        
+        // test
+        optOut(shouldSendOptOutHit: false) // optout hit should be sent
+        
+        // verify
+        XCTAssertTrue(audienceState.getUuid().isEmpty)
+    }
+    
+    func testSendOptOutHit_NotCalledOnOptOut_MissingUUID() {
+        // setup
+        optIn()
+        audienceState.setAamServer(server: AudienceStateTests.aamServer)
+        
+        // test
+        optOut(shouldSendOptOutHit: false) // optout hit should be sent
+        
+        // verify
+        XCTAssertTrue(audienceState.getAamServer().isEmpty)
+    }
+    
+    func testSendOptOutHit_CalledOnOptOut() {
+        // setup
+        optIn()
+        audienceState.setAamServer(server: AudienceStateTests.aamServer)
+        audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)
+        
+        // test
+        optOut(shouldSendOptOutHit: true) // optout hit should be sent
+        
+        // verify
+        XCTAssertTrue(audienceState.getAamServer().isEmpty)
+        XCTAssertTrue(audienceState.getUuid().isEmpty)
     }
     
     func testGetStateData_Happy() {
@@ -495,7 +549,7 @@ class AudienceStateTests: XCTestCase {
         let hitResponse = AudienceHitResponse.fakeHitResponse()
         // setup configuration settings in audience state
         audienceState?.handleConfigurationSharedStateUpdate(event: AudienceStateTests.configEvent, configSharedState: AudienceStateTests.configSharedState, createSharedState: { data, event in
-        })
+        }, dispatchOptOutResult: { (optedOut, event) in})
         
         // test
         audienceState.handleHitResponse(hit: hit, responseData: try! JSONEncoder().encode(hitResponse), dispatchResponse: { visitorProfile, event in
@@ -534,7 +588,7 @@ class AudienceStateTests: XCTestCase {
         let hitResponse = AudienceHitResponse.fakeHitResponse()
         // setup empty configuration settings in audience state
         audienceState?.handleConfigurationSharedStateUpdate(event: AudienceStateTests.configEvent, configSharedState: [:], createSharedState: { data, event in
-        })
+        }, dispatchOptOutResult: { (optedOut, event) in})
         
         // test
         audienceState.handleHitResponse(hit: hit, responseData: try! JSONEncoder().encode(hitResponse), dispatchResponse: { visitorProfile, event in
