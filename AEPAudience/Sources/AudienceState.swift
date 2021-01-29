@@ -192,20 +192,8 @@ public class AudienceState {
     ///   - configSharedState: the configuration shared state data
     ///   - createSharedState: a function which when invoked creates a shared state for the Audience Manager extension
     func handleConfigurationSharedStateUpdate(event: Event, configSharedState: [String: Any], createSharedState: (([String: Any], Event) -> Void)) {
-        // get the privacy status
-        guard let privacyStatusStr = configSharedState[AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY] as? String else { return }
-        let privacyStatus = PrivacyStatus(rawValue: privacyStatusStr) ?? PrivacyStatus.unknown
-        // if privacy is opted out: send the opt out hit, clear the audience state, then create a new audience shared state
-        if privacyStatus == .optedOut {
-            Log.debug(label: getLogTagWith(functionName: #function), "Privacy status is opted-out. Queued Audience hits and stored Audience Identifiers will be cleared.")
-            sendOptOutHit()
-            setMobilePrivacy(status: privacyStatus)
-            createSharedState(getStateData(), event)
-            return
-        }
-
-        // if privacy status is opted out, audience manager data in the AudienceState will be cleared.
-        setMobilePrivacy(status: privacyStatus)
+        // handle privacy changes
+        handlePrivacyStatusChange(event: event, createSharedState: createSharedState)
 
         // store configuration settings that the audience manager extension needs
         if let aamServer = configSharedState[AudienceConstants.Configuration.AAM_SERVER] as? String, !aamServer.isEmpty {
@@ -241,6 +229,24 @@ public class AudienceState {
     }
 
     // MARK: setters
+    // Sets the `PrivacyStatus` in the AudienceState instance.
+    /// If the `PrivacyStatus` is `PrivacyStatus.optedOut`, optOut hit is sent and any stored identifiers are cleared.
+    /// - Parameter:
+    ///   - eveent: configurationEvent
+    func handlePrivacyStatusChange(event: Event, createSharedState: (([String: Any], Event) -> Void)) {
+        guard let privacyStatusStr = event.data?[AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY] as? String else { return }
+
+        self.privacyStatus = PrivacyStatus(rawValue: privacyStatusStr) ?? PrivacyStatus.unknown
+
+        if privacyStatus == .optedOut {
+            Log.debug(label: getLogTagWith(functionName: #function), "Privacy status is opted-out. Queued Audience hits and stored Audience Identifiers will be cleared.")
+            sendOptOutHit()
+            createSharedState(getStateData(), event)
+            reset()
+        }
+        // update hit queue with privacy status
+        hitQueue.handlePrivacyChange(status: privacyStatus)
+    }
 
     /// Sets the value of the dpid property in the AudienceState instance.
     /// Setting the identifier is ignored if the global privacy is set to `PrivacyStatus.optedOut`.
@@ -298,19 +304,6 @@ public class AudienceState {
         }
 
         self.visitorProfile = visitorProfile
-    }
-
-    /// Sets the `PrivacyStatus` in the AudienceState instance.
-    /// If the `PrivacyStatus` is `PrivacyStatus.optedOut`, any stored identifiers are cleared.
-    /// - Parameter:
-    ///   - status: The value for the new privacyStatus
-    func setMobilePrivacy(status: PrivacyStatus) {
-        self.privacyStatus = status
-        if privacyStatus == .optedOut {
-            reset()
-        }
-        // update hit queue with privacy status
-        hitQueue.handlePrivacyChange(status: privacyStatus)
     }
 
     /// Sets the audience manager analytics forwarding enabled status in the AudienceState instance.
