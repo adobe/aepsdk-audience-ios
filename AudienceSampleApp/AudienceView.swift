@@ -13,17 +13,19 @@
 import UIKit
 import SwiftUI
 import AEPAudience
+import AEPCore
 
 struct AudienceView: View {
+    let LOG_TAG = "AudienceTestApp::AudienceView"
     var body: some View {
         VStack(alignment: HorizontalAlignment.leading, spacing: 12) {
             VStack {
                 Text("Audience Manager API").bold()
                 Button(action: {
                     Audience.signalWithData(data: ["trait":"trait value"]) { (traits, error) in
-                        print("returned traits: \(String(describing: traits))")
+                        print("\(LOG_TAG)::#signalWithData - returned traits: \(String(describing: traits))")
                         if(error != nil) {
-                            print("audience signal with data error: \(error?.localizedDescription)")
+                            print("\(LOG_TAG)::#signalWithData - error: \(String(describing: error?.localizedDescription))")
                         }
                     }
                 }){
@@ -36,9 +38,9 @@ struct AudienceView: View {
                 }.cornerRadius(5)
                 Button(action: {
                     Audience.getVisitorProfile { (retrievedProfile, error) in
-                        print("retrieved profile: \(String(describing: retrievedProfile))")
+                        print("\(LOG_TAG)::#getVisitorProfile - retrieved profile: \(String(describing: retrievedProfile))")
                         if(error != nil) {
-                            print("audience get visitor profile error: \(error?.localizedDescription)")
+                            print("\(LOG_TAG)::#getVisitorProfile - Audience getVisitorProfile error: \(String(describing: error?.localizedDescription))")
                         }
                     }
                 }){
@@ -53,6 +55,32 @@ struct AudienceView: View {
                     Audience.reset()
                 }){
                     Text("Reset")
+                        .frame(minWidth: 0, maxWidth: .infinity)
+                        .padding()
+                        .background(Color.gray)
+                        .foregroundColor(.white)
+                        .font(.caption)
+                }.cornerRadius(5)
+                
+                Button(action: {
+                        var config: [String:Any] = [:]
+                        config["global.privacy"] = "optedout";
+                        MobileCore.updateConfigurationWith(configDict: config)
+                }){
+                    Text("OptOut")
+                        .frame(minWidth: 0, maxWidth: .infinity)
+                        .padding()
+                        .background(Color.gray)
+                        .foregroundColor(.white)
+                        .font(.caption)
+                }.cornerRadius(5)
+                
+                Button(action: {
+                        var config: [String:Any] = [:]
+                        config["global.privacy"] = "optedin";
+                        MobileCore.updateConfigurationWith(configDict: config)
+                }){
+                    Text("OptIn")
                         .frame(minWidth: 0, maxWidth: .infinity)
                         .padding()
                         .background(Color.gray)
