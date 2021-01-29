@@ -120,7 +120,7 @@ public class Audience: NSObject, Extension {
         Log.debug(label: getLogTagWith(functionName: #function), "Received an Audience Manager getVisitorProfile event, retrieving the stored visitor profile.")
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_PROFILE] = state?.getVisitorProfile()
-        let responseEvent = event.createResponseEvent(name: "Audience Response Identity", type: EventType.audienceManager, source: EventSource.responseIdentity, data: eventData)
+        let responseEvent = event.createResponseEvent(name: "Audience Manager Identities", type: EventType.audienceManager, source: EventSource.responseIdentity, data: eventData)
 
         // dispatch identity response event with shared state data
         dispatch(event: responseEvent)

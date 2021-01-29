@@ -25,8 +25,8 @@ enum AudienceConstants {
     }
 
     enum EventDataKeys {
-        static let VISITOR_TRAITS       = "aam.traits"
-        static let VISITOR_PROFILE      = "aam.profile"
+        static let VISITOR_TRAITS       = "aamtraits"
+        static let VISITOR_PROFILE      = "aamprofile"
         static let DPID                 = "dpid"
         static let DPUUID               = "dpuuid"
         static let UUID                 = "uuid"
