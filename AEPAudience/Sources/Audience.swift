@@ -91,7 +91,7 @@ public class Audience: NSObject, Extension {
         // bail if the config data is not valid
         guard let configSharedState = getSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event)?.value else { return }
         Log.debug(label: getLogTagWith(functionName: #function), "Received Configuration Response event, attempting to retrieve configuration settings.")
-        state?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: createSharedState(data:event:))
+        state?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: createSharedState(data:event:), dispatchOptOutResult: dispatchOptOutResult(optedOut:event:))
         // create audience shared state on boot / valid audience configuration
         if !sdkBootUpCompleted {
             if let status = state?.isAudienceConfigured(), status == true {
@@ -201,6 +201,17 @@ public class Audience: NSObject, Extension {
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_PROFILE] = visitorProfile
         let responseEvent = event.createResponseEvent(name: "Audience Manager Profile", type: EventType.audienceManager, source: EventSource.responseContent, data: eventData)
+        dispatch(event: responseEvent)
+    }
+
+    /// Dispatches a boolean depending on if optOut Hit  was sent successfully
+    /// - Parameters:
+    ///   - optedOut: the flag which is set to true if optOut Hit  was sent successfully
+    ///   - event: the event which triggered the audience hit
+    private func dispatchOptOutResult(optedOut: Bool, event: Event) {
+        var eventData = [String: Any]()
+        eventData[AudienceConstants.EventDataKeys.OPTED_OUT_HIT_SENT] = optedOut
+        let responseEvent = event.createResponseEvent(name: "Audience Manager Opt Out Event", type: EventType.audienceManager, source: EventSource.responseContent, data: eventData)
         dispatch(event: responseEvent)
     }
 

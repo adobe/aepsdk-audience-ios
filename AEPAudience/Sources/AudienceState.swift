@@ -108,13 +108,13 @@ public class AudienceState {
     }
 
     /// Sends an opt-out hit to the configured Audience Manager server
-    func sendOptOutHit() {
-        if aamServer.isEmpty { return }
-
-        // only send the opt-out hit if the uuid is not empty
-        if !getUuid().isEmpty {
-            ServiceProvider.shared.networkService.sendOptOutRequest(aamServer: aamServer, uuid: uuid)
+    func sendOptOutHit() -> Bool {
+        // only send the opt-out hit if the aamserver and uuid are not empty
+        if !aamServer.isEmpty && !getUuid().isEmpty {
+            return ServiceProvider.shared.networkService.sendOptOutRequest(aamServer: aamServer, uuid: uuid)
         }
+
+        return false
     }
 
     /// Invoked by the Audience Manager extension each time we receive a network response for a processed hit
@@ -191,9 +191,9 @@ public class AudienceState {
     ///   - event: The configuration response content event
     ///   - configSharedState: the configuration shared state data
     ///   - createSharedState: a function which when invoked creates a shared state for the Audience Manager extension
-    func handleConfigurationSharedStateUpdate(event: Event, configSharedState: [String: Any], createSharedState: (([String: Any], Event) -> Void)) {
+    func handleConfigurationSharedStateUpdate(event: Event, configSharedState: [String: Any], createSharedState: (([String: Any], Event) -> Void), dispatchOptOutResult: (Bool, Event) -> Void) {
         // handle privacy changes
-        handlePrivacyStatusChange(event: event, createSharedState: createSharedState)
+        handlePrivacyStatusChange(event: event, createSharedState: createSharedState, dispatchOptOutResult: dispatchOptOutResult)
 
         // store configuration settings that the audience manager extension needs
         if let aamServer = configSharedState[AudienceConstants.Configuration.AAM_SERVER] as? String, !aamServer.isEmpty {
@@ -233,14 +233,15 @@ public class AudienceState {
     /// If the `PrivacyStatus` is `PrivacyStatus.optedOut`, optOut hit is sent and any stored identifiers are cleared.
     /// - Parameter:
     ///   - eveent: configurationEvent
-    func handlePrivacyStatusChange(event: Event, createSharedState: (([String: Any], Event) -> Void)) {
+    func handlePrivacyStatusChange(event: Event, createSharedState: (([String: Any], Event) -> Void), dispatchOptOutResult: (Bool, Event) -> Void) {
         guard let privacyStatusStr = event.data?[AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY] as? String else { return }
 
         self.privacyStatus = PrivacyStatus(rawValue: privacyStatusStr) ?? PrivacyStatus.unknown
 
         if privacyStatus == .optedOut {
             Log.debug(label: getLogTagWith(functionName: #function), "Privacy status is opted-out. Queued Audience hits and stored Audience Identifiers will be cleared.")
-            sendOptOutHit()
+            let optedOut = sendOptOutHit()
+            dispatchOptOutResult(optedOut, event)
             createSharedState(getStateData(), event)
             reset()
         }
