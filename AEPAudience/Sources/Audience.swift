@@ -23,7 +23,9 @@ public class Audience: NSObject, Extension {
     public let friendlyName = AudienceConstants.FRIENDLY_NAME
     public static let extensionVersion = AudienceConstants.EXTENSION_VERSION
     public let metadata: [String: String]? = nil
+    
     private(set) var state: AudienceState?
+    private let dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
 
     // Maintains the boot up state of sdk.
     private var sdkBootUpCompleted = false
@@ -34,6 +36,8 @@ public class Audience: NSObject, Extension {
         self.runtime = runtime
         super.init()
 
+        AudienceMigrator.migrateLocalStorage(dataStore: dataStore)
+        
         guard let dataQueue = ServiceProvider.shared.dataQueueService.getDataQueue(label: name) else {
             Log.error(label: getLogTagWith(functionName: #function), "Failed to create Data Queue, Audience could not be initialized")
             return
@@ -41,7 +45,7 @@ public class Audience: NSObject, Extension {
 
         let hitQueue = PersistentHitQueue(dataQueue: dataQueue, processor: AudienceHitProcessor(responseHandler: handleNetworkResponse(entity:responseData:)))
 
-        state = AudienceState(hitQueue: hitQueue)
+        state = AudienceState(hitQueue: hitQueue, dataStore: dataStore)
     }
 
     // internal init added for tests

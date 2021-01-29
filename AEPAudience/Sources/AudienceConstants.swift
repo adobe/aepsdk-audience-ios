@@ -35,8 +35,8 @@ enum AudienceConstants {
     }
 
     enum DataStoreKeys {
-        static let PROFILE_KEY = "AAMUserProfile"
-        static let USER_ID_KEY = "AAMUserId"
+        static let PROFILE = "AAMUserProfile"
+        static let USER_ID = "AAMUserId"
 
     }
 
@@ -155,9 +155,15 @@ enum AudienceConstants {
         static let SESSION_START_TIMESTAMP = "starttimestampseconds"
         static let UPGRADE_EVENT           = "upgradeevent"
     }
-
-    enum RulesEnging {
-        static let RULES_REQUEST_CONTENT_AUDIENCE_MANAGER_DATA = "audiencemanagerdata"
+    
+    enum V4Migration {
+        static let USER_ID  = "AAMUserId";
+        static let PROFILE = "AAMUserProfile";
+    }
+    
+    enum V5Migration {        
+        static let USER_ID  = "Adobe.AAMDataStore.AAMUserId";
+        static let PROFILE = "Adobe.AAMDataStore.AAMUserProfile";
     }
 
     static let MapToContextDataKeys = [

@@ -21,18 +21,22 @@ class AudienceTests: XCTestCase {
     var mockRuntime: TestableExtensionRuntime!
     var mockHitQueue: MockHitQueue!
     var responseCallbackArgs = [(DataEntity, Data?)]()
-    let dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
+    var dataStore : NamedCollectionDataStore!
     var audienceState: AudienceState!
     static let configEvent = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: nil)
 
     override func setUp() {
         ServiceProvider.shared.networkService = MockNetworking()
+        ServiceProvider.shared.namedKeyValueService = MockDataStore()
+        
         MobileCore.setLogLevel(.error) // reset log level to error before each test
         mockRuntime = TestableExtensionRuntime()
         mockHitQueue = MockHitQueue(processor: AudienceHitProcessor(responseHandler: { [weak self] entity, data in
             self?.responseCallbackArgs.append((entity, data))
         }))
-        audienceState = AudienceState(hitQueue: mockHitQueue)
+                
+        dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
+        audienceState = AudienceState(hitQueue: mockHitQueue, dataStore: dataStore)
         audience = Audience(runtime: mockRuntime, state: audienceState)
         audience.onRegistered()
     }
@@ -87,8 +91,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("testDpuuid", audience?.state?.getDpuuid())
         XCTAssertEqual(["profilekey": "profileValue"], audience?.state?.getVisitorProfile())
         // uuid and visitor profile should be persisted in the datastore
-        XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, fallback: ""))
-        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, fallback: [:]) as! [String : String])
+        XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID, fallback: ""))
+        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE, fallback: [:]) as! [String : String])
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedUnknown() {
@@ -115,8 +119,8 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("testDpuuid", audience?.state?.getDpuuid())
         XCTAssertEqual(["profilekey": "profileValue"], audience?.state?.getVisitorProfile())
         // uuid and visitor profile should be persisted in the datastore
-        XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, fallback: ""))
-        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, fallback: [:]) as! [String : String])
+        XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID, fallback: ""))
+        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE, fallback: [:]) as! [String : String])
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedOut_When_AamServerAndUuidPresent() {

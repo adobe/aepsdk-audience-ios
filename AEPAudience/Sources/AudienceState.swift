@@ -32,7 +32,7 @@ public class AudienceState {
     /// The Audience Manager Visitor Profile
     private var visitorProfile = [String: String]()
     /// The current privacy status provided by the Configuration extension, defaults to `unknown`
-    private var privacyStatus: PrivacyStatus
+    private var privacyStatus: PrivacyStatus = .unknown
     /// The Audience Manager Analytics forwarding enabled status provided by the Configuration extension
     private var aamForwardingStatus = false
     /// The Audience Manager server provided by the Configuration extension
@@ -55,10 +55,9 @@ public class AudienceState {
     private(set) var hitQueue: HitQueuing
 
     /// Creates a new `AudienceState`
-    init(hitQueue: HitQueuing) {
-        dataStore = NamedCollectionDataStore(name: AudienceConstants.DATASTORE_NAME)
-        privacyStatus = .unknown
+    init(hitQueue: HitQueuing, dataStore: NamedCollectionDataStore) {
         self.hitQueue = hitQueue
+        self.dataStore = dataStore
     }
 
     // MARK: Public methods
@@ -275,9 +274,9 @@ public class AudienceState {
         if privacyStatus == .optedOut {
             return
         } else if uuid.isEmpty {
-            dataStore.remove(key: AudienceConstants.DataStoreKeys.USER_ID_KEY)
+            dataStore.remove(key: AudienceConstants.DataStoreKeys.USER_ID)
         } else {
-            dataStore.set(key: AudienceConstants.DataStoreKeys.USER_ID_KEY, value: uuid)
+            dataStore.set(key: AudienceConstants.DataStoreKeys.USER_ID, value: uuid)
         }
 
         self.uuid = uuid
@@ -292,9 +291,9 @@ public class AudienceState {
         if privacyStatus == .optedOut {
             return
         } else if visitorProfile.isEmpty {
-            dataStore.remove(key: AudienceConstants.DataStoreKeys.PROFILE_KEY)
+            dataStore.remove(key: AudienceConstants.DataStoreKeys.PROFILE)
         } else {
-            dataStore.set(key: AudienceConstants.DataStoreKeys.PROFILE_KEY, value: visitorProfile)
+            dataStore.set(key: AudienceConstants.DataStoreKeys.PROFILE, value: visitorProfile)
         }
 
         self.visitorProfile = visitorProfile
@@ -429,7 +428,7 @@ public class AudienceState {
     func getUuid() -> String {
         if self.uuid.isEmpty {
             // check data store to see if we can return a uuid from persistence
-            self.uuid = dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID_KEY) ?? ""
+            self.uuid = dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID) ?? ""
         }
         return self.uuid
     }
@@ -440,7 +439,7 @@ public class AudienceState {
     func getVisitorProfile() -> [String: String] {
         if self.visitorProfile.isEmpty {
             // check data store to see if we can return a visitor profile from persistence
-            self.visitorProfile = (dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE_KEY)) as? [String: String] ?? [String: String]()
+            self.visitorProfile = (dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE)) as? [String: String] ?? [String: String]()
         }
         return self.visitorProfile
     }
@@ -549,8 +548,8 @@ public class AudienceState {
     /// The cleared Audience Manager identifiers are: `uuid`, `dpid`, `dpuuid`, and `visitorProfile`
     func clearIdentifiers() {
         // clear the persisted data
-        dataStore.remove(key: AudienceConstants.DataStoreKeys.USER_ID_KEY)
-        dataStore.remove(key: AudienceConstants.DataStoreKeys.PROFILE_KEY)
+        dataStore.remove(key: AudienceConstants.DataStoreKeys.USER_ID)
+        dataStore.remove(key: AudienceConstants.DataStoreKeys.PROFILE)
         // reset the in-memory audience manager variables
         self.uuid = ""
         self.dpuuid = ""
