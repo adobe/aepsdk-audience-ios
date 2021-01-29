@@ -192,19 +192,6 @@ public class AudienceState {
     ///   - configSharedState: the configuration shared state data
     ///   - createSharedState: a function which when invoked creates a shared state for the Audience Manager extension
     func handleConfigurationSharedStateUpdate(event: Event, configSharedState: [String: Any], createSharedState: (([String: Any], Event) -> Void)) {
-        // store configuration settings that the audience manager extension needs
-        if let aamServer = configSharedState[AudienceConstants.Configuration.AAM_SERVER] as? String, !aamServer.isEmpty {
-            setAamServer(server: aamServer)
-        }
-        if let aamTimeout = configSharedState[AudienceConstants.Configuration.AAM_TIMEOUT] as? TimeInterval {
-            setAamTimeout(timeout: aamTimeout)
-        }
-        if let aamForwardingStatus = configSharedState[AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING] as? Bool {
-            setAamForwardingStatus(status: aamForwardingStatus)
-        }
-        if let orgId = configSharedState[AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID] as? String {
-            setOrgId(orgId: orgId)
-        }
         // get the privacy status
         guard let privacyStatusStr = configSharedState[AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY] as? String else { return }
         let privacyStatus = PrivacyStatus(rawValue: privacyStatusStr) ?? PrivacyStatus.unknown
@@ -219,6 +206,20 @@ public class AudienceState {
 
         // if privacy status is opted out, audience manager data in the AudienceState will be cleared.
         setMobilePrivacy(status: privacyStatus)
+        
+        // store configuration settings that the audience manager extension needs
+        if let aamServer = configSharedState[AudienceConstants.Configuration.AAM_SERVER] as? String, !aamServer.isEmpty {
+            setAamServer(server: aamServer)
+        }
+        if let aamTimeout = configSharedState[AudienceConstants.Configuration.AAM_TIMEOUT] as? TimeInterval {
+            setAamTimeout(timeout: aamTimeout)
+        }
+        if let aamForwardingStatus = configSharedState[AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING] as? Bool {
+            setAamForwardingStatus(status: aamForwardingStatus)
+        }
+        if let orgId = configSharedState[AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID] as? String {
+            setOrgId(orgId: orgId)
+        }
     }
 
     /// Extracts the identity variavles from the passed in identity shared state and caches them in the AudienceState instance.
