@@ -17,8 +17,8 @@ public class AudienceMigrator {
     private static let LOG_TAG = "AudienceMigrator"
     
     private static var userDefaults: UserDefaults {
-        if let v5AppGroup = ServiceProvider.shared.namedKeyValueService.getAppGroup(), !v5AppGroup.isEmpty {
-            return UserDefaults(suiteName: v5AppGroup) ?? UserDefaults.standard
+        if let appGroup = ServiceProvider.shared.namedKeyValueService.getAppGroup(), !appGroup.isEmpty {
+            return UserDefaults(suiteName: appGroup) ?? UserDefaults.standard
         }
 
         return UserDefaults.standard

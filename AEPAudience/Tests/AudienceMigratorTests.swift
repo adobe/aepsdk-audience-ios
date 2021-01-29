@@ -15,7 +15,7 @@
 @testable import AEPIdentity
 import XCTest
 
-class Audience_MigrationTests: XCTestCase {
+class AudienceMigratorTests: XCTestCase {
     
     var audience:Audience!
     var dataStore:NamedCollectionDataStore!
@@ -63,6 +63,23 @@ class Audience_MigrationTests: XCTestCase {
     }
     
     func testAAMMigrationFromV5() {
+        userDefaults.set("uuid", forKey: AudienceConstants.V5Migration.USER_ID)
+        userDefaults.set(["k1": "v1", "k2": "v2"], forKey: AudienceConstants.V5Migration.PROFILE)
+        
+        AudienceMigrator.migrateLocalStorage(dataStore: dataStore)
+        
+        XCTAssertNil(userDefaults.object(forKey: AudienceConstants.V5Migration.USER_ID))
+        XCTAssertNil(userDefaults.object(forKey: AudienceConstants.V5Migration.PROFILE))
+
+        // Migrate both uuid and profile from v5
+        XCTAssertEqual("uuid",dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID))
+        XCTAssertEqual(["k1": "v1", "k2": "v2"],dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE) as? [String:String])
+    }
+    
+    func testAAMMigrationFromV5InAppGroup() {
+        
+        mockDataStore.setAppGroup("test-app-group")
+
         userDefaults.set("uuid", forKey: AudienceConstants.V5Migration.USER_ID)
         userDefaults.set(["k1": "v1", "k2": "v2"], forKey: AudienceConstants.V5Migration.PROFILE)
         
