@@ -20,7 +20,7 @@ on:
         default: 'yes'
 
 jobs:
-  release_rules_engine:
+  release_audience:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
