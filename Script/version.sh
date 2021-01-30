@@ -22,12 +22,12 @@ BLUE='\033[0;34m'
 # fi
 echo "Target version - ${BLUE}$1${NC}"
 echo "------------------AEPAudiece-------------------"
-PODSPEC_VERSION_IN_APECore=$(pod ipc spec AEPAudience.podspec | jq '.version' | tr -d '"')
+PODSPEC_VERSION_IN_AEPAudience=$(pod ipc spec AEPAudience.podspec | jq '.version' | tr -d '"')
 echo "Local podspec version - ${BLUE}${PODSPEC_VERSION_IN_APECore}${NC}"
-SOUCE_CODE_VERSION_IN_APECore=$(cat ./AEPAudience/Sources/AudienceConstants.swift | egrep '\s*EXTENSION_VERSION\s*=\s*\"(.*)\"' | ruby -e "puts gets.scan(/\"(.*)\"/)[0] " | tr -d '"')
+SOUCE_CODE_VERSION_IN_AEPAudience=$(cat ./AEPAudience/Sources/AudienceConstants.swift | egrep '\s*EXTENSION_VERSION\s*=\s*\"(.*)\"' | ruby -e "puts gets.scan(/\"(.*)\"/)[0] " | tr -d '"')
 echo "Souce code version - ${BLUE}${SOUCE_CODE_VERSION_IN_APECore}${NC}"
 
-if [[ "$1" == "$PODSPEC_VERSION_IN_APEAudience" ]] && [[ "$1" == "$SOUCE_CODE_VERSION_IN_APEAudience" ]]; then
+if [[ "$1" == "$PODSPEC_VERSION_IN_AEPAudience" ]] && [[ "$1" == "$SOUCE_CODE_VERSION_IN_AEPAudience" ]]; then
     echo "${GREEN}Pass!${NC}"
 else
     echo "${RED}[Error]${NC} Version do not match!"
