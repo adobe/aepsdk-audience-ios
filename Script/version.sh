@@ -25,7 +25,7 @@ echo "------------------AEPAudiece-------------------"
 PODSPEC_VERSION_IN_AEPAudience=$(pod ipc spec ./AEPAudience.podspec | jq '.version' | tr -d '"')
 echo "Local podspec version - ${BLUE}${PODSPEC_VERSION_IN_AEPAudience}${NC}"
 SOURCE_CODE_VERSION_IN_AEPAudience=$(cat ./AEPAudience/Sources/AudienceConstants.swift | egrep '\s*EXTENSION_VERSION\s*=\s*\"(.*)\"' | ruby -e "puts gets.scan(/\"(.*)\"/)[0] " | tr -d '"')
-echo "Souce code version - ${BLUE}${SOURCE_CODE_VERSION_IN_AEPAudience}${NC}"
+echo "Source code version - ${BLUE}${SOURCE_CODE_VERSION_IN_AEPAudience}${NC}"
 
 if [[ "$1" == "$PODSPEC_VERSION_IN_AEPAudience" ]] && [[ "$1" == "$SOURCE_CODE_VERSION_IN_AEPAudience" ]]; then
     echo "${GREEN}Pass!${NC}"
