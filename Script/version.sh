@@ -14,7 +14,7 @@ GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 
 #  ---- enable the following code after the new pod has been released. ----
-# LATEST_PUBLIC_VERSION=$(pod spec cat AEPRulesEngine | jq '.version' | tr -d '"')
+# LATEST_PUBLIC_VERSION=$(pod spec cat AEPAudience | jq '.version' | tr -d '"')
 # echo "Latest public version is: ${BLUE}$LATEST_PUBLIC_VERSION${NC}"
 # if [[ "$1" == "$LATEST_PUBLIC_VERSION" ]]; then
 #     echo "${RED}[Error]${NC} $LATEST_PUBLIC_VERSION has been released!"
