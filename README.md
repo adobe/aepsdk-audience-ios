@@ -1,11 +1,10 @@
-[![codecov](https://codecov.io/gh/adobe/aepsdk-audience-ios/branch/main/graph/badge.svg?token=X6F5FIJR2T)](https://codecov.io/gh/adobe/aepsdk-audience-ios)
+# Adobe Experience Platform Audience SDK
 
-# AEPAudience
-## BETA ACKNOWLEDGEMENT
+[![Cocoapods](https://img.shields.io/cocoapods/v/AEPAudience.svg?color=orange&label=AEPAudience&logo=apple&logoColor=white)](https://cocoapods.org/pods/AEPAudience)
 
-AEPAudience is currently in Beta. Use of this code is by invitation only and not otherwise supported by Adobe. Please contact your Adobe Customer Success Manager to learn more.
-
-By using the Beta, you hereby acknowledge that the Beta is provided "as is" without warranty of any kind. Adobe shall have no obligation to maintain, correct, update, change, modify or otherwise support the Beta. You are advised to use caution and not to rely in any way on the correct functioning or performance of such Beta and/or accompanying materials.
+[![SPM](https://img.shields.io/badge/SPM-Supported-orange.svg?logo=apple&logoColor=white)](https://swift.org/package-manager/)
+[![CircleCI](https://img.shields.io/circleci/project/github/adobe/aepsdk-audience-ios/master.svg?logo=circleci)](https://circleci.com/gh/adobe/workflows/aepsdk-audience-ios)
+[![Code Coverage](https://img.shields.io/codecov/c/github/adobe/aepsdk-audience-ios/main.svg?logo=codecov)](https://codecov.io/gh/adobe/aepsdk-audience-ios/branch/main)
 
 ## About this project
 
@@ -23,19 +22,19 @@ These are currently the supported installation options:
 # Podfile
 use_frameworks!
 
-# for app development, include all the following pods
+# For app development, include all the following pods
 target 'YOUR_TARGET_NAME' do
-    pod 'AEPAudience', :git => 'https://github.com/adobe/aepsdk-audience-ios.git', :branch => 'main'
-    pod 'AEPCore', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
-    pod 'AEPIdentity', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
+    pod 'AEPAudience'
+    pod 'AEPCore'
+    pod 'AEPIdentity'
 end
 
-# for extension development, include AEPAudience and its dependencies
+# For extension development, include AEPAudience and its dependencies
 target 'YOUR_TARGET_NAME' do
-pod 'AEPAudience', :git => 'https://github.com/adobe/aepsdk-audience-ios.git', :branch => 'main'
-    pod 'AEPCore', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
-    pod 'AEPServices', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
-    pod 'AEPIdentity', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'main'
+    pod 'AEPAudience'
+    pod 'AEPCore'
+    pod 'AEPServices'
+    pod 'AEPIdentity'
 end
 ```
 
