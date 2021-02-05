@@ -19,7 +19,7 @@ import Foundation
 /// 1. Responsible for keeping the current state of all Audience-related variables.
 /// 2. Persists variables via the NamedCollectionDataStore.
 /// 3. Provides public getters and setters for all maintained variables.
-public class AudienceState {
+class AudienceState {
     private static let LOG_TAG = "AudienceState"
     /// The Audience Manager extension datastore.
     private var dataStore: NamedCollectionDataStore

@@ -12,7 +12,7 @@
 import Foundation
 import AEPServices
 
-public class AudienceMigrator {
+class AudienceMigrator {
     private static let LOG_TAG = "AudienceMigrator"
 
     private static var userDefaults: UserDefaults {
