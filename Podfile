@@ -6,21 +6,21 @@ workspace 'AEPAudience'
 project 'AEPAudience.xcodeproj'
 
 target 'AEPAudience' do
-  pod 'AEPCore'
-  pod 'AEPServices'
-  pod 'AEPIdentity'
+  pod 'ACPCore'
+  pod 'AEPServices', :git => 'git@github.com:adobe/aepsdk-core-ios.git', :branch => 'staging'
+  pod 'AEPIdentity', :git => 'git@github.com:adobe/aepsdk-core-ios.git', :branch => 'staging'
   pod 'AEPRulesEngine'
 end
 
 target 'AEPAudienceTests' do
-  pod 'AEPCore'
-  pod 'AEPServices'
+  pod 'AEPCore', :git => 'git@github.com:adobe/aepsdk-core-ios.git', :branch => 'staging'
+  pod 'AEPServices', :git => 'git@github.com:adobe/aepsdk-core-ios.git', :branch => 'staging'
   pod 'AEPRulesEngine'
 end
-  
+
 target 'AudienceSampleApp' do
-  pod 'AEPCore'
-  pod 'AEPIdentity'
-  pod 'AEPLifecycle'
-  pod 'AEPServices'
+  pod 'ACPCore'
+  pod 'AEPIdentity', :git => 'git@github.com:adobe/aepsdk-core-ios.git', :branch => 'staging'
+  pod 'AEPLifecycle', :git => 'git@github.com:adobe/aepsdk-core-ios.git', :branch => 'staging'
+  pod 'AEPServices', :git => 'git@github.com:adobe/aepsdk-core-ios.git', :branch => 'staging'
 end

@@ -118,6 +118,10 @@ enum AudienceConstants {
         static let VISITOR_ID_BLOB = "blob"
         static let VISITOR_ID_LOCATION_HINT = "locationhint"
         static let VISITOR_IDS_LIST = "visitoridslist"
+        static let VISITOR_ID_TYPE = "id_type"
+        static let VISITOR_ID_ORIGIN = "id_origin"
+        static let VISITOR_ID = "id"
+        static let VISITOR_ID_AUTHENTICATION_STATE = "authentication_state"
     }
 
     enum Lifecycle {

@@ -59,11 +59,11 @@ extension URL {
         }
 
         // Attach custom visitorId list synced on Identity extension
-        if let customerVisitorIdList = state?.getVisitorIds() as [CustomIdentity]?, !customerVisitorIdList.isEmpty {
+        if let customerVisitorIdList = state?.getVisitorIds() as [[String: Any]]?, !customerVisitorIdList.isEmpty {
             for id in customerVisitorIdList {
-                let idType = id.type!
-                let idValue = id.identifier ?? ""
-                let idAuthState = id.authenticationState.rawValue
+                let idType: String = id[AudienceConstants.Identity.VISITOR_ID_TYPE] as! String
+                let idValue: String = id[AudienceConstants.Identity.VISITOR_ID] as! String
+                let idAuthState: Int = id[AudienceConstants.Identity.VISITOR_ID_AUTHENTICATION_STATE] as! Int
 
                 var visitorIdString = ""
                 visitorIdString.append(idType)

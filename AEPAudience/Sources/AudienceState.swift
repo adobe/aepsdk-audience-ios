@@ -48,7 +48,7 @@ class AudienceState {
     /// The Experience Cloud ID service location hint provided by the Identity extension
     private var locationHint = String()
     ///  The synced visitor ID's provided by the Identity extension
-    private var syncedVisitorIds = [CustomIdentity]()
+    private var syncedVisitorIds = [[String: Any]]()
     /// The customer event data present in an event triggering a signalWithData hit
     private var customerEventData = [String: String]()
 
@@ -223,7 +223,7 @@ class AudienceState {
         if let locationHint = identitySharedState[AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT] as? String {
             setLocationHint(locationHint: locationHint)
         }
-        if let syncedVisitorIds = identitySharedState[AudienceConstants.Identity.VISITOR_IDS_LIST] as? [CustomIdentity] {
+        if let syncedVisitorIds = identitySharedState[AudienceConstants.Identity.VISITOR_IDS_LIST] as? [[String: Any]] {
             setVisitorIds(visitorIds: syncedVisitorIds)
         }
     }
@@ -395,7 +395,7 @@ class AudienceState {
     /// Setting the visitor id list is ignored if the global privacy is set to `PrivacyStatus.optedOut`.
     /// - Parameter:
     ///   - visitorIds: The value for the new synced visitor ids
-    func setVisitorIds(visitorIds: [CustomIdentity]) {
+    func setVisitorIds(visitorIds: [[String: Any]]) {
         // allow setting if not opt-out
         if privacyStatus == .optedOut {
             return
@@ -492,7 +492,7 @@ class AudienceState {
 
     /// Returns the experience cloud visitor id list from the AudienceState instance.
     /// - Returns: An array containing the synced visitor ids
-    func getVisitorIds() -> [CustomIdentity] {
+    func getVisitorIds() -> [[String: Any]] {
         return self.syncedVisitorIds
     }
 

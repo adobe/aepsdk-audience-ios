@@ -59,7 +59,8 @@ class URL_AudienceTests: XCTestCase {
         let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer.com", AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrg@AdobeOrg", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue]
         let event = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: nil)
         // create a fake synced id for use in the created identity shared state
-        let customIds = [CustomIdentity(origin: "d_cid_ic", type: "DSID_20915", identifier: "test_ad_id", authenticationState: .authenticated)]
+        var customIds = [[String:Any]]()
+        customIds.append(["id_origin": "d_cid_ic", "id_type": "DSID_20915", "id": "test_ad_id", "authentication_state": 1])
         // create identity shared state
         let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "12345567", AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT: "9", AudienceConstants.Identity.VISITOR_ID_BLOB: "blobValue", AudienceConstants.Identity.VISITOR_IDS_LIST: customIds] as [String : Any]
         // process the created shared states in the audience state
