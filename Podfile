@@ -6,7 +6,7 @@ workspace 'AEPAudience'
 project 'AEPAudience.xcodeproj'
 
 target 'AEPAudience' do
-  pod 'AEPCore'
+  pod 'ACPCore'
   pod 'AEPServices'
   pod 'AEPIdentity'
   pod 'AEPRulesEngine'
@@ -17,9 +17,9 @@ target 'AEPAudienceTests' do
   pod 'AEPServices'
   pod 'AEPRulesEngine'
 end
-  
+
 target 'AudienceSampleApp' do
-  pod 'AEPCore'
+  pod 'ACPCore'
   pod 'AEPIdentity'
   pod 'AEPLifecycle'
   pod 'AEPServices'

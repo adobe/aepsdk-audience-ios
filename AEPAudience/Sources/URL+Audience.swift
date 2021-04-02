@@ -59,25 +59,20 @@ extension URL {
         }
 
         // Attach custom visitorId list synced on Identity extension
-        if let customerVisitorIdList = state?.getVisitorIds() as [CustomIdentity]?, !customerVisitorIdList.isEmpty {
+        if let customerVisitorIdList = state?.getVisitorIds(), !customerVisitorIdList.isEmpty {
             for id in customerVisitorIdList {
-                let idType = id.type!
-                let idValue = id.identifier ?? ""
-                let idAuthState = id.authenticationState.rawValue
-
-                var visitorIdString = ""
-                visitorIdString.append(idType)
-                visitorIdString.append(AudienceConstants.DestinationKeys.VISITOR_ID_CID_DELIMITER)
-                if !idValue.isEmpty {
-                    visitorIdString.append(idValue)
+                if let idType = id[AudienceConstants.Identity.VISITOR_ID_TYPE] as? String, !idType.isEmpty {
+                    var visitorIdString = idType
+                    if let idValue = id[AudienceConstants.Identity.VISITOR_ID] as? String, !idValue.isEmpty {
+                        visitorIdString.append(AudienceConstants.DestinationKeys.VISITOR_ID_CID_DELIMITER)
+                        visitorIdString.append(idValue)
+                    }
+                    let idAuthState = id[AudienceConstants.Identity.VISITOR_ID_AUTHENTICATION_STATE] as? Int ?? AudienceConstants.Identity.VISITOR_ID_AUTHENTICATION_STATE_UNAUTHENTICATED
+                    visitorIdString.append(AudienceConstants.DestinationKeys.VISITOR_ID_CID_DELIMITER)
+                    visitorIdString.append(String(idAuthState))
+                    queryItems += [URLQueryItem(name: AudienceConstants.DestinationKeys.VISITOR_ID_PARAMETER_KEY_CUSTOMER, value: visitorIdString)]
                 }
-
-                visitorIdString.append(AudienceConstants.DestinationKeys.VISITOR_ID_CID_DELIMITER)
-                visitorIdString.append(String(idAuthState))
-
-                queryItems += [URLQueryItem(name: AudienceConstants.DestinationKeys.VISITOR_ID_PARAMETER_KEY_CUSTOMER, value: visitorIdString)]
             }
-
         }
 
         // Attach experience cloud org id from configruration shared state

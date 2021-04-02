@@ -85,7 +85,7 @@ class TestableExtensionRuntime: ExtensionRuntime {
         }
     }
 
-    public func getXDMSharedState(extensionName: String, event: Event?) -> SharedStateResult? {
+    public func getXDMSharedState(extensionName: String, event: Event?, barrier: Bool) -> SharedStateResult? {
         // no-op
         return nil
     }

@@ -52,14 +52,119 @@ class URL_AudienceTests: XCTestCase {
         XCTAssertEqual(expectedUrl, url?.absoluteString)
     }
 
-    func testAudienceHitWithWithNoCustomerEventDataAndIdentityDataInSharedState() {
+    func testAudienceHitWithCustomerEventDataAndIdentityDataInSharedState() {
         // setup
         let expectedUrl = "https://testServer.com/event?d_mid=12345567&d_blob=blobValue&dcs_region=9&d_cid_ic=DSID_20915%01test_ad_id%011&d_orgid=testOrg@AdobeOrg&d_uuid=testUuid&d_ptfm=ios&d_dst=1&d_rtbd=json"
         // create configuration shared state and configuration response content event
         let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer.com", AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrg@AdobeOrg", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue]
         let event = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: nil)
         // create a fake synced id for use in the created identity shared state
-        let customIds = [CustomIdentity(origin: "d_cid_ic", type: "DSID_20915", identifier: "test_ad_id", authenticationState: .authenticated)]
+        var customIds = [[String:Any]]()
+        customIds.append(["id_origin": "d_cid_ic", "id_type": "DSID_20915", "id": "test_ad_id", "authentication_state": 1])
+        // create identity shared state
+        let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "12345567", AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT: "9", AudienceConstants.Identity.VISITOR_ID_BLOB: "blobValue", AudienceConstants.Identity.VISITOR_IDS_LIST: customIds] as [String : Any]
+        // process the created shared states in the audience state
+        audienceState?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: { data, event in
+        }, dispatchOptOutResult: { (optedOut, event) in})
+        audienceState?.handleIdentitySharedStateUpdate(identitySharedState: identitySharedState)
+        // set a uuid for testing
+        audienceState?.setUuid(uuid: "testUuid")
+
+        // test
+        let url = URL.buildAudienceHitURL(state: audienceState)
+
+        // verify
+        XCTAssertEqual(expectedUrl, url?.absoluteString)
+    }
+
+    //Test Missing Identity visitor ID, no identity data should be built to the url
+    func testAudienceHitWithIdentityMissingIdTypeDataInSharedState() {
+        // setup
+        let expectedUrl = "https://testServer.com/event?d_mid=12345567&d_blob=blobValue&dcs_region=9&d_cid_ic=DSID_20915%011&d_orgid=testOrg@AdobeOrg&d_uuid=testUuid&d_ptfm=ios&d_dst=1&d_rtbd=json"
+        // create configuration shared state and configuration response content event
+        let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer.com", AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrg@AdobeOrg", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue]
+        let event = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: nil)
+        // create a fake synced id for use in the created identity shared state
+        var customIds = [[String:Any]]()
+        customIds.append(["id_origin": "d_cid_ic", "id_type": "DSID_20915", "authentication_state": 1])
+        // create identity shared state
+        let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "12345567", AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT: "9", AudienceConstants.Identity.VISITOR_ID_BLOB: "blobValue", AudienceConstants.Identity.VISITOR_IDS_LIST: customIds] as [String : Any]
+        // process the created shared states in the audience state
+        audienceState?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: { data, event in
+        }, dispatchOptOutResult: { (optedOut, event) in})
+        audienceState?.handleIdentitySharedStateUpdate(identitySharedState: identitySharedState)
+        // set a uuid for testing
+        audienceState?.setUuid(uuid: "testUuid")
+
+        // test
+        let url = URL.buildAudienceHitURL(state: audienceState)
+
+        // verify
+        XCTAssertEqual(expectedUrl, url?.absoluteString)
+    }
+
+    //Test Missing Identity id type, no identity data should be built to the url
+    func testAudienceHitWithIdentityMissingVisitorIdDataInSharedState() {
+        // setup
+        let expectedUrl = "https://testServer.com/event?d_mid=12345567&d_blob=blobValue&dcs_region=9&d_orgid=testOrg@AdobeOrg&d_uuid=testUuid&d_ptfm=ios&d_dst=1&d_rtbd=json"
+        // create configuration shared state and configuration response content event
+        let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer.com", AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrg@AdobeOrg", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue]
+        let event = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: nil)
+        // create a fake synced id for use in the created identity shared state
+        var customIds = [[String:Any]]()
+        customIds.append(["id_origin": "d_cid_ic", "id": "test_ad_id", "authentication_state": 1])
+        // create identity shared state
+        let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "12345567", AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT: "9", AudienceConstants.Identity.VISITOR_ID_BLOB: "blobValue", AudienceConstants.Identity.VISITOR_IDS_LIST: customIds] as [String : Any]
+        // process the created shared states in the audience state
+        audienceState?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: { data, event in
+        }, dispatchOptOutResult: { (optedOut, event) in})
+        audienceState?.handleIdentitySharedStateUpdate(identitySharedState: identitySharedState)
+        // set a uuid for testing
+        audienceState?.setUuid(uuid: "testUuid")
+
+        // test
+        let url = URL.buildAudienceHitURL(state: audienceState)
+
+        // verify
+        XCTAssertEqual(expectedUrl, url?.absoluteString)
+    }
+
+    //Test Missing Identity authentication, no identity authentication state data, should build the url with authentication state set to 0.
+    func testAudienceHitWithIdentityMissingAuthenticationDataInSharedState() {
+        // setup
+        let expectedUrl = "https://testServer.com/event?d_mid=12345567&d_blob=blobValue&dcs_region=9&d_cid_ic=DSID_20915%01test_ad_id%010&d_orgid=testOrg@AdobeOrg&d_uuid=testUuid&d_ptfm=ios&d_dst=1&d_rtbd=json"
+        // create configuration shared state and configuration response content event
+        let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer.com", AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrg@AdobeOrg", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue]
+        let event = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: nil)
+        // create a fake synced id for use in the created identity shared state
+        var customIds = [[String:Any]]()
+        customIds.append(["id_origin": "d_cid_ic", "id_type": "DSID_20915", "id": "test_ad_id"])
+        // create identity shared state
+        let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "12345567", AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT: "9", AudienceConstants.Identity.VISITOR_ID_BLOB: "blobValue", AudienceConstants.Identity.VISITOR_IDS_LIST: customIds] as [String : Any]
+        // process the created shared states in the audience state
+        audienceState?.handleConfigurationSharedStateUpdate(event: event, configSharedState: configSharedState, createSharedState: { data, event in
+        }, dispatchOptOutResult: { (optedOut, event) in})
+        audienceState?.handleIdentitySharedStateUpdate(identitySharedState: identitySharedState)
+        // set a uuid for testing
+        audienceState?.setUuid(uuid: "testUuid")
+
+        // test
+        let url = URL.buildAudienceHitURL(state: audienceState)
+
+        // verify
+        XCTAssertEqual(expectedUrl, url?.absoluteString)
+    }
+
+    //Test all indentity data all blank, should build the url without identity visitor id and id type.
+    func testAudienceHitWithIdentityDataAllBlankValueInSharedState() {
+        // setup
+        let expectedUrl = "https://testServer.com/event?d_mid=12345567&d_blob=blobValue&dcs_region=9&d_orgid=testOrg@AdobeOrg&d_uuid=testUuid&d_ptfm=ios&d_dst=1&d_rtbd=json"
+        // create configuration shared state and configuration response content event
+        let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer.com", AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrg@AdobeOrg", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue]
+        let event = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: nil)
+        // create a fake synced id for use in the created identity shared state
+        var customIds = [[String:Any]]()
+        customIds.append(["id_origin": "", "id_type": "", "id": "", "authentication_state": 0])
         // create identity shared state
         let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "12345567", AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT: "9", AudienceConstants.Identity.VISITOR_ID_BLOB: "blobValue", AudienceConstants.Identity.VISITOR_IDS_LIST: customIds] as [String : Any]
         // process the created shared states in the audience state
