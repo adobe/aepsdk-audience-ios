@@ -67,6 +67,21 @@ class AudienceTests: XCTestCase {
         return configData
     }
 
+    func isCustomIdsEqual(expectedIds: [[String: Any]]?, actualIds: [[String: Any]]?) -> Bool {
+        if expectedIds == nil && actualIds == nil {
+            return true
+        }
+        guard let expectedIds = expectedIds, let actualIds = actualIds, expectedIds.count == actualIds.count else {
+            return false
+        }
+        for i in 0..<expectedIds.count {
+            if !NSDictionary(dictionary: expectedIds[i]).isEqual(to: actualIds[i]) {
+                return false
+            }
+        }
+        return true
+    }
+
     //MARK: Audience Unit Tests
 
     // ==========================================================================
@@ -759,8 +774,7 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("1234567", audience?.state?.getEcid())
         XCTAssertEqual("testBlob", audience?.state?.getBlob())
         XCTAssertEqual("9", audience?.state?.getLocationHint())
-        //TO DO: compare getVisitorIds
-        //XCTAssertEqual(customIds, audience?.state?.getVisitorIds())
+        XCTAssertTrue(isCustomIdsEqual(expectedIds: customIds, actualIds: audience?.state?.getVisitorIds()))
 
         // create audience identity reset event
         let audienceIdentityResetRequestEvent = Event(name: "Test Audience Reset Request", type: EventType.audienceManager, source: EventSource.requestReset, data: [String: Any]())
@@ -783,8 +797,7 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("1234567", audience?.state?.getEcid())
         XCTAssertEqual("testBlob", audience?.state?.getBlob())
         XCTAssertEqual("9", audience?.state?.getLocationHint())
-        //TO DO: compare getVisitorIds
-        //XCTAssertEqual(customIds, audience?.state?.getVisitorIds())
+        XCTAssertTrue(isCustomIdsEqual(expectedIds: customIds, actualIds: audience?.state?.getVisitorIds()))
     }
 
     // ==========================================================================

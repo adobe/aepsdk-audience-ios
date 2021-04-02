@@ -59,25 +59,20 @@ extension URL {
         }
 
         // Attach custom visitorId list synced on Identity extension
-        if let customerVisitorIdList = state?.getVisitorIds() as [[String: Any]]?, !customerVisitorIdList.isEmpty {
+        if let customerVisitorIdList = state?.getVisitorIds(), !customerVisitorIdList.isEmpty {
             for id in customerVisitorIdList {
-                let idType: String = id[AudienceConstants.Identity.VISITOR_ID_TYPE] as! String
-                let idValue: String = id[AudienceConstants.Identity.VISITOR_ID] as! String
-                let idAuthState: Int = id[AudienceConstants.Identity.VISITOR_ID_AUTHENTICATION_STATE] as! Int
-
-                var visitorIdString = ""
-                visitorIdString.append(idType)
-                visitorIdString.append(AudienceConstants.DestinationKeys.VISITOR_ID_CID_DELIMITER)
-                if !idValue.isEmpty {
-                    visitorIdString.append(idValue)
+                if let idType = id[AudienceConstants.Identity.VISITOR_ID_TYPE] as? String {
+                    var visitorIdString = idType
+                    if let idValue = id[AudienceConstants.Identity.VISITOR_ID] as? String, !idValue.isEmpty {
+                        visitorIdString.append(AudienceConstants.DestinationKeys.VISITOR_ID_CID_DELIMITER)
+                        visitorIdString.append(idValue)
+                    }
+                    let idAuthState = id[AudienceConstants.Identity.VISITOR_ID_AUTHENTICATION_STATE] as? Int ?? AudienceConstants.Identity.VISITOR_ID_AUTHENTICATION_STATE_UNAUTHENTICATED
+                    visitorIdString.append(AudienceConstants.DestinationKeys.VISITOR_ID_CID_DELIMITER)
+                    visitorIdString.append(String(idAuthState))
+                    queryItems += [URLQueryItem(name: AudienceConstants.DestinationKeys.VISITOR_ID_PARAMETER_KEY_CUSTOMER, value: visitorIdString)]
                 }
-
-                visitorIdString.append(AudienceConstants.DestinationKeys.VISITOR_ID_CID_DELIMITER)
-                visitorIdString.append(String(idAuthState))
-
-                queryItems += [URLQueryItem(name: AudienceConstants.DestinationKeys.VISITOR_ID_PARAMETER_KEY_CUSTOMER, value: visitorIdString)]
             }
-
         }
 
         // Attach experience cloud org id from configruration shared state

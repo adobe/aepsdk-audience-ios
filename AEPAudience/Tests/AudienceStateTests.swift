@@ -65,7 +65,7 @@ class AudienceStateTests: XCTestCase {
         updatePrivacy(status: .optedIn)
     }
     
-    func optUknown() {
+    func optUnknown() {
         updatePrivacy(status: .unknown)
     }
     
@@ -261,7 +261,7 @@ class AudienceStateTests: XCTestCase {
     
     func testSetDpid_WithPrivacyStatusUnknown() {
         // setup
-        optUknown()
+        optUnknown()
         
         // test
         audienceState.setDpid(dpid: AudienceStateTests.inMemoryDpid)
@@ -305,7 +305,7 @@ class AudienceStateTests: XCTestCase {
     
     func testSetDpuuid_WithPrivacyStatusUnknown() {
         // setup
-        optUknown()
+        optUnknown()
         
         // test
         audienceState.setDpuuid(dpuuid: AudienceStateTests.inMemoryDpuuid)
@@ -352,7 +352,7 @@ class AudienceStateTests: XCTestCase {
     
     func testSetUuid_WithPrivacyStatusUnknown() {
         // setup
-        optUknown()
+        optUnknown()
         
         // test
         audienceState.setUuid(uuid: AudienceStateTests.inMemoryUuid)
@@ -400,7 +400,7 @@ class AudienceStateTests: XCTestCase {
     
     func testSetVisitorProfile_WithPrivacyStatusUnknown() {
         // setup
-        optUknown()
+        optUnknown()
         
         // test
         audienceState.setVisitorProfile(visitorProfile: AudienceStateTests.inMemoryVisitorProfile)
