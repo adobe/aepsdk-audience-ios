@@ -14,44 +14,20 @@ PODS:
 
 DEPENDENCIES:
   - ACPCore
-  - "AEPCore (from `git@github.com:adobe/aepsdk-core-ios.git`, branch `staging`)"
-  - "AEPIdentity (from `git@github.com:adobe/aepsdk-core-ios.git`, branch `staging`)"
-  - "AEPLifecycle (from `git@github.com:adobe/aepsdk-core-ios.git`, branch `staging`)"
+  - AEPCore
+  - AEPIdentity
+  - AEPLifecycle
   - AEPRulesEngine
-  - "AEPServices (from `git@github.com:adobe/aepsdk-core-ios.git`, branch `staging`)"
+  - AEPServices
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - ACPCore
+    - AEPCore
+    - AEPIdentity
+    - AEPLifecycle
     - AEPRulesEngine
-
-EXTERNAL SOURCES:
-  AEPCore:
-    :branch: staging
-    :git: "git@github.com:adobe/aepsdk-core-ios.git"
-  AEPIdentity:
-    :branch: staging
-    :git: "git@github.com:adobe/aepsdk-core-ios.git"
-  AEPLifecycle:
-    :branch: staging
-    :git: "git@github.com:adobe/aepsdk-core-ios.git"
-  AEPServices:
-    :branch: staging
-    :git: "git@github.com:adobe/aepsdk-core-ios.git"
-
-CHECKOUT OPTIONS:
-  AEPCore:
-    :commit: d311c2936684aac1b0430b1e68e92984255e6d43
-    :git: "git@github.com:adobe/aepsdk-core-ios.git"
-  AEPIdentity:
-    :commit: d311c2936684aac1b0430b1e68e92984255e6d43
-    :git: "git@github.com:adobe/aepsdk-core-ios.git"
-  AEPLifecycle:
-    :commit: d311c2936684aac1b0430b1e68e92984255e6d43
-    :git: "git@github.com:adobe/aepsdk-core-ios.git"
-  AEPServices:
-    :commit: d311c2936684aac1b0430b1e68e92984255e6d43
-    :git: "git@github.com:adobe/aepsdk-core-ios.git"
+    - AEPServices
 
 SPEC CHECKSUMS:
   ACPCore: 5f00fcf7aba597b29b359e4c14f7f4f1f95503f3
@@ -61,6 +37,6 @@ SPEC CHECKSUMS:
   AEPRulesEngine: 8bbc694fce6900cd33b2496c7d4b33ee2eeffc46
   AEPServices: cc1ec2987185ab01d62f6d41be0bb94a1b892efb
 
-PODFILE CHECKSUM: ace84f3f57121cb93502d47c7caafb8427faa3b0
+PODFILE CHECKSUM: 475662d4fbb088c3c6d096df11c31405983609fe
 
 COCOAPODS: 1.10.0
