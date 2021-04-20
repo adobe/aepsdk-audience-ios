@@ -77,7 +77,7 @@ class URL_AudienceTests: XCTestCase {
         XCTAssertEqual(expectedUrl, url?.absoluteString)
     }
 
-    //Test Missing Identity visitor ID, no identity data should be built to the url
+    //Test Missing Identity visitor ID, Visitor Type should still be built to the url
     func testAudienceHitWithIdentityMissingIdTypeDataInSharedState() {
         // setup
         let expectedUrl = "https://testServer.com/event?d_mid=12345567&d_blob=blobValue&dcs_region=9&d_cid_ic=DSID_20915%011&d_orgid=testOrg@AdobeOrg&d_uuid=testUuid&d_ptfm=ios&d_dst=1&d_rtbd=json"
