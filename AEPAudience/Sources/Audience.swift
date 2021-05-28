@@ -18,6 +18,7 @@ import Foundation
 /// Audience extension for the Adobe Experience Platform SDK
 @objc(AEPMobileAudience)
 public class Audience: NSObject, Extension {
+    private static let LOG_TAG = "Audience"
     public let runtime: ExtensionRuntime
     public let name = AudienceConstants.EXTENSION_NAME
     public let friendlyName = AudienceConstants.FRIENDLY_NAME
@@ -66,6 +67,7 @@ public class Audience: NSObject, Extension {
         registerListener(type: EventType.audienceManager, source: EventSource.requestIdentity, listener: handleAudienceIdentityRequest(event:))
         registerListener(type: EventType.audienceManager, source: EventSource.requestReset, listener: handleAudienceResetRequest(event:))
         registerListener(type: EventType.configuration, source: EventSource.responseContent, listener: handleConfigurationResponse(event:))
+        registerListener(type: EventType.genericIdentity, source: EventSource.requestReset, listener: handleResetIdentitiesEvent)
     }
 
     public func onUnregistered() {}
@@ -130,7 +132,7 @@ public class Audience: NSObject, Extension {
     /// - Parameter event: The event coming from the reset API invocation
     private func handleAudienceResetRequest(event: Event) {
         Log.debug(label: getLogTagWith(functionName: #function), "Received an Audience Manager reset event, clearing all stored Audience Manager identities and visitor profile.")
-        state?.clearIdentifiers()
+        state?.clearAudienceIdentifiers()
         createSharedState(data: state?.getStateData() ?? [:], event: event)
     }
 
@@ -213,6 +215,16 @@ public class Audience: NSObject, Extension {
         eventData[AudienceConstants.EventDataKeys.OPTED_OUT_HIT_SENT] = optedOut
         let responseEvent = event.createResponseEvent(name: "Audience Manager Opt Out Event", type: EventType.audienceManager, source: EventSource.responseContent, data: eventData)
         dispatch(event: responseEvent)
+    }
+
+    /// Processes Reset identites event
+    /// - Parameter:
+    ///   - event: The Reset identities event
+    private func handleResetIdentitiesEvent(_ event: Event) {
+        Log.debug(label: Self.LOG_TAG, "\(#function) - Resetting all Identifiers")
+        state?.clearAllIdentifiers()
+        state?.hitQueue.clear()
+        createSharedState(data: state?.getStateData() ?? [:], event: event)
     }
 
     /// Helper to return a log tag

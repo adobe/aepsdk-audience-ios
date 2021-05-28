@@ -541,7 +541,7 @@ class AudienceState {
 
     /// Clears the audience manager identifiers for this AudienceState.
     /// The cleared Audience Manager identifiers are: `uuid`, `dpid`, `dpuuid`, and `visitorProfile`
-    func clearIdentifiers() {
+    func clearAudienceIdentifiers() {
         // clear the persisted data
         dataStore.remove(key: AudienceConstants.DataStoreKeys.USER_ID)
         dataStore.remove(key: AudienceConstants.DataStoreKeys.PROFILE)
@@ -552,17 +552,22 @@ class AudienceState {
         self.visitorProfile = [:]
     }
 
-    /// Clears all the audience manager identifiers, configuration settings, and identity identifiers for this AudienceState.
-    private func reset() {
-        clearIdentifiers()
-        self.aamServer = ""
-        self.aamTimeout = AudienceConstants.Default.TIMEOUT
+    /// Clears all identities.
+    func clearAllIdentifiers() {
+        clearAudienceIdentifiers()
         self.orgId = ""
         self.ecid = ""
         self.blob = ""
         self.locationHint = ""
         self.syncedVisitorIds = []
         self.customerEventData = [:]
+    }
+
+    /// Clears all the audience manager identifiers, configuration settings, and identity identifiers for this AudienceState.
+    private func reset() {
+        clearAllIdentifiers()
+        self.aamServer = ""
+        self.aamTimeout = AudienceConstants.Default.TIMEOUT
     }
 
     /// Helper to return a log tag
