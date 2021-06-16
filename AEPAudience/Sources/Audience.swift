@@ -217,7 +217,7 @@ public class Audience: NSObject, Extension {
         dispatch(event: responseEvent)
     }
 
-    /// Processes Reset identites event
+    /// Processes Reset identities event
     /// - Parameter:
     ///   - event: The Reset identities event
     private func handleResetIdentitiesEvent(_ event: Event) {

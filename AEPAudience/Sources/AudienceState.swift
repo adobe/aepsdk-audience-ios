@@ -243,7 +243,8 @@ class AudienceState {
             let optedOut = sendOptOutHit()
             dispatchOptOutResult(optedOut, event)
             createSharedState(getStateData(), event)
-            reset()
+            clearAllIdentifiers()
+            clearConfiguration()
         }
         // update hit queue with privacy status
         hitQueue.handlePrivacyChange(status: privacyStatus)
@@ -563,9 +564,8 @@ class AudienceState {
         self.customerEventData = [:]
     }
 
-    /// Clears all the audience manager identifiers, configuration settings, and identity identifiers for this AudienceState.
-    private func reset() {
-        clearAllIdentifiers()
+    /// Clears all the audience manager configuration settings
+    private func clearConfiguration() {
         self.aamServer = ""
         self.aamTimeout = AudienceConstants.Default.TIMEOUT
     }
