@@ -132,7 +132,9 @@ public class Audience: NSObject, Extension {
     /// - Parameter event: The event coming from the reset API invocation
     private func handleAudienceResetRequest(event: Event) {
         Log.debug(label: getLogTagWith(functionName: #function), "Received an Audience Manager reset event, clearing all stored Audience Manager identities and visitor profile.")
+        state?.hitQueue.clear()
         state?.clearAudienceIdentifiers()
+        state?.lastResetIdentitiesTimestamp = event.timestamp.timeIntervalSince1970
         createSharedState(data: state?.getStateData() ?? [:], event: event)
     }
 

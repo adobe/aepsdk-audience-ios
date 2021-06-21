@@ -51,6 +51,8 @@ class AudienceState {
     private var syncedVisitorIds = [[String: Any]]()
     /// The customer event data present in an event triggering a signalWithData hit
     private var customerEventData = [String: String]()
+    /// Store the timestamp for most recent resetIdentities API call
+    var lastResetIdentitiesTimestamp = TimeInterval()
 
     private(set) var hitQueue: HitQueuing
 
@@ -70,6 +72,12 @@ class AudienceState {
         if privacyStatus == PrivacyStatus.optedOut {
             Log.debug(label: getLogTagWith(functionName: #function), "Unable to process AAM event as privacy status is opted-out:  \(event.description)")
             // dispatch with an empty visitor profile in response if privacy is opt-out.
+            dispatchResponse([:], event)
+            return
+        }
+
+        if event.timestamp.timeIntervalSince1970 < self.lastResetIdentitiesTimestamp {
+            Log.debug(label: getLogTagWith(functionName: #function), "Dropping Audience hit, resetIdentities API was called after this request.")
             dispatchResponse([:], event)
             return
         }
@@ -126,6 +134,11 @@ class AudienceState {
     func handleHitResponse(hit: AudienceHit, responseData: Data?, dispatchResponse: ([String: String], Event) -> Void, createSharedState: (([String: Any], Event) -> Void)) {
         if privacyStatus == .optedOut {
             Log.debug(label: getLogTagWith(functionName: #function), "Unable to process network response as privacy status is OPT_OUT.")
+            return
+        }
+
+        if hit.event.timestamp.timeIntervalSince1970 < self.lastResetIdentitiesTimestamp {
+            Log.debug(label: getLogTagWith(functionName: #function), "Not dispatching Audience hit response since resetIdentities API was called after queuing this hit.")
             return
         }
 
