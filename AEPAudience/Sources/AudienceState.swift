@@ -52,7 +52,7 @@ class AudienceState {
     /// The customer event data present in an event triggering a signalWithData hit
     private var customerEventData = [String: String]()
     /// Store the timestamp for most recent resetIdentities API call
-    var lastResetIdentitiesTimestamp = TimeInterval()
+    var lastResetTimestamp = TimeInterval()
 
     private(set) var hitQueue: HitQueuing
 
@@ -76,7 +76,7 @@ class AudienceState {
             return
         }
 
-        if event.timestamp.timeIntervalSince1970 < self.lastResetIdentitiesTimestamp {
+        if event.timestamp.timeIntervalSince1970 < self.lastResetTimestamp {
             Log.debug(label: getLogTagWith(functionName: #function), "Dropping Audience hit, resetIdentities API was called after this request.")
             dispatchResponse([:], event)
             return
@@ -137,7 +137,7 @@ class AudienceState {
             return
         }
 
-        if hit.event.timestamp.timeIntervalSince1970 < self.lastResetIdentitiesTimestamp {
+        if hit.event.timestamp.timeIntervalSince1970 < self.lastResetTimestamp {
             Log.debug(label: getLogTagWith(functionName: #function), "Not dispatching Audience hit response since resetIdentities API was called after queuing this hit.")
             return
         }
