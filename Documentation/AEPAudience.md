@@ -52,7 +52,7 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
 }
 ```
 
-**Objective C**
+**Objective-C**
 
 1. Import each of the core extensions in the `AppDelegate` file:
 
@@ -95,13 +95,13 @@ The `extensionVersion()` API returns the version of the Audience extension that 
 
 **Swift**
 
-```
+```swift
 let version = Audience.extensionVersion
 ```
 
 **Objective-C**
 
-```
+```objective-c
 NSString *version = [AEPMobileAudience extensionVersion];
 ```
 
@@ -123,23 +123,24 @@ static func getVisitorProfile(completion: @escaping ([String: String]?, Error?) 
 
 ```swift
 Audience.getVisitorProfile { (visitorProfile, error) in
-                 print("#getVisitorProfile - retrieved profile: \(String(describing: visitorProfile))")
-                 if error != nil {
-                   // handle the error here
-                   }
-                  }
+   if error != nil {
+    // handle the error here
+   } else {
+    // handle the retrieved visitorProfile here
+   }
+}
 ```
 
 **Objective-C**
 
-```objectivec
+```objective-c
 [AEPMobileAudience getVisitorProfile:^(NSDictionary<NSString *,NSString *> * _Nullable visitorProfile, NSError * _Nullable error) {
-            if (error) {
-                // handle the error here
-              } else {
-                // handle the returned visitorProfile dictionary here
-              }
-        }];
+   if (error) {
+    // handle the error here
+   } else {
+    // handle the returned visitorProfile dictionary here
+   }
+}];
 ```
 
 
@@ -165,24 +166,25 @@ static func signalWithData(data: [String: String], completion: @escaping ([Strin
 
 ```swift
 Audience.signalWithData(data: ["trait": "trait value"]) { (traits, error) in
-            // handle the returned visitorProfile dictionary here
-            if error != nil {
-            // handle the error here
-                 }
-             }
+  if error != nil {
+     // handle the error here
+     } else {
+     // handle the returned visitorProfile here
+     }
+}
 ```
 
 **Objective-C**
 
-```objectivec
+```objective-c
 NSDictionary *traits = @{@"key1":@"value1",@"key2":@"value2"};
 [AEPMobileAudience signalWithData:traits completion:^(NSDictionary<NSString *,NSString *> * _Nullable visitorProfile, NSError* _Nullable error) {
-        if (error) {
-            // handle the error here
-          } else {
-            // handle the returned visitorProfile dictionary here
-          }
-        }];
+  if (error) {
+     // handle the error here
+     } else {
+     // handle the returned visitorProfile dictionary here
+     }
+}];
 ```
 
 
@@ -209,7 +211,7 @@ Audience.reset()
 
 **Objective-C**
 
-```objectivec
+```objective-c
 [AEPMobileAudience reset]
 ```
 
