@@ -132,8 +132,7 @@ public class Audience: NSObject, Extension {
     /// - Parameter event: The event coming from the reset API invocation
     private func handleAudienceResetRequest(event: Event) {
         Log.debug(label: getLogTagWith(functionName: #function), "Received an Audience Manager reset event, clearing all stored Audience Manager identities and visitor profile.")
-        state?.clearAudienceIdentifiers()
-        state?.lastResetTimestamp = event.timestamp.timeIntervalSince1970
+        state?.handleResetEvent(event: event)
         createSharedState(data: state?.getStateData() ?? [:], event: event)
     }
 
@@ -223,9 +222,8 @@ public class Audience: NSObject, Extension {
     ///   - event: The Reset identities event
     private func handleResetIdentitiesEvent(_ event: Event) {
         Log.debug(label: Self.LOG_TAG, "\(#function) - Resetting all Identifiers")
-        state?.clearAllIdentifiers()
-        state?.hitQueue.clear()
-        state?.lastResetTimestamp = event.timestamp.timeIntervalSince1970
+
+        state?.handleResetEvent(event: event)
         createSharedState(data: state?.getStateData() ?? [:], event: event)
     }
 

@@ -551,6 +551,18 @@ class AudienceState {
         return !(aamServer.isEmpty)
     }
 
+    /// Clears all identities and caches the timestamp of generic resetIdentities API call
+    func handleResetEvent(event: Event) {
+        if event.type == EventType.genericIdentity {
+            // Generic resetIdentities event
+            clearAllIdentifiers()
+            hitQueue.clear()        } else {
+            // Audience reset API
+            clearAudienceIdentifiers()
+        }
+        lastResetTimestamp = event.timestamp.timeIntervalSince1970
+    }
+
     // MARK: helpers
 
     /// Clears the audience manager identifiers for this AudienceState.
