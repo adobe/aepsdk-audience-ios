@@ -556,7 +556,8 @@ class AudienceState {
         if event.type == EventType.genericIdentity {
             // Generic resetIdentities event
             clearAllIdentifiers()
-            hitQueue.clear()        } else {
+            hitQueue.clear()
+        } else {
             // Audience reset API
             clearAudienceIdentifiers()
         }
