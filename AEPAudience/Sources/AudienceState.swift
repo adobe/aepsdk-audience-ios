@@ -551,7 +551,7 @@ class AudienceState {
         return !(aamServer.isEmpty)
     }
 
-    /// Clears all identities and caches the timestamp of generic resetIdentities API call
+    /// Clears all identities and caches the timestamp of generic resetIdentities and Audience reset  event.
     func handleResetEvent(event: Event) {
         if event.type == EventType.genericIdentity {
             // Generic resetIdentities event
