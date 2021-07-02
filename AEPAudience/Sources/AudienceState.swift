@@ -51,6 +51,8 @@ class AudienceState {
     private var syncedVisitorIds = [[String: Any]]()
     /// The customer event data present in an event triggering a signalWithData hit
     private var customerEventData = [String: String]()
+    /// Store the timestamp for most recent resetIdentities API call
+    var lastResetTimestamp = TimeInterval()
 
     private(set) var hitQueue: HitQueuing
 
@@ -70,6 +72,12 @@ class AudienceState {
         if privacyStatus == PrivacyStatus.optedOut {
             Log.debug(label: getLogTagWith(functionName: #function), "Unable to process AAM event as privacy status is opted-out:  \(event.description)")
             // dispatch with an empty visitor profile in response if privacy is opt-out.
+            dispatchResponse([:], event)
+            return
+        }
+
+        if event.timestamp.timeIntervalSince1970 < self.lastResetTimestamp {
+            Log.debug(label: getLogTagWith(functionName: #function), "Dropping Audience hit, resetIdentities API was called after this request.")
             dispatchResponse([:], event)
             return
         }
@@ -126,6 +134,11 @@ class AudienceState {
     func handleHitResponse(hit: AudienceHit, responseData: Data?, dispatchResponse: ([String: String], Event) -> Void, createSharedState: (([String: Any], Event) -> Void)) {
         if privacyStatus == .optedOut {
             Log.debug(label: getLogTagWith(functionName: #function), "Unable to process network response as privacy status is OPT_OUT.")
+            return
+        }
+
+        if hit.event.timestamp.timeIntervalSince1970 < self.lastResetTimestamp {
+            Log.debug(label: getLogTagWith(functionName: #function), "Not dispatching Audience hit response since resetIdentities API was called after queuing this hit.")
             return
         }
 
@@ -243,7 +256,8 @@ class AudienceState {
             let optedOut = sendOptOutHit()
             dispatchOptOutResult(optedOut, event)
             createSharedState(getStateData(), event)
-            reset()
+            clearAllIdentifiers()
+            clearConfiguration()
         }
         // update hit queue with privacy status
         hitQueue.handlePrivacyChange(status: privacyStatus)
@@ -537,11 +551,24 @@ class AudienceState {
         return !(aamServer.isEmpty)
     }
 
+    /// Clears all identities and caches the timestamp of generic resetIdentities and Audience reset  event.
+    func handleResetEvent(event: Event) {
+        if event.type == EventType.genericIdentity {
+            // Generic resetIdentities event
+            clearAllIdentifiers()
+            hitQueue.clear()
+        } else {
+            // Audience reset API
+            clearAudienceIdentifiers()
+        }
+        lastResetTimestamp = event.timestamp.timeIntervalSince1970
+    }
+
     // MARK: helpers
 
     /// Clears the audience manager identifiers for this AudienceState.
     /// The cleared Audience Manager identifiers are: `uuid`, `dpid`, `dpuuid`, and `visitorProfile`
-    func clearIdentifiers() {
+    func clearAudienceIdentifiers() {
         // clear the persisted data
         dataStore.remove(key: AudienceConstants.DataStoreKeys.USER_ID)
         dataStore.remove(key: AudienceConstants.DataStoreKeys.PROFILE)
@@ -552,17 +579,21 @@ class AudienceState {
         self.visitorProfile = [:]
     }
 
-    /// Clears all the audience manager identifiers, configuration settings, and identity identifiers for this AudienceState.
-    private func reset() {
-        clearIdentifiers()
-        self.aamServer = ""
-        self.aamTimeout = AudienceConstants.Default.TIMEOUT
+    /// Clears all identities.
+    func clearAllIdentifiers() {
+        clearAudienceIdentifiers()
         self.orgId = ""
         self.ecid = ""
         self.blob = ""
         self.locationHint = ""
         self.syncedVisitorIds = []
         self.customerEventData = [:]
+    }
+
+    /// Clears all the audience manager configuration settings
+    private func clearConfiguration() {
+        self.aamServer = ""
+        self.aamTimeout = AudienceConstants.Default.TIMEOUT
     }
 
     /// Helper to return a log tag

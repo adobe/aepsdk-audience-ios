@@ -54,7 +54,7 @@ class AudienceStateTests: XCTestCase {
     
     override func tearDown() {
         // clear audience state by setting privacy to opt out
-        audienceState.clearIdentifiers()
+        audienceState.clearAllIdentifiers()
     }
     
     func optOut(shouldSendOptOutHit: Bool = false) {
@@ -419,7 +419,7 @@ class AudienceStateTests: XCTestCase {
         audienceState.setVisitorProfile(visitorProfile: AudienceStateTests.inMemoryVisitorProfile)
         
         // test
-        audienceState.clearIdentifiers()
+        audienceState.clearAllIdentifiers()
         
         // verify
         XCTAssertTrue(audienceState.getDpid().isEmpty)
