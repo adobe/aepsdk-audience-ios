@@ -52,7 +52,7 @@ To add the AEPAudience Package to your application, from the Xcode menu select:
 
 Enter the URL for the AEPAudience package repository: `https://github.com/adobe/aepsdk-audience-ios.git`.
 
-When prompted, make sure you change the branch to `main`. (Once the repo is public, we will reference specific tags/versions instead of a branch)
+When prompted, input a specific version or a range of versions for Version rule.
 
 There are three options for selecting your dependencies as identified by the *suffix* of the library name:
 
@@ -64,7 +64,7 @@ Alternatively, if your project has a `Package.swift` file, you can add AEPAudien
 
 ```
 dependencies: [
-    .package(url: "https://github.com/adobe/aepsdk-audience-ios.git", .branch("main"))
+    .package(url: "https://github.com/adobe/aepsdk-audience-ios.git", .upToNextMajor(from: "3.0.0"))
 ]
 ```
 
