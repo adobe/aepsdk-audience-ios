@@ -64,7 +64,7 @@ Alternatively, if your project has a `Package.swift` file, you can add AEPAudien
 
 ```
 dependencies: [
-    .package(url: "https://github.com/adobe/aepsdk-audience-ios.git", from: "3.0.0"),
+    .package(url: "https://github.com/adobe/aepsdk-audience-ios.git", .upToNextMajor(from: "3.0.0"))
 ]
 ```
 
