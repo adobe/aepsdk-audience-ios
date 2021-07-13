@@ -12,7 +12,6 @@
 @testable import AEPCore
 @testable import AEPServices
 @testable import AEPAudience
-
 import XCTest
 
 class AudienceMigratorTests: XCTestCase {
