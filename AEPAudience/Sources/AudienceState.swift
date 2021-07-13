@@ -12,7 +12,6 @@
 
 import AEPServices
 import AEPCore
-import AEPIdentity
 import Foundation
 
 /// @class AudienceState
