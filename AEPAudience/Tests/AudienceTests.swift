@@ -987,4 +987,63 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual([:], audience?.state?.getCustomerEventData())
     }
 
+    func testHandleResetIdentities_AllIdentifiersClearedFromAudienceState() {
+        // setup
+        audience?.state?.setDpid(dpid: "testDpid")
+        audience?.state?.setDpuuid(dpuuid: "testDpuuid")
+        audience?.state?.setUuid(uuid: "testUuid")
+        audience?.state?.setVisitorProfile(visitorProfile: ["key1":"value1","key2":"value2","key3":"value3"])
+        // add config and identity data to the Audience State
+        var customIds = [[String:Any]]()
+        customIds.append(["id_origin": "d_cid_ic", "id_type": "DSID_20915", "id": "test_ad_id", "authentication_state": 1])
+        let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer", AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING: false, AudienceConstants.Configuration.AAM_TIMEOUT: 10.0, AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrgId", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue] as [String: Any]
+        let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "1234567", AudienceConstants.Identity.VISITOR_ID_BLOB: "testBlob", AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT: "9", AudienceConstants.Identity.VISITOR_IDS_LIST: customIds] as [String: Any]
+
+        let configEvent = Event(name: "configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: configSharedState)
+
+        audience?.state?.handleConfigurationSharedStateUpdate(event: configEvent, configSharedState: configSharedState, createSharedState: { data, event in
+        }, dispatchOptOutResult: { (optedOut, event) in})
+        audience?.state?.handleIdentitySharedStateUpdate(identitySharedState: identitySharedState)
+
+        // verify data was set
+        XCTAssertEqual(PrivacyStatus.optedIn, audience?.state?.getPrivacyStatus())
+        XCTAssertEqual("testDpid", audience?.state?.getDpid())
+        XCTAssertEqual("testDpuuid", audience?.state?.getDpuuid())
+        XCTAssertEqual("testUuid", audience?.state?.getUuid())
+        XCTAssertEqual(["key1":"value1","key2":"value2","key3":"value3"], audience?.state?.getVisitorProfile())
+        XCTAssertEqual(false, audience?.state?.getAamForwardingStatus())
+        XCTAssertEqual("testServer", audience?.state?.getAamServer())
+        XCTAssertEqual(10.0, audience?.state?.getAamTimeout())
+        XCTAssertEqual("testOrgId", audience?.state?.getOrgId())
+        XCTAssertEqual("1234567", audience?.state?.getEcid())
+        XCTAssertEqual("testBlob", audience?.state?.getBlob())
+        XCTAssertEqual("9", audience?.state?.getLocationHint())
+        XCTAssertTrue(isCustomIdsEqual(expectedIds: customIds, actualIds: audience?.state?.getVisitorIds()))
+
+        // create audience identity reset event
+        let resetIdentitiesEvent = Event(name: "Test Generic Reset Request", type: EventType.genericIdentity, source: EventSource.requestReset, data: [String: Any]())
+        let _ = audience.readyForEvent(resetIdentitiesEvent)
+
+        // test
+        mockRuntime.simulateComingEvent(event: resetIdentitiesEvent)
+
+        // verify audience state was reset but privacy status is unchanged
+        XCTAssertEqual(PrivacyStatus.optedIn, audience?.state?.getPrivacyStatus())
+        XCTAssertEqual("", audience?.state?.getDpid())
+        XCTAssertEqual("", audience?.state?.getDpuuid())
+        XCTAssertEqual("", audience?.state?.getUuid())
+        XCTAssertEqual([:], audience?.state?.getVisitorProfile())
+        XCTAssertEqual(false, audience?.state?.getAamForwardingStatus())
+        XCTAssertEqual("", audience?.state?.getOrgId())
+        XCTAssertEqual("", audience?.state?.getEcid())
+        XCTAssertEqual("", audience?.state?.getBlob())
+        XCTAssertEqual("", audience?.state?.getLocationHint())
+        XCTAssertTrue(audience?.state?.getVisitorIds().count == 0)
+
+        // configuration data should not be cleared if privacy is not opted out
+        XCTAssertEqual("testServer", audience?.state?.getAamServer())
+        XCTAssertEqual(10.0, audience?.state?.getAamTimeout()) // the default aam timeout should be returned
+
+    }
+
 }
