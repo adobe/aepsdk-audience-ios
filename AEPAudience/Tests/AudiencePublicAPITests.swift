@@ -9,10 +9,10 @@
  governing permissions and limitations under the License.
  */
 
-import XCTest
 @testable import AEPAudience
 @testable import AEPCore
 @testable import AEPServices
+import XCTest
 
 class AudiencePublicAPITests: XCTestCase {
 

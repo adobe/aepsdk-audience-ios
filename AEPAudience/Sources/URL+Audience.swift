@@ -10,7 +10,6 @@
  */
 
 import Foundation
-import AEPIdentity
 import AEPServices
 
 extension URL {
