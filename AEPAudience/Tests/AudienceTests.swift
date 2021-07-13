@@ -13,7 +13,6 @@
 import XCTest
 @testable import AEPAudience
 @testable import AEPCore
-@testable import AEPIdentity
 @testable import AEPServices
 
 class AudienceTests: XCTestCase {
