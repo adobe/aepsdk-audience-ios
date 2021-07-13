@@ -54,12 +54,6 @@ Enter the URL for the AEPAudience package repository: `https://github.com/adobe/
 
 When prompted, input a specific version or a range of versions for Version rule.
 
-There are three options for selecting your dependencies as identified by the *suffix* of the library name:
-
-- "Dynamic" - the library will be linked dynamically
-- "Static" - the library will be linked statically
-- *(none)* - (default) SPM will determine whether the library will be linked dynamically or statically
-
 Alternatively, if your project has a `Package.swift` file, you can add AEPAudience directly to your dependencies:
 
 ```
