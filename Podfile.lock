@@ -1,13 +1,14 @@
 PODS:
-  - AEPCore (3.2.2):
+  - AEPCore (3.3.1):
     - AEPRulesEngine (= 1.0.1)
-    - AEPServices (= 3.2.2)
-  - AEPIdentity (3.2.2):
-    - AEPCore (= 3.2.2)
-  - AEPLifecycle (3.2.2):
-    - AEPCore (= 3.2.2)
+    - AEPServices (= 3.3.1)
+  - AEPIdentity (3.3.1):
+    - AEPCore (= 3.3.1)
+  - AEPLifecycle (3.3.1):
+    - AEPCore (= 3.3.1)
   - AEPRulesEngine (1.0.1)
-  - AEPServices (3.2.2)
+  - AEPServices (3.3.1)
+  - SwiftLint (0.44.0)
 
 DEPENDENCIES:
   - AEPCore
@@ -15,6 +16,7 @@ DEPENDENCIES:
   - AEPLifecycle
   - AEPRulesEngine
   - AEPServices
+  - SwiftLint (= 0.44.0)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -23,14 +25,16 @@ SPEC REPOS:
     - AEPLifecycle
     - AEPRulesEngine
     - AEPServices
+    - SwiftLint
 
 SPEC CHECKSUMS:
-  AEPCore: 1f15da7f4c843b8aa61c54486b7c5b85378187af
-  AEPIdentity: bdc78eb093c20d259bb3b7d79d7e0b75f30cff2e
-  AEPLifecycle: 54602c05131fd479b292cad24a62ab9f92509908
+  AEPCore: fc1398728b6b2a4dcc8dc96455f69ec144e087c0
+  AEPIdentity: 40aedf425fc7cc63dde579135b8c1c65497a42d2
+  AEPLifecycle: dc131d6744a55d71bc9009d65f3b3428645cbd23
   AEPRulesEngine: 5075ed294026a12e37bd26fe260f74604d205354
-  AEPServices: 8072b031649fea7ffd971e4e185f271dee3707fc
+  AEPServices: c49e7b6ef17ec9f874b015f68ac7d2436235282f
+  SwiftLint: e96c0a8c770c7ebbc4d36c55baf9096bb65c4584
 
-PODFILE CHECKSUM: 00ef2872c0b4fc1ae3c2db553ad1c73e8189d329
+PODFILE CHECKSUM: 40ac91d2ae370b32bfbc47d37122fe67899d5a2c
 
 COCOAPODS: 1.10.1
