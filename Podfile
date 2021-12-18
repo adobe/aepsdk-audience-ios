@@ -5,6 +5,8 @@ use_frameworks!
 workspace 'AEPAudience'
 project 'AEPAudience.xcodeproj'
 
+pod 'SwiftLint', '0.44.0'
+
 target 'AEPAudience' do
   pod 'AEPCore'
   pod 'AEPServices'
