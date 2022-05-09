@@ -15,7 +15,7 @@ import Foundation
 enum AudienceConstants {
     static let EXTENSION_NAME = "com.adobe.module.audience"
     static let FRIENDLY_NAME = "Audience"
-    static let EXTENSION_VERSION = "3.0.2"
+    static let EXTENSION_VERSION = "3.0.3"
     static let DATASTORE_NAME = EXTENSION_NAME
 
     enum SharedStateKeys {
