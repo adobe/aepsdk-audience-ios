@@ -178,7 +178,7 @@ enum AudienceConstants {
         Lifecycle.CRASH_EVENT: ContextDataKeys.CRASH_EVENT_KEY,
         Lifecycle.DAILY_ENGAGED_EVENT: ContextDataKeys.DAILY_ENGAGED_EVENT_KEY,
         Lifecycle.DAY_OF_WEEK: ContextDataKeys.DAY_OF_WEEK,
-        Lifecycle.DAYS_SINCE_FIRST_LAUNCH: ContextDataKeys.DAYS_SINCE_LAST_LAUNCH,
+        Lifecycle.DAYS_SINCE_FIRST_LAUNCH: ContextDataKeys.DAYS_SINCE_FIRST_LAUNCH,
         Lifecycle.DAYS_SINCE_LAST_LAUNCH: ContextDataKeys.DAYS_SINCE_LAST_LAUNCH,
         Lifecycle.DAYS_SINCE_LAST_UPGRADE: ContextDataKeys.DAYS_SINCE_LAST_UPGRADE,
         Lifecycle.DEVICE_NAME: ContextDataKeys.DEVICE_NAME,
