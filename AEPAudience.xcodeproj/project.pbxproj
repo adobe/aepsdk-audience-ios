@@ -800,7 +800,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 50D662E9D6F2F12CDA469188 /* Pods-AEPAudienceTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
@@ -825,7 +824,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0DE1C01DD381FBA1CD3824EB /* Pods-AEPAudienceTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
