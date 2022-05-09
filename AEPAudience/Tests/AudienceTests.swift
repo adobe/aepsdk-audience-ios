@@ -299,6 +299,67 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual(1, audience.state?.hitQueue.count())
     }
 
+    func testHandleLifecycleResponse_MapsLifecycleKeysCorrectly() {
+        // setup
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // create lifecycle response content
+        let lifecycleContextData:[String: String] = [
+            AudienceConstants.Lifecycle.APP_ID: "testAppId 1.0 (1)",
+            AudienceConstants.Lifecycle.CARRIER_NAME: "testCarrier",
+            AudienceConstants.Lifecycle.DAILY_ENGAGED_EVENT: "DailyEngUserEvent",
+            AudienceConstants.Lifecycle.MONTHLY_ENGAGED_EVENT: "MonthlyEngUserEvent",
+            AudienceConstants.Lifecycle.DAYS_SINCE_FIRST_LAUNCH: "10",
+            AudienceConstants.Lifecycle.DAYS_SINCE_LAST_LAUNCH: "2",
+            AudienceConstants.Lifecycle.DAYS_SINCE_LAST_UPGRADE: "2",
+            AudienceConstants.Lifecycle.DEVICE_NAME: "test",
+            AudienceConstants.Lifecycle.DEVICE_RESOLUTION: "640x1136",
+            AudienceConstants.Lifecycle.HOUR_OF_DAY: "11",
+            AudienceConstants.Lifecycle.DAY_OF_WEEK: "1",
+            AudienceConstants.Lifecycle.LAUNCHES: "5",
+            AudienceConstants.Lifecycle.LAUNCHES_SINCE_UPGRADE: "2",
+            AudienceConstants.Lifecycle.LAUNCH_EVENT: "LaunchEvent",
+            AudienceConstants.Lifecycle.LOCALE: "en-US",
+            AudienceConstants.Lifecycle.OPERATING_SYSTEM: "iOS 14.2",
+            AudienceConstants.Lifecycle.RUN_MODE: "Application"]
+        // create the lifecycle event and simulate having the configuration data in shared state
+        let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: [AudienceConstants.Lifecycle.LIFECYCLE_CONTEXT_DATA: lifecycleContextData])
+        mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
+        let _ = audience.readyForEvent(lifecycleEvent)
+
+        // test
+        mockRuntime.simulateComingEvent(event: lifecycleEvent)
+
+        // verify
+        XCTAssertEqual(1, mockHitQueue.count())
+        let queuedHit: DataEntity = mockHitQueue.queuedHits[0]
+        guard let data = queuedHit.data, let audienceHit = try? JSONDecoder().decode(AudienceHit.self, from: data) else {
+            XCTFail("Failed to convert queued hit to AudienceHit")
+            return
+        }
+
+        let url = audienceHit.url.absoluteString
+        XCTAssertTrue(url.starts(with: "https://testServer.com/event"))
+        XCTAssertTrue(url.contains("c_a.AppID=testAppId%201.0%20%281%29"))
+        XCTAssertTrue(url.contains("c_a.CarrierName=testCarrier"))
+        XCTAssertTrue(url.contains("c_a.DailyEngUserEvent=DailyEngUserEvent"))
+        XCTAssertTrue(url.contains("c_a.MonthlyEngUserEvent=MonthlyEngUserEvent"))
+        XCTAssertTrue(url.contains("c_a.DaysSinceLastUse=2"))
+        XCTAssertTrue(url.contains("c_a.DaysSinceFirstUse=10"))
+        XCTAssertTrue(url.contains("c_a.DaysSinceLastUpgrade=2"))
+        XCTAssertTrue(url.contains("c_a.DeviceName=test"))
+        XCTAssertTrue(url.contains("c_a.Resolution=640x1136"))
+        XCTAssertTrue(url.contains("c_a.HourOfDay=11"))
+        XCTAssertTrue(url.contains("c_a.DayOfWeek=1"))
+        XCTAssertTrue(url.contains("c_a.Launches=5"))
+        XCTAssertTrue(url.contains("c_a.LaunchesSinceUpgrade=2"))
+        XCTAssertTrue(url.contains("c_a.LaunchEvent=LaunchEvent"))
+        XCTAssertTrue(url.contains("c_a.locale=en-US"))
+        XCTAssertTrue(url.contains("c_a.OSVersion=iOS%2014.2"))
+        XCTAssertTrue(url.contains("c_a.RunMode=Application"))
+        XCTAssertTrue(url.contains("d_ptfm=ios"))
+    }
+
     func testHandleLifecycleResponse_ConfigurationMissingAAMServer() {
         // setup
         // dispatch a configuration response event containing aam timeout, privacy status opted in and aam forwarding status equal to false
