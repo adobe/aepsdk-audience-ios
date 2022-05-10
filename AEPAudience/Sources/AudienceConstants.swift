@@ -15,7 +15,7 @@ import Foundation
 enum AudienceConstants {
     static let EXTENSION_NAME = "com.adobe.module.audience"
     static let FRIENDLY_NAME = "Audience"
-    static let EXTENSION_VERSION = "3.0.2"
+    static let EXTENSION_VERSION = "3.0.3"
     static let DATASTORE_NAME = EXTENSION_NAME
 
     enum SharedStateKeys {
@@ -178,7 +178,7 @@ enum AudienceConstants {
         Lifecycle.CRASH_EVENT: ContextDataKeys.CRASH_EVENT_KEY,
         Lifecycle.DAILY_ENGAGED_EVENT: ContextDataKeys.DAILY_ENGAGED_EVENT_KEY,
         Lifecycle.DAY_OF_WEEK: ContextDataKeys.DAY_OF_WEEK,
-        Lifecycle.DAYS_SINCE_FIRST_LAUNCH: ContextDataKeys.DAYS_SINCE_LAST_LAUNCH,
+        Lifecycle.DAYS_SINCE_FIRST_LAUNCH: ContextDataKeys.DAYS_SINCE_FIRST_LAUNCH,
         Lifecycle.DAYS_SINCE_LAST_LAUNCH: ContextDataKeys.DAYS_SINCE_LAST_LAUNCH,
         Lifecycle.DAYS_SINCE_LAST_UPGRADE: ContextDataKeys.DAYS_SINCE_LAST_UPGRADE,
         Lifecycle.DEVICE_NAME: ContextDataKeys.DEVICE_NAME,

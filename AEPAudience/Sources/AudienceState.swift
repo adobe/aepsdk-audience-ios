@@ -607,12 +607,15 @@ class AudienceState {
     ///   - event: the `Lifecycle` response content event
     private func convertLifecycleKeys(event: Event) -> [String: String] {
         var convertedKeys = [String: String]()
-        let lifecycleEventData = event.data as? [String: String]
+        guard let eventData = event.data,
+              let lifecycleContextData = eventData[AudienceConstants.Lifecycle.LIFECYCLE_CONTEXT_DATA] as? [String: String] else {
+            return convertedKeys
+        }
 
         // convert the found event data keys into context data keys
         // each pairedKey object has an event data key as a key and a context data key as a value
         for pairedKey in AudienceConstants.MapToContextDataKeys {
-            guard let value = lifecycleEventData?[pairedKey.key] else {
+            guard let value = lifecycleContextData[pairedKey.key] else {
                 Log.trace(label: getLogTagWith(functionName: #function), "\(pairedKey.key) not found in lifecycle context data.")
                 continue
             }

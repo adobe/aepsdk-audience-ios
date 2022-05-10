@@ -87,7 +87,7 @@ extension URL {
         // Attach platform suffix
         queryItems += [URLQueryItem(name: AudienceConstants.URLKeys.PLATFORM_KEY, value: "ios")]
 
-        // Attach URL suffix        
+        // Attach URL suffix
         queryItems += [URLQueryItem(name: "d_dst", value: "1")]
         queryItems += [URLQueryItem(name: "d_rtbd", value: "json")]
 
