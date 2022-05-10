@@ -45,7 +45,7 @@ lint:
 	./Pods/SwiftLint/swiftlint lint
 
 lint-autocorrect:
-	./Pods/SwiftLint/swiftlint autocorrect
+	./Pods/SwiftLint/swiftlint --fix
 
 checkFormat:
 	swiftformat . --lint --swiftversion 5.1

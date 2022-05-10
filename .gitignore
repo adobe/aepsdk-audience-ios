@@ -93,3 +93,8 @@ iOSInjectionProject/
 .DS_Store
 
 *.log
+
+## Bundler
+.bundle/
+vendor/
+

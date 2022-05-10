@@ -16,7 +16,7 @@ jobs:
 
   build-and-test:
     macos:
-      xcode: 11.6.0 # Specify the Xcode version to use
+      xcode: 12.0.1 # Specify the Xcode version to use
 
     steps:
       - checkout
@@ -24,13 +24,25 @@ jobs:
       # restore pods related caches
       - restore_cache:
           keys:
-            - cocoapods-cache-v4-{{ arch }}-{{ .Branch }}-{{ checksum "Podfile.lock" }}
-            - cocoapods-cache-v4-{{ arch }}-{{ .Branch }}
-            - cocoapods-cache-v4
-            - 1-gems-{{ checksum "Gemfile.lock" }}
+            - 2-gems-{{ checksum "Gemfile.lock" }}
 
-      # install Gemfile
-      - run: bundle check || bundle install --path vendor/bundle --clean
+      # make sure we're on the right version of cocoapods
+      - run:
+          name: Verify Cocoapods Version
+          command: bundle check || bundle install --path vendor/bundle --clean
+
+      # save cocoapods version gem data
+      - save_cache:
+          key: 2-gems-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+      # restore pods related caches
+      - restore_cache:
+          keys:
+            - cocoapods-cache-v6-{{ arch }}-{{ .Branch }}-{{ checksum "Podfile.lock" }}
+            - cocoapods-cache-v6-{{ arch }}-{{ .Branch }}
+            - cocoapods-cache-v6
 
       # install CocoaPods - using default CocoaPods version, not the bundle
       - run:
@@ -40,11 +52,10 @@ jobs:
       # save pods related files
       - save_cache:
           name: Saving CocoaPods Cache
-          key: cocoapods-cache-v4-{{ arch }}-{{ .Branch }}-{{ checksum "Podfile.lock" }}
+          key: cocoapods-cache-v6-{{ arch }}-{{ .Branch }}-{{ checksum "Podfile.lock" }}
           paths:
             - ./Pods
             - ~/.cocoapods
-            - vendor/bundle
 
       - run:
           name: Lint Source Code
@@ -56,7 +67,7 @@ jobs:
 
       - run:
           name: Swift Formating
-          command: swiftformat . --lint --swiftversion 5.2
+          command: make checkFormat
 
       # pre-start the simulator to prevent timeouts
       - run:
