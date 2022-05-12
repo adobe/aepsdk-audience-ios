@@ -76,7 +76,9 @@ public class Audience: NSObject, Extension {
 
         let identityStatus = getSharedState(extensionName: AudienceConstants.SharedStateKeys.IDENTITY, event: event)?.status ?? .none
 
-        if event.type == EventType.audienceManager, event.source == EventSource.requestContent {
+        // for signal events require both config and identity shared states
+        if (event.type == EventType.audienceManager && event.source == EventSource.requestContent) ||
+            (event.type == EventType.lifecycle && event.source == EventSource.responseContent) {
             return configurationStatus != .pending && identityStatus != .pending
         }
 

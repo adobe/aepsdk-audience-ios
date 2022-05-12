@@ -88,19 +88,20 @@ class AudienceState {
         }
 
         // if the event is a lifecycle event, convert the lifecycle keys to audience manager keys
-        if event.type == EventType.lifecycle {
+        var signalData: [String: String] = [:]
+        if event.type == EventType.lifecycle, let eventData = event.data, !eventData.isEmpty {
             Log.debug(label: getLogTagWith(functionName: #function), "Lifecycle event found, processing context data")
-            customerEventData = convertLifecycleKeys(event: event)
+            signalData = convertLifecycleKeys(event: event)
         } else {
-            if let signalData = event.data, !signalData.isEmpty {
-                let signaledTraits = signalData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] as? [String: String] ?? [:]
+            if let eventData = event.data, !eventData.isEmpty {
+                let signaledTraits = eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] as? [String: String] ?? [:]
                 for trait in signaledTraits {
-                    customerEventData[trait.key] = trait.value
+                    signalData[trait.key] = trait.value
                 }
             }
         }
 
-        guard let url = URL.buildAudienceHitURL(state: self) else {
+        guard let url = URL.buildAudienceHitURL(state: self, data: signalData) else {
             Log.debug(label: getLogTagWith(functionName: #function), "Dropping Audience hit, failed to create hit URL")
             return
         }
@@ -509,12 +510,6 @@ class AudienceState {
         return self.syncedVisitorIds
     }
 
-    /// Returns the customer event data from the AudienceState instance.
-    /// - Returns: A dictionary containing the customer event data present in the signalWithData event
-    func getCustomerEventData() -> [String: String] {
-        return self.customerEventData
-    }
-
     /// Get the data for this AudienceState instance to share with other extensions.
     /// The state data is only populated if the set privacy status is not `PrivacyStatus.optedOut`.
     /// - Returns: A dictionary containing the event data stored in the AudienceState
@@ -586,7 +581,6 @@ class AudienceState {
         self.blob = ""
         self.locationHint = ""
         self.syncedVisitorIds = []
-        self.customerEventData = [:]
     }
 
     /// Clears all the audience manager configuration settings

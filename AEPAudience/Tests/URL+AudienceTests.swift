@@ -45,7 +45,7 @@ class URL_AudienceTests: XCTestCase {
         audienceState?.setUuid(uuid: "testUuid")
 
         // test
-        let url = URL.buildAudienceHitURL(state: audienceState)
+        let url = URL.buildAudienceHitURL(state: audienceState, data: [:])
 
         // verify
         XCTAssertEqual(expectedUrl, url?.absoluteString)
@@ -53,7 +53,7 @@ class URL_AudienceTests: XCTestCase {
 
     func testAudienceHitWithCustomerEventDataAndIdentityDataInSharedState() {
         // setup
-        let expectedUrl = "https://testServer.com/event?d_mid=12345567&d_blob=blobValue&dcs_region=9&d_cid_ic=DSID_20915%01test_ad_id%011&d_orgid=testOrg@AdobeOrg&d_uuid=testUuid&d_ptfm=ios&d_dst=1&d_rtbd=json"
+        let expectedUrl = "https://testServer.com/event?c_test=data&d_mid=12345567&d_blob=blobValue&dcs_region=9&d_cid_ic=DSID_20915%01test_ad_id%011&d_orgid=testOrg@AdobeOrg&d_uuid=testUuid&d_ptfm=ios&d_dst=1&d_rtbd=json"
         // create configuration shared state and configuration response content event
         let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer.com", AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrg@AdobeOrg", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue]
         let event = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: nil)
@@ -70,7 +70,7 @@ class URL_AudienceTests: XCTestCase {
         audienceState?.setUuid(uuid: "testUuid")
 
         // test
-        let url = URL.buildAudienceHitURL(state: audienceState)
+        let url = URL.buildAudienceHitURL(state: audienceState, data: ["test":"data"])
 
         // verify
         XCTAssertEqual(expectedUrl, url?.absoluteString)
@@ -96,7 +96,7 @@ class URL_AudienceTests: XCTestCase {
         audienceState?.setUuid(uuid: "testUuid")
 
         // test
-        let url = URL.buildAudienceHitURL(state: audienceState)
+        let url = URL.buildAudienceHitURL(state: audienceState, data: [:])
 
         // verify
         XCTAssertEqual(expectedUrl, url?.absoluteString)
@@ -122,7 +122,7 @@ class URL_AudienceTests: XCTestCase {
         audienceState?.setUuid(uuid: "testUuid")
 
         // test
-        let url = URL.buildAudienceHitURL(state: audienceState)
+        let url = URL.buildAudienceHitURL(state: audienceState, data: [:])
 
         // verify
         XCTAssertEqual(expectedUrl, url?.absoluteString)
@@ -148,7 +148,7 @@ class URL_AudienceTests: XCTestCase {
         audienceState?.setUuid(uuid: "testUuid")
 
         // test
-        let url = URL.buildAudienceHitURL(state: audienceState)
+        let url = URL.buildAudienceHitURL(state: audienceState, data: [:])
 
         // verify
         XCTAssertEqual(expectedUrl, url?.absoluteString)
@@ -174,7 +174,7 @@ class URL_AudienceTests: XCTestCase {
         audienceState?.setUuid(uuid: "testUuid")
 
         // test
-        let url = URL.buildAudienceHitURL(state: audienceState)
+        let url = URL.buildAudienceHitURL(state: audienceState, data: [:])
 
         // verify
         XCTAssertEqual(expectedUrl, url?.absoluteString)

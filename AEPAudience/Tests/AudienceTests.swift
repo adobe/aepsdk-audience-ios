@@ -22,6 +22,10 @@ class AudienceTests: XCTestCase {
     var responseCallbackArgs = [(DataEntity, Data?)]()
     var dataStore : NamedCollectionDataStore!
     var audienceState: AudienceState!
+    
+    let lifecycleContextData:[String: String] =
+        [AudienceConstants.Lifecycle.APP_ID: "testAppId",
+         AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
 
     override func setUp() {
         ServiceProvider.shared.networkService = MockNetworking()
@@ -285,10 +289,8 @@ class AudienceTests: XCTestCase {
         // setup
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
-        // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
         // create the lifecycle event and simulate having the configuration data in shared state
-        let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
+        let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
         let _ = audience.readyForEvent(lifecycleEvent)
 
@@ -303,7 +305,7 @@ class AudienceTests: XCTestCase {
         // setup
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
-        // create lifecycle response content
+        // create the lifecycle event and simulate having the configuration data in shared state
         let lifecycleContextData:[String: String] = [
             AudienceConstants.Lifecycle.APP_ID: "testAppId 1.0 (1)",
             AudienceConstants.Lifecycle.CARRIER_NAME: "testCarrier",
@@ -322,8 +324,7 @@ class AudienceTests: XCTestCase {
             AudienceConstants.Lifecycle.LOCALE: "en-US",
             AudienceConstants.Lifecycle.OPERATING_SYSTEM: "iOS 14.2",
             AudienceConstants.Lifecycle.RUN_MODE: "Application"]
-        // create the lifecycle event and simulate having the configuration data in shared state
-        let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: [AudienceConstants.Lifecycle.LIFECYCLE_CONTEXT_DATA: lifecycleContextData])
+        let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
         let _ = audience.readyForEvent(lifecycleEvent)
 
@@ -364,10 +365,8 @@ class AudienceTests: XCTestCase {
         // setup
         // dispatch a configuration response event containing aam timeout, privacy status opted in and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: nil, aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
-        // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
         // create the lifecycle event and simulate having the configuration data in shared state
-        let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
+        let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
         let _ = audience.readyForEvent(lifecycleEvent)
 
@@ -382,10 +381,8 @@ class AudienceTests: XCTestCase {
         // setup
         // dispatch a configuration response event containing aam timeout, privacy status opted in, empty aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
-        // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
         // create the lifecycle event and simulate having the configuration data in shared state
-        let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
+        let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
         let _ = audience.readyForEvent(lifecycleEvent)
 
@@ -400,10 +397,8 @@ class AudienceTests: XCTestCase {
         // setup
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to true
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: true, privacyStatus: .optedIn, aamTimeout: 10)
-        // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
         // create the lifecycle event and simulate having the configuration data in shared state
-        let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
+        let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
         let _ = audience.readyForEvent(lifecycleEvent)
 
@@ -418,10 +413,8 @@ class AudienceTests: XCTestCase {
         // setup
         // dispatch a configuration response event containing aam timeout, privacy status opted out, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedOut, aamTimeout: 10)
-        // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
         // create the lifecycle event and simulate having the configuration data in shared state
-        let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
+        let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
         let _ = audience.readyForEvent(lifecycleEvent)
 
@@ -436,10 +429,8 @@ class AudienceTests: XCTestCase {
         // setup
         // dispatch a configuration response event containing aam timeout, privacy status unknown, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .unknown, aamTimeout: 10)
-        // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
         // create the lifecycle event and simulate having the configuration data in shared state
-        let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
+        let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
         let _ = audience.readyForEvent(lifecycleEvent)
 
@@ -455,7 +446,7 @@ class AudienceTests: XCTestCase {
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedOut, aamTimeout: 10)
         // create the lifecycle event with empty data and simulate having the configuration data in shared state
-        let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
+        let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: nil)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
         let _ = audience.readyForEvent(lifecycleEvent)
 
@@ -470,10 +461,8 @@ class AudienceTests: XCTestCase {
         // setup
         // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
         let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
-        // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [String: Any]()
         // create the lifecycle event and simulate having the configuration data in shared state
-        let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
+        let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: [:])
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
         let _ = audience.readyForEvent(lifecycleEvent)
 
@@ -481,15 +470,14 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
 
         // verify
-        XCTAssertEqual(0, audience.state?.hitQueue.count())
+        XCTAssertEqual(1, audience.state?.hitQueue.count())
     }
 
     func testHandleLifecycleResponse_ConfigurationSharedStateIsPending() {
         // setup
-        // create lifecycle response content
-        let lifecycleContextData:[String: Any] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
         // create the lifecycle event and simulate having no configuration data in shared state
-        let lifecycleEvent = Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: lifecycleContextData)
+        let lifecycleContextData:[String: String] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
+        let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (nil, .set))
         let _ = audience.readyForEvent(lifecycleEvent)
 
@@ -498,6 +486,53 @@ class AudienceTests: XCTestCase {
 
         // verify
         XCTAssertEqual(0, audience.state?.hitQueue.count())
+    }
+    
+    func testHandleLifecycleResponse_thenHandleAudienceRequest_signalWithoutLifecycleData() {
+        // setup
+        // dispatch a configuration response event containing aam timeout, privacy status opted in, aam server, and aam forwarding status equal to false
+        let configData = dispatchConfigurationEventForTesting(aamServer: "testServer.com", aamForwardingStatus: false, privacyStatus: .optedIn, aamTimeout: 10)
+        // create the lifecycle event and simulate having the configuration data in shared state
+        let lifecycleContextData:[String: String] = [
+            AudienceConstants.Lifecycle.APP_ID: "testAppId 1.0 (1)",
+            AudienceConstants.Lifecycle.CARRIER_NAME: "testCarrier"]
+        let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
+        mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (configData, .set))
+        let traits = ["trait":"traitValue"]
+        var eventData = [String: Any]()
+        eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
+        let audienceEvent = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
+        
+        let _ = audience.readyForEvent(lifecycleEvent)
+
+        // test
+        mockRuntime.simulateComingEvent(event: lifecycleEvent)
+        mockRuntime.simulateComingEvent(event: audienceEvent)
+
+        // verify
+        XCTAssertEqual(2, mockHitQueue.count())
+        guard let data = mockHitQueue.queuedHits[0].data,
+              let audienceHit = try? JSONDecoder().decode(AudienceHit.self, from: data) else {
+            XCTFail("Failed to convert queued hit to AudienceHit")
+            return
+        }
+
+        let url = audienceHit.url.absoluteString
+        XCTAssertTrue(url.starts(with: "https://testServer.com/event"))
+        XCTAssertTrue(url.contains("c_a.AppID=testAppId%201.0%20%281%29"))
+        XCTAssertTrue(url.contains("c_a.CarrierName=testCarrier"))
+        
+        guard let data = mockHitQueue.queuedHits[1].data,
+            let audienceHit2 = try? JSONDecoder().decode(AudienceHit.self, from: data) else {
+            XCTFail("Failed to convert queued hit to AudienceHit")
+            return
+        }
+
+        let url2 = audienceHit2.url.absoluteString
+        XCTAssertTrue(url2.starts(with: "https://testServer.com/event"))
+        XCTAssertFalse(url2.contains("c_a.AppID=testAppId%201.0%20%281%29"))
+        XCTAssertFalse(url2.contains("c_a.CarrierName=testCarrier"))
+        XCTAssertTrue(url2.contains("c_trait=traitValue"))
     }
 
     // ==========================================================================
@@ -863,7 +898,7 @@ class AudienceTests: XCTestCase {
     // ==========================================================================
     // handleAudienceContentRequest
     // ==========================================================================
-    func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_AamServerAndUuidPresent() {
+    func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_AamServerAndUuidPresent_Queued() {
         // setup
         audience.state?.setUuid(uuid: "testUuid")
         audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
@@ -881,12 +916,21 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: event)
 
         // verify
-        XCTAssertEqual(1, audience.state?.hitQueue.count())
-        // verify signaled trait is stored in audience state
-        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
+        XCTAssertEqual(1, mockHitQueue.count())
+        guard let data = mockHitQueue.queuedHits[0].data, let aamHit = try? JSONDecoder().decode(AudienceHit.self, from: data) else {
+            XCTFail("Failed to convert to AudienceHit")
+            return
+        }
+        let url = aamHit.url.absoluteString
+        XCTAssertTrue(url.contains("https://testServer.com/event?"))
+        XCTAssertTrue(url.contains("c_trait=traitValue"))
+        XCTAssertTrue(url.contains("d_ptfm=ios"))
+        XCTAssertTrue(url.contains("d_dst=1"))
+        XCTAssertTrue(url.contains("d_rtbd=json"))
+        XCTAssertTrue(url.contains("d_uuid=testUuid"))
     }
 
-    func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_AamServerEmptyAndUuidPresent() {
+    func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_AamServerEmptyAndUuidPresent_NotQueued() {
         // setup
         audience.state?.setUuid(uuid: "testUuid")
         audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
@@ -904,12 +948,10 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: event)
 
         // verify
-        XCTAssertEqual(0, audience.state?.hitQueue.count())
-        // verify signaled trait is stored in audience state
-        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
+        XCTAssertEqual(0, mockHitQueue.count())
     }
 
-    func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_AamServerNilAndUuidPresent() {
+    func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_AamServerNilAndUuidPresent_NotQueued() {
         // setup
         audience.state?.setUuid(uuid: "testUuid")
         audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
@@ -927,12 +969,10 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: event)
 
         // verify
-        XCTAssertEqual(0, audience.state?.hitQueue.count())
-        // verify signaled trait is stored in audience state
-        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
+        XCTAssertEqual(0, mockHitQueue.count())
     }
 
-    func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_AamServerPresentAndUuidEmpty() {
+    func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_AamServerPresentAndUuidEmpty_Queued() {
         // setup
         audience.state?.setUuid(uuid: "")
         audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
@@ -950,12 +990,21 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: event)
 
         // verify
-        XCTAssertEqual(1, audience.state?.hitQueue.count())
-        // verify signaled trait is stored in audience state
-        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
+        XCTAssertEqual(1, mockHitQueue.count())
+        guard let data = mockHitQueue.queuedHits[0].data, let aamHit = try? JSONDecoder().decode(AudienceHit.self, from: data) else {
+            XCTFail("Failed to convert to AudienceHit")
+            return
+        }
+        let url = aamHit.url.absoluteString
+        XCTAssertTrue(url.contains("https://testServer.com/event?"))
+        XCTAssertTrue(url.contains("c_trait=traitValue"))
+        XCTAssertTrue(url.contains("d_ptfm=ios"))
+        XCTAssertTrue(url.contains("d_dst=1"))
+        XCTAssertTrue(url.contains("d_rtbd=json"))
+        XCTAssertFalse(url.contains("d_uuid"))
     }
 
-    func testHandleAudienceContentRequest_PrivacyStatusUnknown_When_AamServerAndUuidPresent() {
+    func testHandleAudienceContentRequest_PrivacyStatusUnknown_When_AamServerAndUuidPresent_Queued() {
         // setup
         audience.state?.setUuid(uuid: "testUuid")
         audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
@@ -973,12 +1022,21 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: event)
 
         // verify
-        XCTAssertEqual(1, audience.state?.hitQueue.count())
-        // verify signaled trait is stored in audience state
-        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
+        XCTAssertEqual(1, mockHitQueue.count())
+        guard let data = mockHitQueue.queuedHits[0].data, let aamHit = try? JSONDecoder().decode(AudienceHit.self, from: data) else {
+            XCTFail("Failed to convert to AudienceHit")
+            return
+        }
+        let url = aamHit.url.absoluteString
+        XCTAssertTrue(url.contains("https://testServer.com/event?"))
+        XCTAssertTrue(url.contains("c_trait=traitValue"))
+        XCTAssertTrue(url.contains("d_ptfm=ios"))
+        XCTAssertTrue(url.contains("d_dst=1"))
+        XCTAssertTrue(url.contains("d_rtbd=json"))
+        XCTAssertTrue(url.contains("d_uuid=testUuid"))
     }
 
-    func testHandleAudienceContentRequest_PrivacyStatusOptedOut_When_AamServerAndUuidPresent() {
+    func testHandleAudienceContentRequest_PrivacyStatusOptedOut_When_AamServerAndUuidPresent_NotQueued() {
         // setup
         audience.state?.setUuid(uuid: "testUuid")
         audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
@@ -996,12 +1054,10 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: event)
 
         // verify
-        XCTAssertEqual(0, audience.state?.hitQueue.count())
-        // verify signaled trait is not stored in audience state due to privacy opt out
-        XCTAssertEqual([:], audience?.state?.getCustomerEventData())
+        XCTAssertEqual(0, mockHitQueue.count())
     }
 
-    func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_TimeoutNotPresent() {
+    func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_TimeoutNotPresent_Queued() {
         // setup
         audience.state?.setUuid(uuid: "testUuid")
         audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
@@ -1019,12 +1075,21 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: event)
 
         // verify
-        XCTAssertEqual(1, audience.state?.hitQueue.count())
-        // verify signaled trait is stored in audience state
-        XCTAssertEqual(["trait":"traitValue"], audience?.state?.getCustomerEventData())
+        XCTAssertEqual(1, mockHitQueue.count())
+        guard let data = mockHitQueue.queuedHits[0].data, let aamHit = try? JSONDecoder().decode(AudienceHit.self, from: data) else {
+            XCTFail("Failed to convert to AudienceHit")
+            return
+        }
+        let url = aamHit.url.absoluteString
+        XCTAssertTrue(url.contains("https://testServer.com/event?"))
+        XCTAssertTrue(url.contains("c_trait=traitValue"))
+        XCTAssertTrue(url.contains("d_ptfm=ios"))
+        XCTAssertTrue(url.contains("d_dst=1"))
+        XCTAssertTrue(url.contains("d_rtbd=json"))
+        XCTAssertTrue(url.contains("d_uuid=testUuid"))
     }
 
-    func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_ProvidedTraitsAreEmpty() {
+    func testHandleAudienceContentRequest_PrivacyStatusOptedIn_When_ProvidedTraitsAreEmpty_Queued() {
         // setup
         audience.state?.setUuid(uuid: "testUuid")
         audience.state?.setVisitorProfile(visitorProfile: ["profilekey": "profileValue"])
@@ -1042,9 +1107,17 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateComingEvent(event: event)
 
         // verify
-        XCTAssertEqual(1, audience.state?.hitQueue.count())
-        // verify no signaled trait is stored in audience state
-        XCTAssertEqual([:], audience?.state?.getCustomerEventData())
+        XCTAssertEqual(1, mockHitQueue.count())
+        guard let data = mockHitQueue.queuedHits[0].data, let aamHit = try? JSONDecoder().decode(AudienceHit.self, from: data) else {
+            XCTFail("Failed to convert to AudienceHit")
+            return
+        }
+        let url = aamHit.url.absoluteString
+        XCTAssertTrue(url.contains("https://testServer.com/event?"))
+        XCTAssertTrue(url.contains("d_ptfm=ios"))
+        XCTAssertTrue(url.contains("d_dst=1"))
+        XCTAssertTrue(url.contains("d_rtbd=json"))
+        XCTAssertTrue(url.contains("d_uuid=testUuid"))
     }
 
     func testHandleResetIdentities_AllIdentifiersClearedFromAudienceState() {
@@ -1104,6 +1177,10 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("testServer", audience?.state?.getAamServer())
         XCTAssertEqual(10.0, audience?.state?.getAamTimeout()) // the default aam timeout should be returned
 
+    }
+    
+    private func createLifecycleResponseEvent(withContextDataData: [String:String]?) -> Event {
+        return Event(name: "Test Lifecycle response", type: EventType.lifecycle, source: EventSource.responseContent, data: [AudienceConstants.Lifecycle.LIFECYCLE_CONTEXT_DATA: withContextDataData])
     }
 
 }
