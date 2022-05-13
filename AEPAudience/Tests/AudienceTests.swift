@@ -22,7 +22,7 @@ class AudienceTests: XCTestCase {
     var responseCallbackArgs = [(DataEntity, Data?)]()
     var dataStore : NamedCollectionDataStore!
     var audienceState: AudienceState!
-    
+
     let lifecycleContextData:[String: String] =
         [AudienceConstants.Lifecycle.APP_ID: "testAppId",
          AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
@@ -59,11 +59,11 @@ class AudienceTests: XCTestCase {
 
     private func mockConfiguration(aamServer: String?, aamForwardingStatus: Bool, privacyStatus: PrivacyStatus, aamTimeout: TimeInterval?){
         let configData: [String: Any] =
-        [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: privacyStatus.rawValue,
-         AudienceConstants.Configuration.AAM_SERVER: aamServer as Any,
-         AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING: aamForwardingStatus as Any,
-         AudienceConstants.Configuration.AAM_TIMEOUT: aamTimeout as Any]
-        
+            [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: privacyStatus.rawValue,
+             AudienceConstants.Configuration.AAM_SERVER: aamServer as Any,
+             AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING: aamForwardingStatus as Any,
+             AudienceConstants.Configuration.AAM_TIMEOUT: aamTimeout as Any]
+
         let configEvent = Event(name: "configuration response event",
                                 type: EventType.configuration,
                                 source: EventSource.responseContent,
@@ -73,7 +73,7 @@ class AudienceTests: XCTestCase {
         // dispatch the event
         mockRuntime.simulateComingEvent(event: configEvent)
     }
-    
+
     private func createLifecycleResponseEvent(withContextDataData: [String:String]?) -> Event {
         var eventData: [String: Any] = [:]
         if let data = withContextDataData {
@@ -511,7 +511,7 @@ class AudienceTests: XCTestCase {
         // verify
         XCTAssertEqual(0, audience.state?.hitQueue.count())
     }
-    
+
     func testHandleLifecycleResponse_thenHandleAudienceRequest_signalWithoutLifecycleData() {
         // setup
         mockConfiguration(aamServer: "testServer.com",
@@ -527,7 +527,7 @@ class AudienceTests: XCTestCase {
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let audienceEvent = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
-        
+
         let _ = audience.readyForEvent(lifecycleEvent)
 
         // test
@@ -546,9 +546,9 @@ class AudienceTests: XCTestCase {
         XCTAssertTrue(url.starts(with: "https://testServer.com/event"))
         XCTAssertTrue(url.contains("c_a.AppID=testAppId%201.0%20%281%29"))
         XCTAssertTrue(url.contains("c_a.CarrierName=testCarrier"))
-        
+
         guard let data = mockHitQueue.queuedHits[1].data,
-            let audienceHit2 = try? JSONDecoder().decode(AudienceHit.self, from: data) else {
+              let audienceHit2 = try? JSONDecoder().decode(AudienceHit.self, from: data) else {
             XCTFail("Failed to convert queued hit to AudienceHit")
             return
         }
