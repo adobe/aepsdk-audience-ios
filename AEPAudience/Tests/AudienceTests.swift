@@ -547,8 +547,8 @@ class AudienceTests: XCTestCase {
         XCTAssertTrue(url.contains("c_a.AppID=testAppId%201.0%20%281%29"))
         XCTAssertTrue(url.contains("c_a.CarrierName=testCarrier"))
 
-        guard let data = mockHitQueue.queuedHits[1].data,
-              let audienceHit2 = try? JSONDecoder().decode(AudienceHit.self, from: data) else {
+        guard let data2 = mockHitQueue.queuedHits[1].data,
+              let audienceHit2 = try? JSONDecoder().decode(AudienceHit.self, from: data2) else {
             XCTFail("Failed to convert queued hit to AudienceHit")
             return
         }
