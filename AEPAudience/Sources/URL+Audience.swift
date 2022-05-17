@@ -19,7 +19,8 @@ extension URL {
     /// Creates a new Audience Manager hit URL
     /// - Parameters:
     ///   - state: the Audience State containing Audience-related variables.
-    static func buildAudienceHitURL(state: AudienceState?) -> URL? {
+    ///   - data: new signal data to be sent
+    static func buildAudienceHitURL(state: AudienceState?, data: [String: String]) -> URL? {
         let aamServer = state?.getAamServer() ?? ""
         // bail if the aam server is empty
         if aamServer.isEmpty {
@@ -34,9 +35,8 @@ extension URL {
 
         var queryItems: [URLQueryItem] = []
 
-        // Attach the customer data sent by the SignalWithData API
-        let customerEventData = state?.getCustomerEventData() ?? [:]
-        for (key, value) in customerEventData {
+        // Attach the customer data sent by the SignalWithData API or from an internal event
+        for (key, value) in data {
             if key.isEmpty || value.isEmpty {
                 continue
             }
