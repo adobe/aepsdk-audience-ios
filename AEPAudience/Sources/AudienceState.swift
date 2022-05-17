@@ -48,8 +48,6 @@ class AudienceState {
     private var locationHint = String()
     ///  The synced visitor ID's provided by the Identity extension
     private var syncedVisitorIds = [[String: Any]]()
-    /// The customer event data present in an event triggering a signalWithData hit
-    private var customerEventData = [String: String]()
     /// Store the timestamp for most recent resetIdentities API call
     var lastResetTimestamp = TimeInterval()
 
@@ -89,11 +87,11 @@ class AudienceState {
 
         // if the event is a lifecycle event, convert the lifecycle keys to audience manager keys
         var signalData: [String: String] = [:]
-        if event.type == EventType.lifecycle, let eventData = event.data, !eventData.isEmpty {
-            Log.debug(label: getLogTagWith(functionName: #function), "Lifecycle event found, processing context data")
-            signalData = convertLifecycleKeys(event: event)
-        } else {
-            if let eventData = event.data, !eventData.isEmpty {
+        if let eventData = event.data, !eventData.isEmpty {
+            if event.type == EventType.lifecycle {
+                Log.debug(label: getLogTagWith(functionName: #function), "Lifecycle event found, processing context data")
+                signalData = convertLifecycleKeys(event: event)
+            } else {
                 let signaledTraits = eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] as? [String: String] ?? [:]
                 for trait in signaledTraits {
                     signalData[trait.key] = trait.value
