@@ -18,7 +18,8 @@ import AEPAudience
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    private let LAUNCH_ENVIRONMENT_FILE_ID = "YOUR-APP-ID"
+    // TODO: Set up the preferred Environment File ID from your mobile property configured in Data Collection UI
+    private let ENVIRONMENT_FILE_ID = "YOUR-APP-ID"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
@@ -29,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ], {
 
             // Use the App id assigned to this application via Adobe Launch
-            MobileCore.configureWith(appId: self.LAUNCH_ENVIRONMENT_FILE_ID)
+            MobileCore.configureWith(appId: self.ENVIRONMENT_FILE_ID)
             if appState != .background {
                 MobileCore.lifecycleStart(additionalContextData: ["contextDataKey": "contextDataVal"])
             }
