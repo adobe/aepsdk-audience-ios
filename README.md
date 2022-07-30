@@ -72,7 +72,7 @@ Run `make archive` from the root directory to generate `.xcframeworks` for each 
 
 ## Documentation
 
-Additional documentation for usage and SDK architecture can be found under the [Documentation](Documentation/README.md) directory.
+Additional documentation for usage and SDK architecture can be found under the [Documentation](Documentation) directory.
 
 ## Contributing
 
