@@ -8,6 +8,8 @@ SIMULATOR_ARCHIVE_DSYM_PATH = $(CURR_DIR)/build/ios_simulator.xcarchive/dSYMs/
 IOS_ARCHIVE_PATH = $(CURR_DIR)/build/ios.xcarchive/Products/Library/Frameworks/
 IOS_ARCHIVE_DSYM_PATH = $(CURR_DIR)/build/ios.xcarchive/dSYMs/
 
+TEST_APP_IOS_SCHEME = AudienceSampleApp
+
 pod-repo-update:
 	pod repo update
 
@@ -23,9 +25,9 @@ pod-update: pod-repo-update
 open:
 	open $(PROJECT_NAME).xcworkspace
 
-test: clean-ios-test-files
+test-ios: clean-ios-test-files
 	@echo "######################################################################"
-	@echo "### Unit Testing iOS"
+	@echo "### Testing iOS"
 	@echo "######################################################################"
 	xcodebuild test -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination 'platform=iOS Simulator,name=iPhone 14' -derivedDataPath build/out -resultBundlePath iosresults.xcresult -enableCodeCoverage YES
 

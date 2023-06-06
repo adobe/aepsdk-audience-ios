@@ -104,6 +104,7 @@ jobs:
           flags: ios-tests
           upload_name: Coverage Report for iOS Tests
           xtra_args: -c -v --xc --xp iosresults.xcresult
+          
   build_xcframework_and_app:  
     macos:
       xcode: 14.1.0 # Specify the Xcode version to use
