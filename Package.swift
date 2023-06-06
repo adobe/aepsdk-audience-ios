@@ -15,12 +15,12 @@ import PackageDescription
 
 let package = Package(
     name: "AEPAudience",
-    platforms: [.iOS(.v10)],
+    platforms: [.iOS(.v11)],
     products: [
         .library(name: "AEPAudience", targets: ["AEPAudience"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/adobe/aepsdk-core-ios.git", .upToNextMajor(from: "3.0.0"))
+        .package(url: "https://github.com/adobe/aepsdk-core-ios.git", .upToNextMajor(from: "4.0.0"))
     ],
     targets: [
         .target(name: "AEPAudience",

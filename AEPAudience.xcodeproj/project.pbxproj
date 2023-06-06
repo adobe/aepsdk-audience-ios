@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -316,6 +316,7 @@
 				2EBEE76C2525A35300880E72 /* Sources */,
 				2EBEE76D2525A35300880E72 /* Frameworks */,
 				2EBEE76E2525A35300880E72 /* Resources */,
+				926F33CE2A2F273F00F12881 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -335,6 +336,7 @@
 				2EBEE7762525A35400880E72 /* Frameworks */,
 				2EBEE7772525A35400880E72 /* Resources */,
 				24BEBB43A70E421B0C47CEF5 /* [CP] Embed Pods Frameworks */,
+				926F33D12A2F347B00F12881 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -355,6 +357,7 @@
 				D66FD48425C241130029CD02 /* Frameworks */,
 				D66FD48525C241130029CD02 /* Resources */,
 				E697D09D0D28B521DD963319 /* [CP] Embed Pods Frameworks */,
+				926F33D02A2F27F800F12881 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -520,6 +523,60 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		926F33CE2A2F273F00F12881 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which ${PODS_ROOT}/SwiftLint/swiftlint >/dev/null; then\n    ${PODS_ROOT}/SwiftLint/swiftlint lint --config ${SRCROOT}/.swiftlint.yml AEPAudience/Sources\nelse\n    echo \"warning: SwiftLint is not installed, please run the pod install command from the project root directory.\"\nfi\n";
+		};
+		926F33D02A2F27F800F12881 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which ${PODS_ROOT}/SwiftLint/swiftlint >/dev/null; then\n    ${PODS_ROOT}/SwiftLint/swiftlint lint --config ${SRCROOT}/.swiftlint.yml --lenient AudienceSampleApp\nelse\n    echo \"warning: SwiftLint is not installed, please run the pod install command from the project root directory.\"\nfi\n";
+		};
+		926F33D12A2F347B00F12881 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ -z ${ADB_SKIP_LINT} || ${ADB_SKIP_LINT} -ne \"YES\" ]]; then\n    if which ${PODS_ROOT}/SwiftLint/swiftlint >/dev/null; then\n        ${PODS_ROOT}/SwiftLint/swiftlint lint --config ${SRCROOT}/.swiftlint.yml Tests/Tests\n        echo \"warning: SwiftLint is not installed, please run the pod install command from the project root directory.\"\n    fi\nelse\n    echo \"Skipping linting build phase as ADB_SKIP_LINT flag is YES.\"\nfi\n\n\n\n";
+		};
 		E697D09D0D28B521DD963319 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -668,7 +725,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MACH_O_TYPE = mh_dylib;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -727,7 +784,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MACH_O_TYPE = mh_dylib;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -758,7 +815,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.4;
+				MARKETING_VERSION = 4.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.mobile.AEPAudience;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -786,7 +843,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.4;
+				MARKETING_VERSION = 4.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.mobile.AEPAudience;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;

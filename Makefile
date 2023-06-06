@@ -8,60 +8,67 @@ SIMULATOR_ARCHIVE_DSYM_PATH = $(CURR_DIR)/build/ios_simulator.xcarchive/dSYMs/
 IOS_ARCHIVE_PATH = $(CURR_DIR)/build/ios.xcarchive/Products/Library/Frameworks/
 IOS_ARCHIVE_DSYM_PATH = $(CURR_DIR)/build/ios.xcarchive/dSYMs/
 
-setup:
-	(pod install)
-
 pod-repo-update:
-	(pod repo update)
+	pod repo update
 
-# pod repo update may fail if there is no repo (issue fixed in v1.8.4). Use pod install --repo-update instead
 pod-install:
-	(pod install --repo-update)
+	pod install --repo-update
+
+ci-pod-install:
+	bundle exec pod install --repo-update
 
 pod-update: pod-repo-update
-	(pod update)
+	pod update
 
 open:
 	open $(PROJECT_NAME).xcworkspace
 
-test:
+test: clean-ios-test-files
 	@echo "######################################################################"
 	@echo "### Unit Testing iOS"
 	@echo "######################################################################"
-	xcodebuild test -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination 'platform=iOS Simulator,name=iPhone 8' -derivedDataPath build/out -enableCodeCoverage YES
+	xcodebuild test -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination 'platform=iOS Simulator,name=iPhone 14' -derivedDataPath build/out -resultBundlePath iosresults.xcresult -enableCodeCoverage YES
 
 install-swiftlint:
 	HOMEBREW_NO_AUTO_UPDATE=1 brew install swiftlint && brew cleanup swiftlint
 
-archive: pod-update
+archive: clean pod-update
+	@echo "######################################################################"
+	@echo "### Generating iOS Frameworks for $(PROJECT_NAME)"
+	@echo "######################################################################"
 	xcodebuild archive -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -archivePath "./build/ios.xcarchive" -sdk iphoneos -destination="iOS" SKIP_INSTALL=NO BUILD_LIBRARIES_FOR_DISTRIBUTION=YES
 	xcodebuild archive -workspace $(PROJECT_NAME).xcworkspace -scheme $(SCHEME_NAME_XCFRAMEWORK) -archivePath "./build/ios_simulator.xcarchive" -sdk iphonesimulator -destination="iOS Simulator" SKIP_INSTALL=NO BUILD_LIBRARIES_FOR_DISTRIBUTION=YES
 	xcodebuild -create-xcframework -framework $(SIMULATOR_ARCHIVE_PATH)$(PROJECT_NAME).framework -debug-symbols $(SIMULATOR_ARCHIVE_DSYM_PATH)$(EXTENSION_NAME).framework.dSYM -framework $(IOS_ARCHIVE_PATH)$(PROJECT_NAME).framework -debug-symbols $(IOS_ARCHIVE_DSYM_PATH)$(EXTENSION_NAME).framework.dSYM -output ./build/$(PROJECT_NAME).xcframework
 
+zip:
+	cd build && zip -r -X $(PROJECT_NAME).xcframework.zip $(PROJECT_NAME).xcframework/
+	swift package compute-checksum build/$(PROJECT_NAME).xcframework.zip
+
+build-app: pod-install
+	@echo "######################################################################"
+	@echo "### Building $(TEST_APP_IOS_SCHEME)"
+	@echo "######################################################################"
+	xcodebuild clean build -workspace $(PROJECT_NAME).xcworkspace -scheme $(TEST_APP_IOS_SCHEME) -destination 'generic/platform=iOS Simulator'
+
 clean:
 	rm -rf ./build
 
+clean-ios-test-files:
+	rm -rf iosresults.xcresult
+
 lint:
-	./Pods/SwiftLint/swiftlint lint
+	./Pods/SwiftLint/swiftlint lint AEPAudience/Sources
 
 lint-autocorrect:
 	./Pods/SwiftLint/swiftlint --fix
 
-checkFormat:
-	swiftformat . --lint --swiftversion 5.1
-
-format:
-	swiftformat . --swiftversion 5.1
-
-# make check-version VERSION=3.0.0
+# release checks
+# make check-version VERSION=4.0.0
 check-version:
-	(sh ./Script/version.sh $(VERSION))
+	sh ./Script/version.sh $(VERSION)
 
 test-SPM-integration:
-	(sh ./Script/test-SPM.sh)
+	sh ./Script/test-SPM.sh
 
 test-podspec:
-	(sh ./Script/test-podspec.sh)
-
-pod-lint:
-	(pod lib lint --allow-warnings --verbose --swift-version=5.1)
+	sh ./Script/test-podspec.sh
