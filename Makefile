@@ -31,9 +31,6 @@ test-ios: clean-ios-test-files
 	@echo "######################################################################"
 	xcodebuild test -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination 'platform=iOS Simulator,name=iPhone 14' -derivedDataPath build/out -resultBundlePath iosresults.xcresult -enableCodeCoverage YES
 
-install-swiftlint:
-	HOMEBREW_NO_AUTO_UPDATE=1 brew install swiftlint && brew cleanup swiftlint
-
 archive: clean pod-update
 	@echo "######################################################################"
 	@echo "### Generating iOS Frameworks for $(PROJECT_NAME)"
