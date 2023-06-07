@@ -26,7 +26,7 @@ commands:
       - restore_cache:
           name: Restoring Gemfile Cache
           keys:
-            - 1-gems-{{ checksum "Gemfile.lock" }}
+            - 3-gems-{{ checksum "Gemfile.lock" }}
 
       # make sure we're on the right version of cocoapods
       - run:
@@ -36,7 +36,7 @@ commands:
       # save cocoapods version gem data
       - save_cache:
           name: Saving Gemfile Cache
-          key: 1-gems-{{ checksum "Gemfile.lock" }}
+          key: 3-gems-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
 
