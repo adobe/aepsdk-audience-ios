@@ -17,7 +17,7 @@ This section walks through how to get up and running with the AEP Swift Audience
 
 ## Set up a Mobile Property
 
-Set up a mobile property as outlined in the Adobe Experience Platform [docs](https://aep-sdks.gitbook.io/docs/getting-started/create-a-mobile-property)
+Set up a mobile property as outlined in the Adobe Experience Platform [docs](https://developer.adobe.com/client-sdks/documentation/getting-started/create-a-mobile-property/)
 
 ## Get the Swift Mobile Audience
 
