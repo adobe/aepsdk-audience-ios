@@ -71,3 +71,9 @@ test-SPM-integration:
 
 test-podspec:
 	sh ./Script/test-podspec.sh
+
+# make bump-versions from='3\.1\.0' to=3.1.1
+bump-versions:
+	(LC_ALL=C find . -type f -name 'project.pbxproj' -exec sed -i '' 's/$(from)/$(to)/' {} +)
+	(LC_ALL=C find . -type f -name '*.swift' -exec sed -i '' 's/$(from)/$(to)/' {} +)
+	(LC_ALL=C find . -type f -name '*.podspec' -exec sed -i '' 's/$(from)/$(to)/' {} +)
