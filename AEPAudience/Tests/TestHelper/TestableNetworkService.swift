@@ -34,11 +34,11 @@ public class TestableNetworkService: Networking {
         completionHandler?(HttpConnection(data: nil, response: nil, error: nil))
     }
 
-    public func mock(resolver:@escaping RequestResolver) {
+    public func mock(resolver: @escaping RequestResolver) {
         resolvers += [resolver]
     }
 
-    public func getRequest(at index:Int) -> NetworkRequest? {
+    public func getRequest(at index: Int) -> NetworkRequest? {
         if index + 1 <= requests.count {
             return requests[index]
         }

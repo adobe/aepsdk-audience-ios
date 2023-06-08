@@ -78,7 +78,7 @@ class TestableExtensionRuntime: ExtensionRuntime {
         return createdSharedStates.last ?? [:]
     }
 
-    public func createXDMSharedState(data: [String : Any], event: Event?) {
+    public func createXDMSharedState(data: [String: Any], event: Event?) {
         // no-op
     }
 
