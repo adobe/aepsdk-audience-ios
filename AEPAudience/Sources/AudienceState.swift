@@ -14,6 +14,7 @@ import AEPServices
 import AEPCore
 import Foundation
 
+// swiftlint:disable type_body_length
 /// @class AudienceState
 /// 1. Responsible for keeping the current state of all Audience-related variables.
 /// 2. Persists variables via the NamedCollectionDataStore.
@@ -663,3 +664,4 @@ class AudienceState {
         return segments
     }
 }
+// swiftlint:enable type_body_length

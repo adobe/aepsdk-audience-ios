@@ -15,7 +15,7 @@
 import XCTest
 
 class AudienceHitProcessorTests: XCTestCase {
-    let DEFAULT_TIMEOUT : TimeInterval = 2000;
+    let DEFAULT_TIMEOUT: TimeInterval = 2000
     var hitProcessor: AudienceHitProcessor!
     var responseCallbackArgs = [(DataEntity, Data?)]()
     var mockNetworkService: MockNetworking? {
@@ -52,7 +52,7 @@ class AudienceHitProcessorTests: XCTestCase {
         // setup
         let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should not be retried")
         let expectedUrl = URL(string: "adobe.com")!
-        let expectedEvent = Event(name: "Hit Event", type: EventType.audienceManager, source: EventSource.requestContent, data: ["signalKey1":"signalKey2"])
+        let expectedEvent = Event(name: "Hit Event", type: EventType.audienceManager, source: EventSource.requestContent, data: ["signalKey1": "signalKey2"])
         let hit = AudienceHit(url: expectedUrl, timeout: DEFAULT_TIMEOUT, event: expectedEvent)
         mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: HTTPURLResponse(url: expectedUrl, statusCode: 200, httpVersion: nil, headerFields: nil), error: nil)
 
