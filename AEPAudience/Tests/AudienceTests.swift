@@ -20,12 +20,12 @@ class AudienceTests: XCTestCase {
     var mockRuntime: TestableExtensionRuntime!
     var mockHitQueue: MockHitQueue!
     var responseCallbackArgs = [(DataEntity, Data?)]()
-    var dataStore : NamedCollectionDataStore!
+    var dataStore: NamedCollectionDataStore!
     var audienceState: AudienceState!
 
-    let lifecycleContextData:[String: String] =
+    let lifecycleContextData: [String: String] =
         [AudienceConstants.Lifecycle.APP_ID: "testAppId",
-         AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
+         AudienceConstants.Lifecycle.CARRIER_NAME: "testCarrier"]
 
     override func setUp() {
         ServiceProvider.shared.networkService = MockNetworking()
@@ -57,7 +57,7 @@ class AudienceTests: XCTestCase {
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: configEvent, data: (configData, .set))
     }
 
-    private func mockConfiguration(aamServer: String?, aamForwardingStatus: Bool, privacyStatus: PrivacyStatus, aamTimeout: TimeInterval?){
+    private func mockConfiguration(aamServer: String?, aamForwardingStatus: Bool, privacyStatus: PrivacyStatus, aamTimeout: TimeInterval?) {
         let configData: [String: Any] =
             [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: privacyStatus.rawValue,
              AudienceConstants.Configuration.AAM_SERVER: aamServer as Any,
@@ -69,12 +69,12 @@ class AudienceTests: XCTestCase {
                                 source: EventSource.responseContent,
                                 data: configData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: configEvent, data: (configData, .set))
-        let _ = audience.readyForEvent(configEvent)
+        _ = audience.readyForEvent(configEvent)
         // dispatch the event
         mockRuntime.simulateComingEvent(event: configEvent)
     }
 
-    private func createLifecycleResponseEvent(withContextDataData: [String:String]?) -> Event {
+    private func createLifecycleResponseEvent(withContextDataData: [String: String]?) -> Event {
         var eventData: [String: Any] = [:]
         if let data = withContextDataData {
             eventData[AudienceConstants.Lifecycle.LIFECYCLE_CONTEXT_DATA] = data
@@ -92,15 +92,13 @@ class AudienceTests: XCTestCase {
         guard let expectedIds = expectedIds, let actualIds = actualIds, expectedIds.count == actualIds.count else {
             return false
         }
-        for i in 0..<expectedIds.count {
-            if !NSDictionary(dictionary: expectedIds[i]).isEqual(to: actualIds[i]) {
-                return false
-            }
+        for i in 0..<expectedIds.count where !NSDictionary(dictionary: expectedIds[i]).isEqual(to: actualIds[i]) {
+            return false
         }
         return true
     }
 
-    //MARK: Audience Unit Tests
+    // MARK: Audience Unit Tests
 
     // ==========================================================================
     // handleConfigurationResponse
@@ -116,7 +114,7 @@ class AudienceTests: XCTestCase {
         // create the configuration response content event with the data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: data)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (data, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -130,7 +128,7 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual(["profilekey": "profileValue"], audience?.state?.getVisitorProfile())
         // uuid and visitor profile should be persisted in the datastore
         XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID, fallback: ""))
-        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE, fallback: [:]) as! [String : String])
+        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE, fallback: [:]) as! [String: String])
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedUnknown() {
@@ -144,7 +142,7 @@ class AudienceTests: XCTestCase {
         // create the configuration response content event with the data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: data)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (data, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -158,7 +156,7 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual(["profilekey": "profileValue"], audience?.state?.getVisitorProfile())
         // uuid and visitor profile should be persisted in the datastore
         XCTAssertEqual("testUuid", dataStore.getString(key: AudienceConstants.DataStoreKeys.USER_ID, fallback: ""))
-        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE, fallback: [:]) as! [String : String])
+        XCTAssertEqual(["profilekey": "profileValue"], dataStore.getDictionary(key: AudienceConstants.DataStoreKeys.PROFILE, fallback: [:]) as! [String: String])
     }
 
     func testHandleConfigurationResponse_PrivacyStatusOptedOut_When_AamServerAndUuidPresent() {
@@ -173,7 +171,7 @@ class AudienceTests: XCTestCase {
         // create the configuration response content event with the data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: data)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (data, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -202,7 +200,7 @@ class AudienceTests: XCTestCase {
         // create the configuration response content event with the data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: data)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (data, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -230,7 +228,7 @@ class AudienceTests: XCTestCase {
         // create the configuration response content event with the data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: data)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (data, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -258,7 +256,7 @@ class AudienceTests: XCTestCase {
         // create the configuration response content event with the data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: data)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (data, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -284,7 +282,7 @@ class AudienceTests: XCTestCase {
         // create the configuration response content event with empty data
         let event = Event(name: "Test Configuration response", type: EventType.configuration, source: EventSource.responseContent, data: nil)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: event, data: (nil, .set))
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -308,7 +306,7 @@ class AudienceTests: XCTestCase {
                           aamTimeout: 10)
         // create the lifecycle event and simulate having the configuration data in shared state
         let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -324,7 +322,7 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: 10)
         // create the lifecycle event and simulate having the configuration data in shared state
-        let lifecycleContextData:[String: String] = [
+        let lifecycleContextData: [String: String] = [
             AudienceConstants.Lifecycle.APP_ID: "testAppId 1.0 (1)",
             AudienceConstants.Lifecycle.CARRIER_NAME: "testCarrier",
             AudienceConstants.Lifecycle.DAILY_ENGAGED_EVENT: "DailyEngUserEvent",
@@ -343,7 +341,7 @@ class AudienceTests: XCTestCase {
             AudienceConstants.Lifecycle.OPERATING_SYSTEM: "iOS 14.2",
             AudienceConstants.Lifecycle.RUN_MODE: "Application"]
         let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -386,7 +384,7 @@ class AudienceTests: XCTestCase {
                           aamTimeout: 10)
         // create the lifecycle event and simulate having the configuration data in shared state
         let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -403,7 +401,7 @@ class AudienceTests: XCTestCase {
                           aamTimeout: 10)
         // create the lifecycle event and simulate having the configuration data in shared state
         let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -420,7 +418,7 @@ class AudienceTests: XCTestCase {
                           aamTimeout: 10)
         // create the lifecycle event and simulate having the configuration data in shared state
         let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -437,7 +435,7 @@ class AudienceTests: XCTestCase {
                           aamTimeout: 10)
         // create the lifecycle event and simulate having the configuration data in shared state
         let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -454,7 +452,7 @@ class AudienceTests: XCTestCase {
                           aamTimeout: 10)
         // create the lifecycle event and simulate having the configuration data in shared state
         let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -471,7 +469,7 @@ class AudienceTests: XCTestCase {
                           aamTimeout: 10)
         // create the lifecycle event with empty data and simulate having the configuration data in shared state
         let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: nil)
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -488,7 +486,7 @@ class AudienceTests: XCTestCase {
                           aamTimeout: 10)
         // create the lifecycle event and simulate having the configuration data in shared state
         let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: [:])
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -500,10 +498,10 @@ class AudienceTests: XCTestCase {
     func testHandleLifecycleResponse_ConfigurationSharedStateIsPending() {
         // setup
         // create the lifecycle event and simulate having no configuration data in shared state
-        let lifecycleContextData:[String: String] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME:"testCarrier"]
+        let lifecycleContextData: [String: String] = [AudienceConstants.Lifecycle.APP_ID: "testAppId", AudienceConstants.Lifecycle.CARRIER_NAME: "testCarrier"]
         let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
         mockRuntime.simulateSharedState(extensionName: AudienceConstants.SharedStateKeys.CONFIGURATION, event: lifecycleEvent, data: (nil, .set))
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -519,16 +517,16 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: 10)
         // create the lifecycle event
-        let lifecycleContextData:[String: String] = [
+        let lifecycleContextData: [String: String] = [
             AudienceConstants.Lifecycle.APP_ID: "testAppId 1.0 (1)",
             AudienceConstants.Lifecycle.CARRIER_NAME: "testCarrier"]
         let lifecycleEvent = createLifecycleResponseEvent(withContextDataData: lifecycleContextData)
-        let traits = ["trait":"traitValue"]
+        let traits = ["trait": "traitValue"]
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let audienceEvent = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
 
-        let _ = audience.readyForEvent(lifecycleEvent)
+        _ = audience.readyForEvent(lifecycleEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: lifecycleEvent)
@@ -571,10 +569,10 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -600,10 +598,10 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: nil)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -629,10 +627,10 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[]}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[]}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -654,10 +652,10 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\"}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\",\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\"}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -679,10 +677,10 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: " "]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: " "]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -703,10 +701,10 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -731,10 +729,10 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cv\":\"segments=1606170,2461982\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -759,10 +757,10 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"stuff\":[{\"cn\":\"testCookieName\", \"ttl\":30,\"dmn\":\"testServer.com\"}, {\"cn\":\"anotherCookieName\",\"cv\":\"segments=1234567,7890123\", \"ttl\":30,\"dmn\":\"testServer.com\"}],\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -787,10 +785,10 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"www.adobe.com\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -815,10 +813,10 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: 10)
         // create analytics response content
-        let analyticsResponse:[String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"\"},{\"c\":\"www.google.com\"}]}"]
+        let analyticsResponse: [String: Any] = [AudienceConstants.Analytics.SERVER_RESPONSE: "{\"uuid\":\"62392686667681235686319212494661564917\",\"dcs_region\":9,\"tid\":\"3jqoF+VgRH4=\",\"dests\":[{\"c\":\"\"},{\"c\":\"www.google.com\"}]}"]
         // create the analytics event
         let analyticsEvent = Event(name: "Test Analytics response", type: EventType.analytics, source: EventSource.responseContent, data: analyticsResponse)
-        let _ = audience.readyForEvent(analyticsEvent)
+        _ = audience.readyForEvent(analyticsEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: analyticsEvent)
@@ -839,10 +837,10 @@ class AudienceTests: XCTestCase {
     func testHandleAudienceIdentityRequest_VisitorProfileDataPresentInAudienceState() {
         // setup
         // add visitor profile data to audience state
-        audience?.state?.setVisitorProfile(visitorProfile: ["key1":"value1","key2":"value2","key3":"value3"])
+        audience?.state?.setVisitorProfile(visitorProfile: ["key1": "value1", "key2": "value2", "key3": "value3"])
         // create audience identity request event
         let audienceIdentityRequestEvent = Event(name: "Test Audience Identity Request", type: EventType.audienceManager, source: EventSource.requestIdentity, data: [String: Any]())
-        let _ = audience.readyForEvent(audienceIdentityRequestEvent)
+        _ = audience.readyForEvent(audienceIdentityRequestEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: audienceIdentityRequestEvent)
@@ -859,7 +857,7 @@ class AudienceTests: XCTestCase {
         audience?.state?.setVisitorProfile(visitorProfile: [:])
         // create audience identity request event
         let audienceIdentityRequestEvent = Event(name: "Test Audience Identity Request", type: EventType.audienceManager, source: EventSource.requestIdentity, data: [String: Any]())
-        let _ = audience.readyForEvent(audienceIdentityRequestEvent)
+        _ = audience.readyForEvent(audienceIdentityRequestEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: audienceIdentityRequestEvent)
@@ -878,17 +876,17 @@ class AudienceTests: XCTestCase {
         audience?.state?.setDpid(dpid: "testDpid")
         audience?.state?.setDpuuid(dpuuid: "testDpuuid")
         audience?.state?.setUuid(uuid: "testUuid")
-        audience?.state?.setVisitorProfile(visitorProfile: ["key1":"value1","key2":"value2","key3":"value3"])
+        audience?.state?.setVisitorProfile(visitorProfile: ["key1": "value1", "key2": "value2", "key3": "value3"])
         // add config and identity data to the Audience State
-        var customIds = [[String:Any]]()
+        var customIds = [[String: Any]]()
         customIds.append(["id_origin": "d_cid_ic", "id_type": "DSID_20915", "id": "test_ad_id", "authentication_state": 1])
         let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer", AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING: false, AudienceConstants.Configuration.AAM_TIMEOUT: 10.0, AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrgId", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue] as [String: Any]
         let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "1234567", AudienceConstants.Identity.VISITOR_ID_BLOB: "testBlob", AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT: "9", AudienceConstants.Identity.VISITOR_IDS_LIST: customIds] as [String: Any]
 
         let configEvent = Event(name: "configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: configSharedState)
 
-        audience?.state?.handleConfigurationSharedStateUpdate(event: configEvent, configSharedState: configSharedState, createSharedState: { data, event in
-        }, dispatchOptOutResult: { (optedOut, event) in})
+        audience?.state?.handleConfigurationSharedStateUpdate(event: configEvent, configSharedState: configSharedState, createSharedState: { _, _ in
+        }, dispatchOptOutResult: { (_, _) in})
         audience?.state?.handleIdentitySharedStateUpdate(identitySharedState: identitySharedState)
 
         // verify data was set
@@ -896,7 +894,7 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("testDpid", audience?.state?.getDpid())
         XCTAssertEqual("testDpuuid", audience?.state?.getDpuuid())
         XCTAssertEqual("testUuid", audience?.state?.getUuid())
-        XCTAssertEqual(["key1":"value1","key2":"value2","key3":"value3"], audience?.state?.getVisitorProfile())
+        XCTAssertEqual(["key1": "value1", "key2": "value2", "key3": "value3"], audience?.state?.getVisitorProfile())
         XCTAssertEqual(false, audience?.state?.getAamForwardingStatus())
         XCTAssertEqual("testServer", audience?.state?.getAamServer())
         XCTAssertEqual(10.0, audience?.state?.getAamTimeout())
@@ -908,7 +906,7 @@ class AudienceTests: XCTestCase {
 
         // create audience identity reset event
         let audienceIdentityResetRequestEvent = Event(name: "Test Audience Reset Request", type: EventType.audienceManager, source: EventSource.requestReset, data: [String: Any]())
-        let _ = audience.readyForEvent(audienceIdentityResetRequestEvent)
+        _ = audience.readyForEvent(audienceIdentityResetRequestEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: audienceIdentityResetRequestEvent)
@@ -942,11 +940,11 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: 10)
         // create the audience content request event with signal data
-        let traits = ["trait":"traitValue"]
+        let traits = ["trait": "traitValue"]
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -975,11 +973,11 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: 10)
         // create the audience content request event with signal data
-        let traits = ["trait":"traitValue"]
+        let traits = ["trait": "traitValue"]
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -997,11 +995,11 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: 10)
         // create the audience content request event with signal data
-        let traits = ["trait":"traitValue"]
+        let traits = ["trait": "traitValue"]
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -1019,11 +1017,11 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: 10)
         // create the audience content request event with signal data
-        let traits = ["trait":"traitValue"]
+        let traits = ["trait": "traitValue"]
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -1052,11 +1050,11 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .unknown,
                           aamTimeout: 10)
         // create the audience content request event with signal data
-        let traits = ["trait":"traitValue"]
+        let traits = ["trait": "traitValue"]
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -1085,11 +1083,11 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedOut,
                           aamTimeout: 10)
         // create the audience content request event with signal data
-        let traits = ["trait":"traitValue"]
+        let traits = ["trait": "traitValue"]
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -1107,11 +1105,11 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: nil)
         // create the audience content request event with signal data
-        let traits = ["trait":"traitValue"]
+        let traits = ["trait": "traitValue"]
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -1140,11 +1138,11 @@ class AudienceTests: XCTestCase {
                           privacyStatus: .optedIn,
                           aamTimeout: 10)
         // create the audience content request event with nil traits
-        let traits:[String: String] = [:]
+        let traits: [String: String] = [:]
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = traits
         let event = Event(name: "Test Audience Content request", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
-        let _ = audience.readyForEvent(event)
+        _ = audience.readyForEvent(event)
 
         // test
         mockRuntime.simulateComingEvent(event: event)
@@ -1168,17 +1166,17 @@ class AudienceTests: XCTestCase {
         audience?.state?.setDpid(dpid: "testDpid")
         audience?.state?.setDpuuid(dpuuid: "testDpuuid")
         audience?.state?.setUuid(uuid: "testUuid")
-        audience?.state?.setVisitorProfile(visitorProfile: ["key1":"value1","key2":"value2","key3":"value3"])
+        audience?.state?.setVisitorProfile(visitorProfile: ["key1": "value1", "key2": "value2", "key3": "value3"])
         // add config and identity data to the Audience State
-        var customIds = [[String:Any]]()
+        var customIds = [[String: Any]]()
         customIds.append(["id_origin": "d_cid_ic", "id_type": "DSID_20915", "id": "test_ad_id", "authentication_state": 1])
         let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer", AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING: false, AudienceConstants.Configuration.AAM_TIMEOUT: 10.0, AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrgId", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue] as [String: Any]
         let identitySharedState = [AudienceConstants.Identity.VISITOR_ID_MID: "1234567", AudienceConstants.Identity.VISITOR_ID_BLOB: "testBlob", AudienceConstants.Identity.VISITOR_ID_LOCATION_HINT: "9", AudienceConstants.Identity.VISITOR_IDS_LIST: customIds] as [String: Any]
 
         let configEvent = Event(name: "configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: configSharedState)
 
-        audience?.state?.handleConfigurationSharedStateUpdate(event: configEvent, configSharedState: configSharedState, createSharedState: { data, event in
-        }, dispatchOptOutResult: { (optedOut, event) in})
+        audience?.state?.handleConfigurationSharedStateUpdate(event: configEvent, configSharedState: configSharedState, createSharedState: { _, _ in
+        }, dispatchOptOutResult: { (_, _) in})
         audience?.state?.handleIdentitySharedStateUpdate(identitySharedState: identitySharedState)
 
         // verify data was set
@@ -1186,7 +1184,7 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("testDpid", audience?.state?.getDpid())
         XCTAssertEqual("testDpuuid", audience?.state?.getDpuuid())
         XCTAssertEqual("testUuid", audience?.state?.getUuid())
-        XCTAssertEqual(["key1":"value1","key2":"value2","key3":"value3"], audience?.state?.getVisitorProfile())
+        XCTAssertEqual(["key1": "value1", "key2": "value2", "key3": "value3"], audience?.state?.getVisitorProfile())
         XCTAssertEqual(false, audience?.state?.getAamForwardingStatus())
         XCTAssertEqual("testServer", audience?.state?.getAamServer())
         XCTAssertEqual(10.0, audience?.state?.getAamTimeout())
@@ -1198,7 +1196,7 @@ class AudienceTests: XCTestCase {
 
         // create audience identity reset event
         let resetIdentitiesEvent = Event(name: "Test Generic Reset Request", type: EventType.genericIdentity, source: EventSource.requestReset, data: [String: Any]())
-        let _ = audience.readyForEvent(resetIdentitiesEvent)
+        _ = audience.readyForEvent(resetIdentitiesEvent)
 
         // test
         mockRuntime.simulateComingEvent(event: resetIdentitiesEvent)
@@ -1214,7 +1212,7 @@ class AudienceTests: XCTestCase {
         XCTAssertEqual("", audience?.state?.getEcid())
         XCTAssertEqual("", audience?.state?.getBlob())
         XCTAssertEqual("", audience?.state?.getLocationHint())
-        XCTAssertTrue(audience?.state?.getVisitorIds().count == 0)
+        XCTAssertTrue(audience?.state?.getVisitorIds().isEmpty ?? false)
 
         // configuration data should not be cleared if privacy is not opted out
         XCTAssertEqual("testServer", audience?.state?.getAamServer())
