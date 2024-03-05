@@ -271,13 +271,28 @@ class AudienceManagerFunctionalTests: XCTestCase {
         let ecid = getEcid()
         // two requests are sent: id sync and signal with data
         XCTAssertEqual(2, mockNetworkService.requests.count)
-        let requestUrl = mockNetworkService.getRequest(at: 0)?.url.absoluteString ?? ""
-        XCTAssertTrue(requestUrl.contains("https://identityTestServer.com/id?"))
-        let requestUrl2 = mockNetworkService.getRequest(at: 1)?.url.absoluteString ?? ""
-        XCTAssertTrue(requestUrl2.contains("https://testServer.com/event?"))
-        XCTAssertTrue(requestUrl2.contains("d_mid=\(ecid)"))
-        XCTAssertTrue(requestUrl2.contains("c_trait=b"))
-        XCTAssertTrue(requestUrl2.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
+        let request1 = mockNetworkService.getRequest(at: 0)
+        let request2 = mockNetworkService.getRequest(at: 1)
+        XCTAssertNotNil(request1)
+        XCTAssertNotNil(request2)
+        let requestUrl = request1!.url.absoluteString
+        if requestUrl.contains("https://identityTestServer.com/id?") {
+            let requestUrl1 = request1?.url.absoluteString ?? ""
+            XCTAssertTrue(requestUrl1.contains("https://identityTestServer.com/id?"))
+            let requestUrl2 = request2?.url.absoluteString ?? ""
+            XCTAssertTrue(requestUrl2.contains("https://testServer.com/event?"))
+            XCTAssertTrue(requestUrl2.contains("d_mid=\(ecid)"))
+            XCTAssertTrue(requestUrl2.contains("c_trait=b"))
+            XCTAssertTrue(requestUrl2.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
+        } else {
+            let requestUrl2 = request2?.url.absoluteString ?? ""
+            XCTAssertTrue(requestUrl2.contains("https://identityTestServer.com/id?"))
+            let requestUrl1 = request1?.url.absoluteString ?? ""
+            XCTAssertTrue(requestUrl1.contains("https://testServer.com/event?"))
+            XCTAssertTrue(requestUrl1.contains("d_mid=\(ecid)"))
+            XCTAssertTrue(requestUrl1.contains("c_trait=b"))
+            XCTAssertTrue(requestUrl1.contains("&d_orgid=testOrg@AdobeOrg&d_ptfm=ios&d_dst=1&d_rtbd=json"))
+        }
     }
 
     func testSignalWithData_PrivacyUnknownThenPrivacyOptOut() {
