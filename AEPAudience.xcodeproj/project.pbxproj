@@ -21,6 +21,8 @@
 		2EBEE7C825282EC000880E72 /* TestableExtensionRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7C725282EC000880E72 /* TestableExtensionRuntime.swift */; };
 		6B414B2D8049789594CE7EA9 /* Pods_AEPAudienceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B81E902C9371043528CBC77 /* Pods_AEPAudienceTests.framework */; };
 		6EC7BAFB38519F7DB73C0D91 /* Pods_AudienceSampleApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7209F82E6B77CD678B185A43 /* Pods_AudienceSampleApp.framework */; };
+		92D9D4B62BA4F5AC0005BCEF /* AEPAudience.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EBEE7702525A35400880E72 /* AEPAudience.framework */; };
+		92D9D4B72BA4F5AC0005BCEF /* AEPAudience.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2EBEE7702525A35400880E72 /* AEPAudience.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		ACED0E3025C378E400374DDF /* MockDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACED0E2F25C378E400374DDF /* MockDataStore.swift */; };
 		ACED0E3725C37E4200374DDF /* AudienceMigrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACED0E1025C3505E00374DDF /* AudienceMigrator.swift */; };
 		ACED0E4325C383F300374DDF /* AudienceMigratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACED0E3B25C383E400374DDF /* AudienceMigratorTests.swift */; };
@@ -54,6 +56,13 @@
 			remoteGlobalIDString = 2EBEE76F2525A35300880E72;
 			remoteInfo = AEPAudience;
 		};
+		92D9D4B82BA4F5AC0005BCEF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2EBEE7672525A35300880E72 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2EBEE76F2525A35300880E72;
+			remoteInfo = AEPAudience;
+		};
 		D6CD89EF25C25FD800C9543A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2EBEE7672525A35300880E72 /* Project object */;
@@ -62,6 +71,20 @@
 			remoteInfo = AEPAudience;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		92D9D4BA2BA4F5AD0005BCEF /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				92D9D4B72BA4F5AC0005BCEF /* AEPAudience.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0B81E902C9371043528CBC77 /* Pods_AEPAudienceTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPAudienceTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -145,6 +168,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6EC7BAFB38519F7DB73C0D91 /* Pods_AudienceSampleApp.framework in Frameworks */,
+				92D9D4B62BA4F5AC0005BCEF /* AEPAudience.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,11 +382,13 @@
 				D66FD48525C241130029CD02 /* Resources */,
 				E697D09D0D28B521DD963319 /* [CP] Embed Pods Frameworks */,
 				926F33D02A2F27F800F12881 /* ShellScript */,
+				92D9D4BA2BA4F5AD0005BCEF /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				D6CD89F025C25FD800C9543A /* PBXTargetDependency */,
+				92D9D4B92BA4F5AC0005BCEF /* PBXTargetDependency */,
 			);
 			name = AudienceSampleApp;
 			productName = AudienceSampleApp;
@@ -654,6 +680,11 @@
 			target = 2EBEE76F2525A35300880E72 /* AEPAudience */;
 			targetProxy = 2EBEE77B2525A35400880E72 /* PBXContainerItemProxy */;
 		};
+		92D9D4B92BA4F5AC0005BCEF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2EBEE76F2525A35300880E72 /* AEPAudience */;
+			targetProxy = 92D9D4B82BA4F5AC0005BCEF /* PBXContainerItemProxy */;
+		};
 		D6CD89F025C25FD800C9543A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2EBEE76F2525A35300880E72 /* AEPAudience */;
@@ -909,7 +940,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"AudienceSampleApp/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = FKGEE875K4;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = AudienceSampleApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -935,7 +966,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"AudienceSampleApp/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = FKGEE875K4;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = AudienceSampleApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
