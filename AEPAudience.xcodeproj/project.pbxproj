@@ -12,7 +12,6 @@
 		2E45B6B225350D9E003D3534 /* AudienceHitProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E45B6B125350D9E003D3534 /* AudienceHitProcessor.swift */; };
 		2E45B6B625379FA7003D3534 /* AudienceHitProcessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E45B6B525379FA7003D3534 /* AudienceHitProcessorTests.swift */; };
 		2E45B6BA2537A071003D3534 /* MockNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E45B6B92537A071003D3534 /* MockNetworking.swift */; };
-		2EBEE77A2525A35400880E72 /* AEPAudience.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EBEE7702525A35400880E72 /* AEPAudience.framework */; };
 		2EBEE7962525A47800880E72 /* AEPAudience.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EBEE7922525A47800880E72 /* AEPAudience.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EBEE7A22526763200880E72 /* Audience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7A12526763200880E72 /* Audience.swift */; };
 		2EBEE7BB2527C89E00880E72 /* AudienceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBEE7BA2527C89E00880E72 /* AudienceConstants.swift */; };
@@ -49,13 +48,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2EBEE77B2525A35400880E72 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2EBEE7672525A35300880E72 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2EBEE76F2525A35300880E72;
-			remoteInfo = AEPAudience;
-		};
 		92D9D4B82BA4F5AC0005BCEF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2EBEE7672525A35300880E72 /* Project object */;
@@ -158,7 +150,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EBEE77A2525A35400880E72 /* AEPAudience.framework in Frameworks */,
 				6B414B2D8049789594CE7EA9 /* Pods_AEPAudienceTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -365,7 +356,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				2EBEE77C2525A35400880E72 /* PBXTargetDependency */,
 			);
 			name = AEPAudienceTests;
 			productName = AEPAudienceTests;
@@ -675,11 +665,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		2EBEE77C2525A35400880E72 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2EBEE76F2525A35300880E72 /* AEPAudience */;
-			targetProxy = 2EBEE77B2525A35400880E72 /* PBXContainerItemProxy */;
-		};
 		92D9D4B92BA4F5AC0005BCEF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2EBEE76F2525A35300880E72 /* AEPAudience */;
