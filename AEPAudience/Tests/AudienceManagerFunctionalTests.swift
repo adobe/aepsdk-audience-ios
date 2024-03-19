@@ -67,6 +67,7 @@ class AudienceManagerFunctionalTests: XCTestCase {
     override func setUp() {
         UserDefaults.clear()
         FileManager.default.clearCache()
+        FileManager.default.clearDirectory()
         ServiceProvider.shared.reset()
         EventHub.reset()
     }
