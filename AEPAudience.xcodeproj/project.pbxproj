@@ -392,7 +392,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1230;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = Adobe;
 				TargetAttributes = {
 					2EBEE76F2525A35300880E72 = {
@@ -818,6 +818,7 @@
 			baseConfigurationReference = 589D3DEEBB97CB7CBDF13CAA /* Pods-AEPAudience.debug.xcconfig */;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -846,6 +847,7 @@
 			baseConfigurationReference = C41818540F37C8D4F018570D /* Pods-AEPAudience.release.xcconfig */;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;

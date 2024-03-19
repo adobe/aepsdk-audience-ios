@@ -7,9 +7,9 @@ project 'AEPAudience.xcodeproj'
 pod 'SwiftLint', '0.52.0'
 
 def core_pods
-  pod 'AEPCore', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'staging'
-  pod 'AEPServices', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'staging'
-  pod 'AEPRulesEngine', :git => 'https://github.com/adobe/aepsdk-rulesengine-ios.git', :branch => 'staging'
+  pod 'AEPCore'
+  pod 'AEPServices'
+  pod 'AEPRulesEngine'
 end
 
 target 'AEPAudience' do
@@ -18,11 +18,11 @@ end
 
 target 'AEPAudienceTests' do
   core_pods
-  pod 'AEPIdentity', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'staging'
+  pod 'AEPIdentity'
 end
 
 target 'AudienceSampleApp' do
   core_pods
-  pod 'AEPIdentity', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'staging'
-  pod 'AEPLifecycle', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'staging'
+  pod 'AEPIdentity'
+  pod 'AEPLifecycle'
 end
