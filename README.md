@@ -10,7 +10,7 @@
 The AEPAudience extension represents the Audience Manager Adobe Experience Platform SDK that is required for updating audience profiles for users and retrieving user segment information from your mobile app.
 
 ## Requirements
-- Xcode 14.1
+- Xcode 15
 - Swift 5.1
 
 ## Installation
@@ -60,7 +60,7 @@ Alternatively, if your project has a `Package.swift` file, you can add AEPAudien
 
 ```
 dependencies: [
-    .package(url: "https://github.com/adobe/aepsdk-audience-ios.git", .upToNextMajor(from: "4.0.0"))
+    .package(url: "https://github.com/adobe/aepsdk-audience-ios.git", .upToNextMajor(from: "5.0.0"))
 ]
 ```
 

@@ -1,4 +1,4 @@
-platform :ios, '11.0'
+platform :ios, '12.0'
 use_frameworks!
 
 workspace 'AEPAudience'
@@ -6,22 +6,23 @@ project 'AEPAudience.xcodeproj'
 
 pod 'SwiftLint', '0.52.0'
 
-target 'AEPAudience' do
+def core_pods
   pod 'AEPCore'
   pod 'AEPServices'
-  pod 'AEPIdentity'
   pod 'AEPRulesEngine'
+end
+
+target 'AEPAudience' do
+  core_pods
 end
 
 target 'AEPAudienceTests' do
-  pod 'AEPCore'
-  pod 'AEPServices'
-  pod 'AEPRulesEngine'
+  core_pods
+  pod 'AEPIdentity'
 end
 
 target 'AudienceSampleApp' do
-  pod 'AEPCore'
+  core_pods
   pod 'AEPIdentity'
   pod 'AEPLifecycle'
-  pod 'AEPServices'
 end

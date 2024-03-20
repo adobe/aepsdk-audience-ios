@@ -29,9 +29,9 @@ test-ios: clean-ios-test-files
 	@echo "######################################################################"
 	@echo "### Testing iOS"
 	@echo "######################################################################"
-	xcodebuild test -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination 'platform=iOS Simulator,name=iPhone 14' -derivedDataPath build/out -resultBundlePath iosresults.xcresult -enableCodeCoverage YES
+	xcodebuild test -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination 'platform=iOS Simulator,name=iPhone 15' -derivedDataPath build/out -resultBundlePath iosresults.xcresult -enableCodeCoverage YES
 
-archive: clean pod-update
+archive: clean pod-install
 	@echo "######################################################################"
 	@echo "### Generating iOS Frameworks for $(PROJECT_NAME)"
 	@echo "######################################################################"
@@ -62,7 +62,7 @@ lint-autocorrect:
 	./Pods/SwiftLint/swiftlint --fix
 
 # release checks
-# make check-version VERSION=4.0.0
+# make check-version VERSION=5.0.0
 check-version:
 	sh ./Script/version.sh $(VERSION)
 
