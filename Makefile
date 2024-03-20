@@ -31,7 +31,7 @@ test-ios: clean-ios-test-files
 	@echo "######################################################################"
 	xcodebuild test -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination 'platform=iOS Simulator,name=iPhone 15' -derivedDataPath build/out -resultBundlePath iosresults.xcresult -enableCodeCoverage YES
 
-archive: clean pod-update
+archive: clean pod-install
 	@echo "######################################################################"
 	@echo "### Generating iOS Frameworks for $(PROJECT_NAME)"
 	@echo "######################################################################"
