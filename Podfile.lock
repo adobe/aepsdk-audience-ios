@@ -15,7 +15,7 @@ DEPENDENCIES:
   - AEPIdentity
   - AEPLifecycle
   - AEPRulesEngine
-  - AEPServices
+  - AEPServices (from `https://github.com/adobe/aepsdk-core-ios.git`, branch `dev-v5.1.0`)
   - SwiftLint (= 0.52.0)
 
 SPEC REPOS:
@@ -24,8 +24,17 @@ SPEC REPOS:
     - AEPIdentity
     - AEPLifecycle
     - AEPRulesEngine
-    - AEPServices
     - SwiftLint
+
+EXTERNAL SOURCES:
+  AEPServices:
+    :branch: dev-v5.1.0
+    :git: https://github.com/adobe/aepsdk-core-ios.git
+
+CHECKOUT OPTIONS:
+  AEPServices:
+    :commit: 53a2af15cf53dac950ff072bff7f0acd3b7012a4
+    :git: https://github.com/adobe/aepsdk-core-ios.git
 
 SPEC CHECKSUMS:
   AEPCore: f1c3e9238bb12e7e1103f4407c341ebc65aeab5b
@@ -35,6 +44,6 @@ SPEC CHECKSUMS:
   AEPServices: e42e5118128e81c0f797fdfb1dc9c4a714d644b8
   SwiftLint: 13280e21cdda6786ad908dc6e416afe5acd1fcb7
 
-PODFILE CHECKSUM: 93674eb6bd266ce5c0635278c74cc8c849eb8608
+PODFILE CHECKSUM: d18074bc70f15ee06311673b019bee4f631815a0
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.13.0

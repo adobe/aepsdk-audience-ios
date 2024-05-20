@@ -64,9 +64,17 @@ class AudienceHitProcessor: HitProcessing {
             completion(true)
         } else if NetworkServiceConstants.RECOVERABLE_ERROR_CODES.contains(connection.responseCode ?? -1) {
             // retry this hit later
-            Log.warning(label: "\(LOG_TAG):\(#function)", "Retrying Audience hit, request with url \(hit.url.absoluteString) failed with error \(connection.error?.localizedDescription ?? "") and recoverable status code \(connection.responseCode ?? -1)")
+            Log.warning(label: "\(LOG_TAG):\(#function)", "Audience request with url:(\(hit.url.absoluteString)) failed with error:(\(connection.error?.localizedDescription ?? "")) and code:(\(connection.responseCode ?? -1)). Will Retry Audience hit in \(retryInterval) seconds")
             completion(false)
         } else {
+
+            if let urlError = connection.error as? URLError, urlError.isRecoverable {
+                // retry recoverable URL errors
+                Log.warning(label: "\(LOG_TAG):\(#function)", "Audience request with url:(\(hit.url.absoluteString)) failed with error:(\(urlError.localizedDescription)) and code:(\(urlError.errorCode)). Will Retry Audience hit in \(retryInterval) seconds")
+                completion(false)
+                return
+            }
+
             // unrecoverable error. delete the hit from the database and continue
             Log.warning(label: "\(LOG_TAG):\(#function)", "Dropping Audience hit, request with url \(hit.url.absoluteString) failed with error \(connection.error?.localizedDescription ?? "") and unrecoverable status code \(connection.responseCode ?? -1)")
             responseHandler(entity, connection.data)

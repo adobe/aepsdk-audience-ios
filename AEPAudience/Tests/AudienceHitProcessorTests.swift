@@ -71,7 +71,7 @@ class AudienceHitProcessorTests: XCTestCase {
         XCTAssertEqual(mockNetworkService?.connectAsyncCalledWithNetworkRequest?.url, expectedUrl) // network request should be made with the url in the hit
     }
 
-    /// Tests that when the network request fails but has a recoverable error that we will retry the hit and do not invoke the response handler for that hit
+    /// Tests that the network request fails with a recoverable error response code doesn't invoke the response handler and the hit is retried
     func testProcessHitRecoverableNetworkError() {
         // setup
         let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should be retried")
@@ -95,7 +95,7 @@ class AudienceHitProcessorTests: XCTestCase {
         XCTAssertEqual(mockNetworkService?.connectAsyncCalledWithNetworkRequest?.url, expectedUrl) // network request should be made with the url in the hit
     }
 
-    /// Tests that when the network request fails and does not have a recoverable response code that we invoke the response handler and do not retry the hit
+    /// Tests that the network request fails with unrecoverable response code invokes the response handler and the hit is dropped without retrying
     func testProcessHitUnrecoverableNetworkError() {
         // setup
         let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should not be retried")
@@ -103,6 +103,54 @@ class AudienceHitProcessorTests: XCTestCase {
         let expectedEvent = Event(name: "Hit Event", type: EventType.audienceManager, source: EventSource.requestContent, data: nil)
         let hit = AudienceHit(url: expectedUrl, timeout: DEFAULT_TIMEOUT, event: expectedEvent)
         mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: HTTPURLResponse(url: expectedUrl, statusCode: -1, httpVersion: nil, headerFields: nil), error: nil)
+
+        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try! JSONEncoder().encode(hit))
+
+        // test
+        hitProcessor.processHit(entity: entity) { success in
+            XCTAssertTrue(success)
+            expectation.fulfill()
+        }
+
+        // verify
+        wait(for: [expectation], timeout: 0.5)
+        XCTAssertFalse(responseCallbackArgs.isEmpty) // response handler should have been invoked
+        XCTAssertTrue(mockNetworkService?.connectAsyncCalled ?? false) // network request should have been made
+        XCTAssertEqual(mockNetworkService?.connectAsyncCalledWithNetworkRequest?.url, expectedUrl) // network request should be made with the url in the hit
+    }
+
+    /// Tests that the network request failing with a recoverable url error doesn't invoke the response handler and the hit is retried
+    func testProcessHitRecoverableUrlError() {
+        // setup
+        let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should be retried")
+        let expectedUrl = URL(string: "adobe.com")!
+        let expectedEvent = Event(name: "Hit Event", type: EventType.audienceManager, source: EventSource.requestContent, data: nil)
+        let hit = AudienceHit(url: expectedUrl, timeout: DEFAULT_TIMEOUT, event: expectedEvent)
+        mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: nil, error: URLError(URLError.notConnectedToInternet))
+
+        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try! JSONEncoder().encode(hit))
+
+        // test
+        hitProcessor.processHit(entity: entity) { success in
+            XCTAssertFalse(success)
+            expectation.fulfill()
+        }
+
+        // verify
+        wait(for: [expectation], timeout: 0.5)
+        XCTAssertTrue(responseCallbackArgs.isEmpty) // response handler should have not been invoked
+        XCTAssertTrue(mockNetworkService?.connectAsyncCalled ?? false) // network request should have been made
+        XCTAssertEqual(mockNetworkService?.connectAsyncCalledWithNetworkRequest?.url, expectedUrl) // network request should be made with the url in the hit
+    }
+
+    /// Tests that the network request fails with unrecoverable url error invokes the response handler and the hit is dropped without retrying
+    func testProcessHitUnrecoverableUrlError() {
+        // setup
+        let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should not be retried")
+        let expectedUrl = URL(string: "adobe.com")!
+        let expectedEvent = Event(name: "Hit Event", type: EventType.audienceManager, source: EventSource.requestContent, data: nil)
+        let hit = AudienceHit(url: expectedUrl, timeout: DEFAULT_TIMEOUT, event: expectedEvent)
+        mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: nil, error: URLError(URLError.badURL))
 
         let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try! JSONEncoder().encode(hit))
 
