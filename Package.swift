@@ -27,6 +27,7 @@ let package = Package(
                 dependencies: [
                     .product(name: "AEPCore", package: "aepsdk-core-ios"),
                     .product(name: "AEPServices", package: "aepsdk-core-ios"),
+                    .product(name: "AEPIdentity", package: "aepsdk-core-ios")
                 ],
                 path: "AEPAudience/Sources")
     ]
