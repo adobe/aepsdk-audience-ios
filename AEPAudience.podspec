@@ -18,7 +18,6 @@ Pod::Spec.new do |s|
 
   s.dependency 'AEPCore', '>= 5.0.0', '< 6.0.0'
   s.dependency 'AEPIdentity', '>= 5.0.0', '< 6.0.0'
-  s.dependency 'AEPServices', '>= 5.1.0', '< 6.0.0'
 
   s.source_files          = 'AEPAudience/Sources/*.swift'
 
