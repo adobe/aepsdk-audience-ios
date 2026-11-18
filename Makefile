@@ -10,6 +10,17 @@ IOS_ARCHIVE_DSYM_PATH = $(CURR_DIR)/build/ios.xcarchive/dSYMs/
 
 TEST_APP_IOS_SCHEME = AudienceSampleApp
 
+IOS_DEVICE_NAME ?= iPhone 18 Pro
+# If OS version is not specified, uses the first device name match in the list of available simulators
+IOS_VERSION ?=
+ifeq ($(strip $(IOS_VERSION)),)
+    IOS_DESTINATION = "platform=iOS Simulator,name=$(IOS_DEVICE_NAME)"
+else
+    IOS_DESTINATION = "platform=iOS Simulator,name=$(IOS_DEVICE_NAME),OS=$(IOS_VERSION)"
+endif
+
+FUNCTIONAL_TESTS = AEPAudienceTests/AudienceManagerFunctionalTests
+
 pod-repo-update:
 	pod repo update
 
@@ -29,7 +40,7 @@ test-ios: clean-ios-test-files
 	@echo "######################################################################"
 	@echo "### Testing iOS"
 	@echo "######################################################################"
-	xcodebuild test -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination 'platform=iOS Simulator,name=iPhone 18 Pro,OS=27.0' -derivedDataPath build/out -resultBundlePath iosresults.xcresult -enableCodeCoverage YES
+	xcodebuild test -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination $(IOS_DESTINATION) -derivedDataPath build/out -resultBundlePath iosresults.xcresult -enableCodeCoverage YES
 
 build-swift6:
 	xcodebuild build -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination 'generic/platform=iOS Simulator' AEPAUDIENCE_SWIFT_VERSION=6.0
@@ -39,6 +50,20 @@ test-swift6-consumer:
 
 build-min-toolchain:
 	xcodebuild build -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination 'generic/platform=iOS Simulator'
+
+unit-test-ios:
+	rm -rf build/reports/iosUnitResults.xcresult
+	@echo "######################################################################"
+	@echo "### Unit Testing iOS"
+	@echo "######################################################################"
+	xcodebuild test -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination $(IOS_DESTINATION) -derivedDataPath build/out -resultBundlePath build/reports/iosUnitResults.xcresult -enableCodeCoverage YES -skip-testing:$(FUNCTIONAL_TESTS)
+
+functional-test-ios:
+	rm -rf build/reports/iosFunctionalResults.xcresult
+	@echo "######################################################################"
+	@echo "### Functional Testing iOS"
+	@echo "######################################################################"
+	xcodebuild test -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination $(IOS_DESTINATION) -derivedDataPath build/out -resultBundlePath build/reports/iosFunctionalResults.xcresult -enableCodeCoverage YES -only-testing:$(FUNCTIONAL_TESTS)
 
 archive: clean pod-install
 	@echo "######################################################################"
