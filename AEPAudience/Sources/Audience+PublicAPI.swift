@@ -21,7 +21,8 @@ import Foundation
     /// - Parameters:
     ///   - completion: closure  invoked with the visitor's profile as a parameter
     @objc(getVisitorProfile:)
-    static func getVisitorProfile(completion: @escaping ([String: String]?, Error?) -> Void) {
+    // Completion runs on the SDK queue. Sendable tells Swift 6 apps not to assume main actor, and preconcurrency keeps old callers compiling.
+    @preconcurrency static func getVisitorProfile(completion: @escaping @Sendable ([String: String]?, Error?) -> Void) {
         let event = Event(name: "AudienceRequestIdentity", type: EventType.audienceManager, source: EventSource.requestIdentity, data: nil)
 
         MobileCore.dispatch(event: event) { responseEvent in
@@ -40,7 +41,8 @@ import Foundation
     ///   - data: Traits data for the current visitor
     ///   - completion: closure  invoked with the visitor's profile as a parameter
     @objc(signalWithData:completion:)
-    static func signalWithData(data: [String: String], completion: @escaping ([String: String]?, Error?) -> Void) {
+    // Completion runs on the SDK queue. Sendable tells Swift 6 apps not to assume main actor, and preconcurrency keeps old callers compiling.
+    @preconcurrency static func signalWithData(data: [String: String], completion: @escaping @Sendable ([String: String]?, Error?) -> Void) {
         var eventData = [String: Any]()
         eventData[AudienceConstants.EventDataKeys.VISITOR_TRAITS] = data
         let event = Event(name: "AudienceRequestContent", type: EventType.audienceManager, source: EventSource.requestContent, data: eventData)
