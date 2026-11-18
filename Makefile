@@ -31,6 +31,15 @@ test-ios: clean-ios-test-files
 	@echo "######################################################################"
 	xcodebuild test -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination 'platform=iOS Simulator,name=iPhone 18 Pro,OS=27.0' -derivedDataPath build/out -resultBundlePath iosresults.xcresult -enableCodeCoverage YES
 
+build-swift6:
+	xcodebuild build -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination 'generic/platform=iOS Simulator' AEPAUDIENCE_SWIFT_VERSION=6.0
+
+test-swift6-consumer:
+	sh ./Script/test-swift6-consumer.sh
+
+build-min-toolchain:
+	xcodebuild build -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination 'generic/platform=iOS Simulator'
+
 archive: clean pod-install
 	@echo "######################################################################"
 	@echo "### Generating iOS Frameworks for $(PROJECT_NAME)"
