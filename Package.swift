@@ -15,7 +15,7 @@ import PackageDescription
 
 let package = Package(
     name: "AEPAudience",
-    platforms: [.iOS(.v12)],
+    platforms: [.iOS("15.0")],
     products: [
         .library(name: "AEPAudience", targets: ["AEPAudience"]),
     ],
