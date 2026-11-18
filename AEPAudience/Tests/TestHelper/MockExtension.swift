@@ -16,12 +16,13 @@ import Foundation
 class MockExtension: Extension {
     var name = "mockExtension"
     var friendlyName = "mockExtension"
-    static var extensionVersion = "0.0.1"
+    static let extensionVersion = "0.0.1"
     var metadata: [String: String]?
 
-    static var registrationClosure: (() -> Void)?
-    static var unregistrationClosure: (() -> Void)?
-    static var eventReceivedClosure: ((Event) -> Void)?
+    // Swift 6 flags shared statics as unsafe. Tests set these hooks before the extension runs, so we mark them nonisolated(unsafe).
+    nonisolated(unsafe) static var registrationClosure: (() -> Void)?
+    nonisolated(unsafe) static var unregistrationClosure: (() -> Void)?
+    nonisolated(unsafe) static var eventReceivedClosure: ((Event) -> Void)?
 
     let runtime: ExtensionRuntime
 

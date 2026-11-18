@@ -32,9 +32,10 @@ class AudienceStateTests: XCTestCase {
     static let inMemoryVisitorProfile = ["inMemoryTrait": "inMemoryValue"]
     static let persistedVisitorProfile = ["persistedTrait": "persistedValue"]
     static let expectedVisitorProfile = ["cookie1": "cookieValue1", "cookie2": "cookieValue2"]
-    static let validConfigSharedState = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn, AudienceConstants.Configuration.AAM_SERVER: "www.testServer.com", AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING: false, AudienceConstants.Configuration.AAM_TIMEOUT: TimeInterval(10)] as [String: Any]
+    // Swift 6 flags non Sendable statics as unsafe. These fixtures are never mutated, so nonisolated(unsafe) is safe here.
+    nonisolated(unsafe) static let validConfigSharedState = [AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn, AudienceConstants.Configuration.AAM_SERVER: "www.testServer.com", AudienceConstants.Configuration.ANALYTICS_AAM_FORWARDING: false, AudienceConstants.Configuration.AAM_TIMEOUT: TimeInterval(10)] as [String: Any]
     static let configSharedState = [AudienceConstants.Configuration.AAM_SERVER: "testServer.com", AudienceConstants.Configuration.EXPERIENCE_CLOUD_ORGID: "testOrg@AdobeOrg", AudienceConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue]
-    static let configEvent = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: nil)
+    nonisolated(unsafe) static let configEvent = Event(name: "Configuration response event", type: EventType.configuration, source: EventSource.responseContent, data: nil)
 
     override func setUp() {
         ServiceProvider.shared.namedKeyValueService = MockDataStore()
